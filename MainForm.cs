@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,8 +11,11 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using DarkUI.Controls;
 using DarkUI.Forms;
 using ShrineFox.IO;
+using static EPLGen.MainForm;
 
 namespace EPLGen
 {
@@ -19,6 +24,140 @@ namespace EPLGen
         public MainForm()
         {
             InitializeComponent();
+            AddVectorFields();
+        }
+
+        private void AddVectorFields()
+        {
+            AddNumericControls(tlp_ModelSettings, "ModelRot", 4, 1, 0);
+            AddNumericControls(tlp_ParticleSettings, "ParticleRot", 4, 1, 0);
+            AddNumericControls(tlp_ModelSettings, "ModelScale", 3, 1, 1);
+            AddNumericControls(tlp_ParticleSettings, "ParticleScale", 3, 1, 1);
+            AddNumericControls(tlp_ParticleSettings, "ParticleTranslation", 3, 1, 2);
+        }
+
+        private void AddNumericControls(TableLayoutPanel parentTlp, string fieldPrefix, int numOfOptions, int column, int row)
+        {
+            TableLayoutPanel tlp = new TableLayoutPanel() { Dock = DockStyle.Fill };
+            for (int i = 0; i < numOfOptions; i++)
+            {
+                string axis = "x";
+                switch (i)
+                {
+                    case 1: axis = "y"; break;
+                    case 2: axis = "z"; break;
+                    case 3: axis = "w"; break;
+                }
+
+                decimal maxMin = 360;
+                float columnWidth = 25f;
+                if (numOfOptions < 4)
+                {
+                    maxMin = 99999;
+                    columnWidth = 33f;
+                }
+
+                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Fill, Name = $"num_{fieldPrefix}_{axis}" };
+                numUpDwn.ValueChanged += FieldValueChanged;
+                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
+                tlp.Controls.Add(numUpDwn, i, 0);
+            }
+            parentTlp.Controls.Add(tlp, column, row);
+        }
+
+        private void FieldValueChanged(object sender, EventArgs e)
+        {
+            DarkNumericUpDown numUpDwn = (DarkNumericUpDown)sender;
+            UpdateOptionValue(numUpDwn.Name.Split('_')[1], numUpDwn.Name.Split('_')[2], (float)numUpDwn.Value);
+        }
+
+        private void UpdateOptionValue(string name, string axis, float value)
+        {
+            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled
+                && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
+            {
+                var modelSetting = modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
+                switch (name)
+                {
+                    case "ModelRot":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Rotation.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Rotation.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Rotation.Z = value;
+                                break;
+                            case "w":
+                                modelSetting.Rotation.W = value;
+                                break;
+                        }
+                        break;
+                    case "ParticleRot":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Rotation.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Rotation.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Particle.Rotation.Z = value;
+                                break;
+                            case "w":
+                                modelSetting.Particle.Rotation.W = value;
+                                break;
+                        }
+                        break;
+                    case "ModelScale":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Scale.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Scale.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Scale.Z = value;
+                                break;
+                        }
+                        break;
+                    case "ParticleScale":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Scale.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Scale.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Particle.Scale.Z = value;
+                                break;
+                        }
+                        break;
+                    case "ParticleTranslation":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Translation.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Translation.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Particle.Translation.Z = value;
+                                break;
+                        }
+                        break;
+                }
+                
+            }
         }
 
         List<ModelSettings> modelSettings = new List<ModelSettings>();
@@ -91,6 +230,8 @@ namespace EPLGen
             // Re-enable listbox and re-select previous value if within bounds
             if (selected != -1 && listBox_Sprites.Items.Count - 1 >= selected)
                 listBox_Sprites.SelectedIndex = selected;
+
+            // Re-enable listbox
             listBox_Sprites.Enabled = true;
         }
 
@@ -115,26 +256,117 @@ namespace EPLGen
 
         private void SpriteList_IndexChanged(object sender, EventArgs e)
         {
-            UpdateOptionValues();
+            LoadOptionValues();
         }
 
-        private void UpdateOptionValues()
+        private void LoadOptionValues()
         {
-            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
+            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled 
+                && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
             {
                 var selectedModel = modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
 
-                txt_Rotation.Text = selectedModel.Rotation.ToString();
-                txt_Scale.Text = selectedModel.Scale.ToString();
-                txt_ParticleTranslation.Text = selectedModel.Particle.Translation.ToString();
-                txt_ParticleRot.Text = selectedModel.Particle.Rotation.ToString();
-                txt_ParticleScale.Text = selectedModel.Particle.Scale.ToString();
-                comboBox_Mode.SelectedIndex = (int)selectedModel.EplType;
+                // Try to use values from selected model object
+                foreach (var ctrl in new string[] { "ModelRot", "ParticleRot" })
+                    foreach (var axis in new string[] { "x", "y", "z", "w" })
+                    {
+                        DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
+                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                    }
+                foreach (var ctrl in new string[] { "ModelScale", "ParticleScale", "ParticleTranslation" })
+                    foreach (var axis in new string[] { "x", "y", "z", })
+                    {
+                        DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
+                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                    }
 
                 LoadTexturePreview(selectedModel.TexturePath);
             }
             else
                 LoadTexturePreview();
+        }
+
+        private void LoadOptionValue(ModelSettings selectedModel, DarkNumericUpDown numUpDwn, string ctrl, string axis)
+        {
+            switch (ctrl)
+            {
+                case "ModelRot":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.Z);
+                            break;
+                        case "w":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.W);
+                            break;
+                    }
+                    break;
+                case "ParticleRot":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.Z);
+                            break;
+                        case "w":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.W);
+                            break;
+                    }
+                    break;
+                case "ModelScale":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.Z);
+                            break;
+                    }
+                    break;
+                case "ParticleScale":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.Z);
+                            break;
+                    }
+                    break;
+                case "ParticleTranslation":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.Z);
+                            break;
+                    }
+                    break;
+            }
         }
 
         private void LoadTexturePreview(string texPath = "")
@@ -155,29 +387,9 @@ namespace EPLGen
             }
         }
 
-        private void Rotation_Changed(object sender, EventArgs e)
-        {
-            if (listBox_Sprites.SelectedIndex == -1)
-                return;
-
-            foreach (var item in listBox_Sprites.SelectedItems)
-                if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).Rotation = txt_Rotation.Text.ToVector4(",", " ");
-        }
-
-        private void Scale_Changed(object sender, EventArgs e)
-        {
-            if (listBox_Sprites.SelectedIndex == -1)
-                return;
-
-            foreach (var item in listBox_Sprites.SelectedItems)
-                if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).Scale = txt_Scale.Text.ToVector3(",", " ");
-        }
-
         private void Mode_Changed(object sender, EventArgs e)
         {
-            if (listBox_Sprites.SelectedIndex == -1)
+            if (listBox_Sprites.SelectedIndex == -1 || !comboBox_Mode.Enabled)
                 return;
 
             foreach (var item in listBox_Sprites.SelectedItems)
@@ -207,20 +419,22 @@ namespace EPLGen
             if (delimiters == null) throw new ArgumentNullException("delimiters are null");
             if (delimiters.Length <= 0) throw new InvalidOperationException("missing delimiters");
 
-            var rslt = str
+            try
+            {
+                var rslt = str
             .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
             .Select(float.Parse)
             .ToArray()
             ;
-
-            if (rslt.Length != 4)
-                throw new FormatException("The input string does not follow" +
-                                            "the required format for the string." +
-                                            "There has to be four floats inside" +
-                                            "the string delimited by one of the" +
-                                            "requested delimiters. input string: " +
-                                            str);
-            return new Vector4(rslt[0], rslt[1], rslt[2], rslt[3]);
+                if (rslt.Length != 4)
+                    return new Vector4(0, 0, 0, 0);
+                else
+                    return new Vector4(rslt[0], rslt[1], rslt[2], rslt[3]);
+            } catch
+            {
+                return new Vector4(0, 0, 0, 0);
+            }
+            
         }
     }
 
@@ -235,20 +449,22 @@ namespace EPLGen
             if (delimiters == null) throw new ArgumentNullException("delimiters are null");
             if (delimiters.Length <= 0) throw new InvalidOperationException("missing delimiters");
 
-            var rslt = str
+            try
+            {
+                var rslt = str
             .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
             .Select(float.Parse)
             .ToArray()
             ;
-
-            if (rslt.Length != 3)
-                throw new FormatException("The input string does not follow" +
-                                            "the required format for the string." +
-                                            "There has to be three floats inside" +
-                                            "the string delimited by one of the" +
-                                            "requested delimiters. input string: " +
-                                            str);
-            return new Vector3(rslt[0], rslt[1], rslt[2]);
+                if (rslt.Length != 3)
+                    return new Vector3(1, 1, 1);
+                return new Vector3(rslt[0], rslt[1], rslt[2]);
+            }
+            catch
+            {
+                return new Vector3(1, 1, 1);
+            }
+            
         }
     }
 }

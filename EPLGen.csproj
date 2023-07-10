@@ -109,6 +109,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GFD-Studio\GFDLibrary.NET48\GFDLibrary.NET48.csproj">
+      <Project>{68fabec8-d9a9-4752-a4fe-87d6797d7749}</Project>
+      <Name>GFDLibrary.NET48</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj">
       <Project>{7640412a-7372-4925-b20c-0178d8818a8f}</Project>
       <Name>ShrineFox.IO</Name>
