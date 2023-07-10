@@ -57,10 +57,13 @@ namespace EPLGen
                     columnWidth = 33f;
                 }
 
-                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Fill, Name = $"num_{fieldPrefix}_{axis}" };
+                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Top, Name = $"num_{fieldPrefix}_{axis}" };
                 numUpDwn.ValueChanged += FieldValueChanged;
+                tlp.RowStyles.Add(new RowStyle() { SizeType = SizeType.Percent, Height = 50f });
                 tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
-                tlp.Controls.Add(numUpDwn, i, 0);
+                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
+                tlp.Controls.Add(new DarkLabel() { Text = axis.ToUpper(), Dock = DockStyle.Bottom }, i, 0);
+                tlp.Controls.Add(numUpDwn, i, 1);
             }
             parentTlp.Controls.Add(tlp, column, row);
         }
