@@ -167,17 +167,17 @@ namespace EPLGen
 
         public class ParticleSettings
         {
-            public Vector3 Translation = new Vector3(0, 0, 0);
-            public Vector4 Rotation = new Vector4(0, 0, 0, 0);
-            public Vector3 Scale = new Vector3(1, 1, 1);
+            public Vector3 Translation = new Vector3(0f, 0f, 0f);
+            public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
+            public Vector3 Scale = new Vector3(1f, 1f, 1f);
         }
 
         public class ModelSettings
         {
             public string Name = "Untitled";
             public string TexturePath = "";
-            public Vector4 Rotation = new Vector4(0, 0, 0, 0);
-            public Vector3 Scale = new Vector3(1, 1, 1);
+            public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
+            public Vector3 Scale = new Vector3(1f, 1f, 1f);
             public ModelType EplType = ModelType.Cone;
             public ParticleSettings Particle = new ParticleSettings();
         }
@@ -407,67 +407,20 @@ namespace EPLGen
 
             // TODO: Change values based on selected type
         }
-    }
 
-
-
-    public static class StringVector4Extensions
-    {
-        public static Vector4 ToVector4(this string str, params string[] delimiters)
+        private void ExportEPL_Click(object sender, EventArgs e)
         {
-            if (str == null) throw new ArgumentNullException("string is null");
-            if (string.IsNullOrEmpty(str)) throw new FormatException("string is empty");
-            if (string.IsNullOrWhiteSpace(str)) throw new FormatException("string is just white space");
+            if (Directory.Exists("./Output"))
+                Directory.Delete("./Output", true);
+            Directory.CreateDirectory("./Output");
 
-            if (delimiters == null) throw new ArgumentNullException("delimiters are null");
-            if (delimiters.Length <= 0) throw new InvalidOperationException("missing delimiters");
+            foreach (var model in modelSettings)
+                EPL.Build(model);
 
-            try
-            {
-                var rslt = str
-            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
-            .Select(float.Parse)
-            .ToArray()
-            ;
-                if (rslt.Length != 4)
-                    return new Vector4(0, 0, 0, 0);
-                else
-                    return new Vector4(rslt[0], rslt[1], rslt[2], rslt[3]);
-            } catch
-            {
-                return new Vector4(0, 0, 0, 0);
-            }
-            
-        }
-    }
-
-    public static class StringVector3Extensions
-    {
-        public static Vector3 ToVector3(this string str, params string[] delimiters)
-        {
-            if (str == null) throw new ArgumentNullException("string is null");
-            if (string.IsNullOrEmpty(str)) throw new FormatException("string is empty");
-            if (string.IsNullOrWhiteSpace(str)) throw new FormatException("string is just white space");
-
-            if (delimiters == null) throw new ArgumentNullException("delimiters are null");
-            if (delimiters.Length <= 0) throw new InvalidOperationException("missing delimiters");
-
-            try
-            {
-                var rslt = str
-            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
-            .Select(float.Parse)
-            .ToArray()
-            ;
-                if (rslt.Length != 3)
-                    return new Vector3(1, 1, 1);
-                return new Vector3(rslt[0], rslt[1], rslt[2]);
-            }
-            catch
-            {
-                return new Vector3(1, 1, 1);
-            }
-            
+            List<byte> combinedEpl = new List<byte>();
+            foreach (var eplFile in Directory.GetFiles("./Output", "*.epl", SearchOption.AllDirectories))
+                combinedEpl.Concat(File.ReadAllBytes(eplFile));
+            File.WriteAllBytes("combined.epl", combinedEpl.ToArray());
         }
     }
 }
