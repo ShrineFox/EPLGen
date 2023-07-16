@@ -12,11 +12,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 using DarkUI.Controls;
 using DarkUI.Forms;
 using GFDLibrary.Effects;
+using Newtonsoft.Json;
 using ShrineFox.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static EPLGen.MainForm;
 
 namespace EPLGen
@@ -703,12 +706,14 @@ namespace EPLGen
             {
                 case ModelType.Floor:
                     model.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
+                    model.Particle.SpawnerAngles = new Vector2(0f, 0f);
                     model.Particle.Field180 = new Vector2(0f, 0f);
                     model.Particle.Translation = new Vector3(0, 0.5f, 0);
                     model.Particle.Rotation = new Quaternion(0f, 1f, 0f, 0f);
                     break;
                 default:
                     model.Rotation = new Quaternion(0, 0f, 0f, 1f);
+                    model.Particle.SpawnerAngles = new Vector2(-360f, 360f);
                     model.Particle.Field180 = new Vector2(-1f, 2f);
                     model.Particle.Translation = new Vector3(0, 0f, 0);
                     model.Particle.Rotation = new Quaternion(0f, 0f, 0f, 1f);
@@ -732,10 +737,15 @@ namespace EPLGen
             foreach (var eplFile in eplFiles)
                 combinedEpl = combinedEpl.Concat(File.ReadAllBytes(eplFile)).ToList();
 
-            // Output combined EPL file with attachment count at the beginning
-            File.WriteAllBytes("./combined.epl", BitConverter.GetBytes(Convert.ToUInt32(EndiannessSwapUtility.Swap(eplFiles.Count()))).Concat(combinedEpl).ToArray());
+            // Output combined EPL file with attachment count at the beginning (for hex editing gmd attachments)
+            byte[] eplCount = BitConverter.GetBytes(Convert.ToUInt32(EndiannessSwapUtility.Swap(eplFiles.Count())));
+            byte[] combinedEpls = eplCount.Concat(combinedEpl).ToArray();
+            File.WriteAllBytes("./COMBINED.EPL", combinedEpls);
+            // Output combined EPL wrapped in a GMD (for attaching to objects)
+            byte[] combinedGMD = GMD.gmdHeader.Concat(combinedEpls).Concat(eplCount).Concat(GMD.gmdFooter).ToArray();
+            File.WriteAllBytes("./COMBINED.GMD", combinedGMD);
 
-            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./combined.epl")}", "EPL Export Successful");
+            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./COMBINED.EPL")}", "EPL Export Successful");
         }
 
         private void Rename_Click(object sender, EventArgs e)
@@ -804,6 +814,27 @@ namespace EPLGen
                 RemoveSelected_Click(sender, e);
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
                 Rename_Click(sender, e);
+        }
+
+        private void SavePreset_Click(object sender, EventArgs e)
+        {
+            var selection = WinFormsEvents.FilePath_Click("Save preset file...", true, new string[] { "json (.json)" }, true);
+            if (selection.Count == 0)
+                return;
+
+            File.WriteAllText(selection.First(), JsonConvert.SerializeObject(modelSettings, Newtonsoft.Json.Formatting.Indented));
+            MessageBox.Show($"Saved preset file to:\n{selection.First()}", "Preset Saved Successfully");
+        }
+
+        private void LoadPreset_Click(object sender, EventArgs e)
+        {
+            var selection = WinFormsEvents.FilePath_Click("Load preset file...", true, new string[] { "json (.json)" });
+            if (selection.Count == 0)
+                return;
+
+            modelSettings = JsonConvert.DeserializeObject<List<ModelSettings>>(File.ReadAllText(selection.First()));
+
+            UpdateSpriteList();
         }
     }
 
