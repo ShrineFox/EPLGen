@@ -727,25 +727,25 @@ namespace EPLGen
         {
             if (Directory.Exists("./Output"))
                 Directory.Delete("./Output", true);
-            Directory.CreateDirectory("./Output");
+            Directory.CreateDirectory("./Output/EPLs");
 
             foreach (var model in modelSettings)
-                EPL.Build(model);
+                EPL.Build(model, "./Output/EPLs");
 
             List<byte> combinedEpl = new List<byte>();
-            var eplFiles = Directory.GetFiles("./Output", "*.epl", SearchOption.AllDirectories);
+            var eplFiles = Directory.GetFiles("./Output/EPLs", "*.epl", SearchOption.AllDirectories);
             foreach (var eplFile in eplFiles)
                 combinedEpl = combinedEpl.Concat(File.ReadAllBytes(eplFile)).ToList();
 
             // Output combined EPL file with attachment count at the beginning (for hex editing gmd attachments)
             byte[] eplCount = BitConverter.GetBytes(EndiannessSwapUtility.Swap(Convert.ToUInt32(eplFiles.Count())));
             byte[] combinedEpls = eplCount.Concat(combinedEpl).ToArray();
-            File.WriteAllBytes("./COMBINED.EPL", combinedEpls);
+            File.WriteAllBytes("./Output/COMBINED.EPL", combinedEpls);
             // Output combined EPL wrapped in a GMD (for attaching to objects)
             byte[] combinedGMD = GMD.gmdHeader.Concat(combinedEpls).Concat(GMD.gmdFooter).ToArray();
-            File.WriteAllBytes("./COMBINED.GMD", combinedGMD);
+            File.WriteAllBytes("./Output/COMBINED.GMD", combinedGMD);
 
-            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./COMBINED.EPL")}", "EPL Export Successful");
+            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./Output/COMBINED.EPL")}", "EPL Export Successful");
         }
 
         private void Rename_Click(object sender, EventArgs e)

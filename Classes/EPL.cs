@@ -30,7 +30,7 @@ namespace EPLGen
             return data.ToArray();
         }
 
-        public static void Build(ModelSettings model)
+        public static void Build(ModelSettings model, string outputDir)
         {
             EPL epl = new EPL();
             epl.childNodeName = NameData(model.Name);
@@ -76,7 +76,7 @@ namespace EPLGen
             epl.particleEffect.dataLength = Convert.ToUInt32(epl.particleEffect.embeddedFile.Length);
 
             using (EndianBinaryWriter writer = new EndianBinaryWriter(
-                new FileStream($".//Output//{model.Name}.epl", FileMode.OpenOrCreate), Endianness.BigEndian))
+                new FileStream(Path.Combine(outputDir, $"{model.Name}.epl"), FileMode.OpenOrCreate), Endianness.BigEndian))
             {
                 // Start EPL
                 writer.Write(epl.header);
