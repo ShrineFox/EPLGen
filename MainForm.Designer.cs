@@ -47,15 +47,15 @@ namespace EPLGen
             this.lbl_Scale = new DarkUI.Controls.DarkLabel();
             this.lbl_Mode = new DarkUI.Controls.DarkLabel();
             this.comboBox_Mode = new System.Windows.Forms.ComboBox();
+            this.groupBox_Texture = new DarkUI.Controls.DarkGroupBox();
+            this.pictureBox_Tex = new System.Windows.Forms.PictureBox();
+            this.darkContextMenu_Texture = new DarkUI.Controls.DarkContextMenu();
+            this.chooseImageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.darkMenuStrip_MainMenu = new DarkUI.Controls.DarkMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportEPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox_Texture = new DarkUI.Controls.DarkGroupBox();
-            this.pictureBox_Tex = new System.Windows.Forms.PictureBox();
-            this.darkContextMenu_Texture = new DarkUI.Controls.DarkContextMenu();
-            this.chooseImageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,10 +66,10 @@ namespace EPLGen
             this.darkContextMenu_Sprites.SuspendLayout();
             this.groupBox_ModelSettings.SuspendLayout();
             this.tlp_ModelSettings.SuspendLayout();
-            this.darkMenuStrip_MainMenu.SuspendLayout();
             this.groupBox_Texture.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Tex)).BeginInit();
             this.darkContextMenu_Texture.SuspendLayout();
+            this.darkMenuStrip_MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlp_Main
@@ -290,6 +290,49 @@ namespace EPLGen
             this.comboBox_Mode.Size = new System.Drawing.Size(148, 24);
             this.comboBox_Mode.TabIndex = 5;
             // 
+            // groupBox_Texture
+            // 
+            this.groupBox_Texture.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.groupBox_Texture.Controls.Add(this.pictureBox_Tex);
+            this.groupBox_Texture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox_Texture.Location = new System.Drawing.Point(403, 3);
+            this.groupBox_Texture.Name = "groupBox_Texture";
+            this.groupBox_Texture.Size = new System.Drawing.Size(394, 205);
+            this.groupBox_Texture.TabIndex = 4;
+            this.groupBox_Texture.TabStop = false;
+            this.groupBox_Texture.Text = "Sprite Texture";
+            // 
+            // pictureBox_Tex
+            // 
+            this.pictureBox_Tex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(53)))), ((int)(((byte)(55)))));
+            this.pictureBox_Tex.ContextMenuStrip = this.darkContextMenu_Texture;
+            this.pictureBox_Tex.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox_Tex.Location = new System.Drawing.Point(3, 18);
+            this.pictureBox_Tex.Name = "pictureBox_Tex";
+            this.pictureBox_Tex.Size = new System.Drawing.Size(388, 184);
+            this.pictureBox_Tex.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox_Tex.TabIndex = 1;
+            this.pictureBox_Tex.TabStop = false;
+            // 
+            // darkContextMenu_Texture
+            // 
+            this.darkContextMenu_Texture.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.darkContextMenu_Texture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.darkContextMenu_Texture.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.darkContextMenu_Texture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chooseImageFileToolStripMenuItem});
+            this.darkContextMenu_Texture.Name = "darkContextMenu_Texture";
+            this.darkContextMenu_Texture.Size = new System.Drawing.Size(210, 28);
+            // 
+            // chooseImageFileToolStripMenuItem
+            // 
+            this.chooseImageFileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.chooseImageFileToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.chooseImageFileToolStripMenuItem.Name = "chooseImageFileToolStripMenuItem";
+            this.chooseImageFileToolStripMenuItem.Size = new System.Drawing.Size(209, 24);
+            this.chooseImageFileToolStripMenuItem.Text = "Choose Image File...";
+            this.chooseImageFileToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFile_Click);
+            // 
             // darkMenuStrip_MainMenu
             // 
             this.darkMenuStrip_MainMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -325,7 +368,7 @@ namespace EPLGen
             this.loadToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.loadToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
             this.loadToolStripMenuItem.Text = "Load Preset";
             // 
             // saveToolStripMenuItem
@@ -333,7 +376,7 @@ namespace EPLGen
             this.saveToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.saveToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
             this.saveToolStripMenuItem.Text = "Save Preset";
             // 
             // exportEPLToolStripMenuItem
@@ -341,52 +384,9 @@ namespace EPLGen
             this.exportEPLToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.exportEPLToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
-            this.exportEPLToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exportEPLToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
             this.exportEPLToolStripMenuItem.Text = "Export EPL";
             this.exportEPLToolStripMenuItem.Click += new System.EventHandler(this.ExportEPL_Click);
-            // 
-            // groupBox_Texture
-            // 
-            this.groupBox_Texture.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.groupBox_Texture.Controls.Add(this.pictureBox_Tex);
-            this.groupBox_Texture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox_Texture.Location = new System.Drawing.Point(403, 3);
-            this.groupBox_Texture.Name = "groupBox_Texture";
-            this.groupBox_Texture.Size = new System.Drawing.Size(394, 205);
-            this.groupBox_Texture.TabIndex = 4;
-            this.groupBox_Texture.TabStop = false;
-            this.groupBox_Texture.Text = "Sprite Texture";
-            // 
-            // pictureBox_Tex
-            // 
-            this.pictureBox_Tex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(53)))), ((int)(((byte)(55)))));
-            this.pictureBox_Tex.ContextMenuStrip = this.darkContextMenu_Texture;
-            this.pictureBox_Tex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_Tex.Location = new System.Drawing.Point(3, 18);
-            this.pictureBox_Tex.Name = "pictureBox_Tex";
-            this.pictureBox_Tex.Size = new System.Drawing.Size(388, 184);
-            this.pictureBox_Tex.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_Tex.TabIndex = 1;
-            this.pictureBox_Tex.TabStop = false;
-            // 
-            // darkContextMenu_Texture
-            // 
-            this.darkContextMenu_Texture.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.darkContextMenu_Texture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkContextMenu_Texture.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.darkContextMenu_Texture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chooseImageFileToolStripMenuItem});
-            this.darkContextMenu_Texture.Name = "darkContextMenu_Texture";
-            this.darkContextMenu_Texture.Size = new System.Drawing.Size(210, 28);
-            // 
-            // chooseImageFileToolStripMenuItem
-            // 
-            this.chooseImageFileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.chooseImageFileToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.chooseImageFileToolStripMenuItem.Name = "chooseImageFileToolStripMenuItem";
-            this.chooseImageFileToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.chooseImageFileToolStripMenuItem.Text = "Choose Image File...";
-            this.chooseImageFileToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFile_Click);
             // 
             // addToolStripMenuItem
             // 
@@ -442,12 +442,11 @@ namespace EPLGen
             this.groupBox_ModelSettings.ResumeLayout(false);
             this.tlp_ModelSettings.ResumeLayout(false);
             this.tlp_ModelSettings.PerformLayout();
-            this.darkMenuStrip_MainMenu.ResumeLayout(false);
-            this.darkMenuStrip_MainMenu.PerformLayout();
             this.groupBox_Texture.ResumeLayout(false);
-            this.groupBox_Texture.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Tex)).EndInit();
             this.darkContextMenu_Texture.ResumeLayout(false);
+            this.darkMenuStrip_MainMenu.ResumeLayout(false);
+            this.darkMenuStrip_MainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

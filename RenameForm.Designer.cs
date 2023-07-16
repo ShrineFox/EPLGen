@@ -129,6 +129,7 @@ namespace EPLGen
             // 
             // metroSetButton_Cancel
             // 
+            this.metroSetButton_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.metroSetButton_Cancel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroSetButton_Cancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.metroSetButton_Cancel.Location = new System.Drawing.Point(295, 2);
@@ -155,8 +156,10 @@ namespace EPLGen
             // 
             // RenameForm
             // 
+            this.AcceptButton = this.metroSetButton_Save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.metroSetButton_Cancel;
             this.ClientSize = new System.Drawing.Size(509, 179);
             this.Controls.Add(this.tableLayoutPanel_Settings);
             this.Margin = new System.Windows.Forms.Padding(2);

@@ -402,9 +402,15 @@ namespace EPLGen
 
         private void LoadTexturePreview(string texPath = "")
         {
-            // TODO: Convert DDS to Bitmap
-
-            pictureBox_Tex.ImageLocation = texPath;
+            if (!String.IsNullOrEmpty(texPath) && File.Exists(texPath))
+            {
+                pictureBox_Tex.Image = GFDLibrary.Textures.TextureDecoder.Decode(File.ReadAllBytes(texPath),
+                    GFDLibrary.Textures.TextureFormat.DDS);
+            }
+            else
+            {
+                pictureBox_Tex.Image = null;
+            }
         }
 
         private void RemoveSelected_Click(object sender, EventArgs e)
@@ -503,9 +509,11 @@ namespace EPLGen
                         modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).TexturePath = texPaths[i];
                     else
                         AddModel(Path.GetFileNameWithoutExtension(texPaths[i]), texPaths[i]);
-                }
 
-                UpdateSpriteList();
+                    // Show texture preview if it's the last one loaded
+                    if (i == texPaths.Count - 1)
+                        LoadTexturePreview(texPaths[i]);
+                }
             }
         }
     }
