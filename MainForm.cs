@@ -15,7 +15,9 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using DarkUI.Controls;
 using DarkUI.Forms;
+using GFDLibrary.Effects;
 using ShrineFox.IO;
+using static EPLGen.MainForm;
 
 namespace EPLGen
 {
@@ -24,8 +26,8 @@ namespace EPLGen
         public MainForm()
         {
             InitializeComponent();
-            AddVectorFields();
             SetMenuStripIcons();
+            AddInputFields();
         }
 
         private void SetMenuStripIcons()
@@ -74,16 +76,39 @@ namespace EPLGen
                         $"Icons\\{menuStripIcons.Single(x => x.Item1 == tsmi.Name).Item2}.png"));
         }
 
-        private void AddVectorFields()
+        private void AddInputFields()
         {
-            AddNumericControls(tlp_ModelSettings, "ModelRot", 4, 1, 0);
-            AddNumericControls(tlp_ParticleSettings, "ParticleRot", 4, 1, 0);
-            AddNumericControls(tlp_ModelSettings, "ModelScale", 3, 1, 1);
-            AddNumericControls(tlp_ParticleSettings, "ParticleScale", 3, 1, 1);
-            AddNumericControls(tlp_ParticleSettings, "ParticleTranslation", 3, 1, 2);
+            AddAxisControls(tlp_ModelSettings, "Pos Offset:", "ModelTranslation", 3, 1);
+            AddAxisControls(tlp_ModelSettings, "Rotate:", "ModelRot", 4, 2);
+            AddAxisControls(tlp_ModelSettings, "Scale:", "ModelScale", 3, 3);
+
+            AddAxisControls(tlp_ParticleSettings, "Pos Offset:", "ParticleTranslation", 3, 0);
+            AddAxisControls(tlp_ParticleSettings, "Rotate:", "ParticleRot", 4, 1);
+            AddAxisControls(tlp_ParticleSettings, "Scale:", "ParticleScale", 3, 2);
+            AddNumControls(tlp_ParticleSettings, "Speed:", "ParticleSpeed", 3);
+            AddNumControls(tlp_ParticleSettings, "Spawn Delay:", "RandomSpawnDelay", 4, false);
+            AddNumControls(tlp_ParticleSettings, "Life Length:", "ParticleLife", 5);
+            AddNumControls(tlp_ParticleSettings, "Repawn Time:", "RespawnTimer", 6);
+            AddAxisControls(tlp_ParticleSettings, "Spawn Choke:", "SpawnChoker", 2, 7);
+            AddAxisControls(tlp_ParticleSettings, "Spawn Angles:", "SpawnerAngles", 2, 8);
+            AddAxisControls(tlp_ParticleSettings, "Field170:", "Field170", 2, 9);
+            AddAxisControls(tlp_ParticleSettings, "Field188:", "Field188", 2, 10);
+            AddAxisControls(tlp_ParticleSettings, "Field178:", "Field178", 2, 11);
+            AddAxisControls(tlp_ParticleSettings, "Field180:", "Field180", 2, 12);
+            AddAxisControls(tlp_ParticleSettings, "Field190:", "Field190", 2, 13);
         }
 
-        private void AddNumericControls(TableLayoutPanel parentTlp, string fieldPrefix, int numOfOptions, int column, int row)
+        private void AddNumControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int row, bool decimalPlaces = true)
+        {
+            var numUpDwn = new DarkNumericUpDown() { Minimum = -999999, Maximum = 999999, Name = $"num_{fieldPrefix}_x",
+                Anchor = AnchorStyles.Left, AutoSize = true  };
+            if (!decimalPlaces)
+                numUpDwn.DecimalPlaces = 7;
+            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
+            parentTlp.Controls.Add(numUpDwn, 1, row);
+        }
+
+        private void AddAxisControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int numOfOptions, int row)
         {
             TableLayoutPanel tlp = new TableLayoutPanel() { Dock = DockStyle.Fill };
             for (int i = 0; i < numOfOptions; i++)
@@ -112,7 +137,8 @@ namespace EPLGen
                 tlp.Controls.Add(new DarkLabel() { Text = axis.ToUpper(), Dock = DockStyle.Bottom }, i, 0);
                 tlp.Controls.Add(numUpDwn, i, 1);
             }
-            parentTlp.Controls.Add(tlp, column, row);
+            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true  }, 0, row);
+            parentTlp.Controls.Add(tlp, 1, row);
         }
 
         private void FieldValueChanged(object sender, EventArgs e)
@@ -123,10 +149,9 @@ namespace EPLGen
 
         private void UpdateOptionValue(string name, string axis, float value)
         {
-            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled
-                && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
+            foreach (var item in listBox_Sprites.SelectedItems)
             {
-                var modelSetting = modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
+                var modelSetting = modelSettings.First(x => x.Name.Equals(item.ToString()));
                 switch (name)
                 {
                     case "ModelRot":
@@ -191,6 +216,20 @@ namespace EPLGen
                                 break;
                         }
                         break;
+                    case "ModelTranslation":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Translation.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Translation.Y = value;
+                                break;
+                            case "z":
+                                modelSetting.Translation.Z = value;
+                                break;
+                        }
+                        break;
                     case "ParticleTranslation":
                         switch (axis)
                         {
@@ -202,6 +241,95 @@ namespace EPLGen
                                 break;
                             case "z":
                                 modelSetting.Particle.Translation.Z = value;
+                                break;
+                        }
+                        break;
+                    case "ParticleSpeed":
+                        modelSetting.Particle.ParticleSpeed = value;
+                        break;
+                    case "RandomSpawnDelay":
+                        modelSetting.Particle.RandomSpawnDelay = Convert.ToUInt32(value);
+                        break;
+                    case "ParticleLife":
+                        modelSetting.Particle.ParticleLife = value;
+                        break;
+                    case "RespawnTimer":
+                        modelSetting.Particle.RespawnTimer = value;
+                        break;
+                    case "SpawnChoker":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.SpawnChoker.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.SpawnChoker.Y = value;
+                                break;
+                        }
+                        break;
+                    case "SpawnerAngles":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.SpawnerAngles.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.SpawnerAngles.Y = value;
+                                break;
+                        }
+                        break;
+                    case "Field170":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Field170.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Field170.Y = value;
+                                break;
+                        }
+                        break;
+                    case "Field188":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Field188.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Field188.Y = value;
+                                break;
+                        }
+                        break;
+                    case "Field178":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Field178.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Field178.Y = value;
+                                break;
+                        }
+                        break;
+                    case "Field180":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Field180.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Field180.Y = value;
+                                break;
+                        }
+                        break;
+                    case "Field190":
+                        switch (axis)
+                        {
+                            case "x":
+                                modelSetting.Particle.Field190.X = value;
+                                break;
+                            case "y":
+                                modelSetting.Particle.Field190.Y = value;
                                 break;
                         }
                         break;
@@ -217,12 +345,24 @@ namespace EPLGen
             public Vector3 Translation = new Vector3(0f, 0f, 0f);
             public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
             public Vector3 Scale = new Vector3(1f, 1f, 1f);
+            public float ParticleSpeed = 0.5f;
+            public uint RandomSpawnDelay = 0;
+            public float ParticleLife = 0.5f;
+            public float RespawnTimer = 0f;
+            public Vector2 SpawnChoker = new Vector2(0f, 2f);
+            public Vector2 SpawnerAngles = new Vector2(-360f, 360f);
+            public Vector2 Field170 = new Vector2(102.6f, 84f);
+            public Vector2 Field188 = new Vector2(0f, 0f);
+            public Vector2 Field178 = new Vector2(-1f, 2f);
+            public Vector2 Field180 = new Vector2(-1f, 2f); // 0,0 for floor
+            public Vector2 Field190 = new Vector2(0f, 0f);
         }
 
         public class ModelSettings
         {
             public string Name = "Untitled";
             public string TexturePath = "";
+            public Vector3 Translation = new Vector3(0f, 0f, 0f);
             public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
             public Vector3 Scale = new Vector3(1f, 1f, 1f);
             public ModelType EplType = ModelType.Cone;
@@ -292,6 +432,8 @@ namespace EPLGen
 
         private void LoadOptionValues()
         {
+            comboBox_Mode.Enabled = false;
+
             if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled 
                 && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
             {
@@ -304,17 +446,33 @@ namespace EPLGen
                         DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
                         LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
                     }
-                foreach (var ctrl in new string[] { "ModelScale", "ParticleScale", "ParticleTranslation" })
+                foreach (var ctrl in new string[] { "ModelScale", "ModelTranslation", "ParticleScale", "ParticleTranslation" })
                     foreach (var axis in new string[] { "x", "y", "z", })
                     {
                         DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
                         LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
                     }
 
+                foreach (var ctrl in new string[] { "SpawnChoker", "SpawnerAngles", "Field170", "Field188", "Field178", "Field180", "Field190" })
+                    foreach (var axis in new string[] { "x", "y" })
+                    {
+                        DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
+                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                    }
+
+                foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "RespawnTimer" })
+                {
+                    DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_x");
+                    LoadOptionValue(selectedModel, numUpDwn, ctrl, "x");
+                }
+                comboBox_Mode.SelectedIndex = comboBox_Mode.Items.IndexOf(selectedModel.EplType.ToString());
+
                 LoadTexturePreview(selectedModel.TexturePath);
             }
             else
                 LoadTexturePreview();
+
+            comboBox_Mode.Enabled = true;
         }
 
         private void LoadOptionValue(ModelSettings selectedModel, DarkNumericUpDown numUpDwn, string ctrl, string axis)
@@ -383,6 +541,20 @@ namespace EPLGen
                             break;
                     }
                     break;
+                case "ModelTranslation":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.Y);
+                            break;
+                        case "z":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.Z);
+                            break;
+                    }
+                    break;
                 case "ParticleTranslation":
                     switch (axis)
                     {
@@ -394,6 +566,95 @@ namespace EPLGen
                             break;
                         case "z":
                             numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.Z);
+                            break;
+                    }
+                    break;
+                case "ParticleSpeed":
+                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.ParticleSpeed);
+                    break;
+                case "RandomSpawnDelay":
+                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.RandomSpawnDelay);
+                    break;
+                case "ParticleLife":
+                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.ParticleLife);
+                    break;
+                case "RespawnTimer":
+                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.RespawnTimer);
+                    break;
+                case "SpawnChoker":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnChoker.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnChoker.Y);
+                            break;
+                    }
+                    break;
+                case "SpawnerAngles":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnerAngles.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnerAngles.Y);
+                            break;
+                    }
+                    break;
+                case "Field170":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field170.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field170.Y);
+                            break;
+                    }
+                    break;
+                case "Field188":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field188.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field188.Y);
+                            break;
+                    }
+                    break;
+                case "Field178":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field178.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field178.Y);
+                            break;
+                    }
+                    break;
+                case "Field180":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field180.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field180.Y);
+                            break;
+                    }
+                    break;
+                case "Field190":
+                    switch (axis)
+                    {
+                        case "x":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field190.X);
+                            break;
+                        case "y":
+                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field190.Y);
                             break;
                     }
                     break;
@@ -415,13 +676,11 @@ namespace EPLGen
 
         private void RemoveSelected_Click(object sender, EventArgs e)
         {
-            if (listBox_Sprites.SelectedIndex != -1 && modelSettings.Any(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())))
-            {
-                string modelName = listBox_Sprites.SelectedItem.ToString();
-                modelSettings.Remove(modelSettings.First(x => x.Name.Equals(modelName)));
+            foreach (var item in listBox_Sprites.SelectedItems)
+                if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
+                    modelSettings.Remove(modelSettings.First(x => x.Name.Equals(item.ToString())));
 
-                UpdateSpriteList();
-            }
+            UpdateSpriteList();
         }
 
         private void Mode_Changed(object sender, EventArgs e)
@@ -431,7 +690,7 @@ namespace EPLGen
 
             foreach (var item in listBox_Sprites.SelectedItems)
                 if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    ChangeMode(modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())), 
+                    ChangeMode(modelSettings.First(x => x.Name.Equals(item.ToString())), 
                         (ModelType)Enum.Parse(typeof(ModelType), comboBox_Mode.SelectedItem.ToString()));
         }
 
@@ -439,7 +698,24 @@ namespace EPLGen
         {
             model.EplType = eplType;
 
-            // TODO: Change values based on selected type
+            // Change values based on selected type
+            switch (eplType)
+            {
+                case ModelType.Floor:
+                    model.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
+                    model.Particle.Field180 = new Vector2(0f, 0f);
+                    model.Particle.Translation = new Vector3(0, 0.5f, 0);
+                    model.Particle.Rotation = new Quaternion(0f, 1f, 0f, 0f);
+                    break;
+                default:
+                    model.Rotation = new Quaternion(0, 0f, 0f, 1f);
+                    model.Particle.Field180 = new Vector2(-1f, 2f);
+                    model.Particle.Translation = new Vector3(0, 0f, 0);
+                    model.Particle.Rotation = new Quaternion(0f, 0f, 0f, 1f);
+                    break;
+            }
+
+            LoadOptionValues();
         }
 
         private void ExportEPL_Click(object sender, EventArgs e)
@@ -452,9 +728,14 @@ namespace EPLGen
                 EPL.Build(model);
 
             List<byte> combinedEpl = new List<byte>();
-            foreach (var eplFile in Directory.GetFiles("./Output", "*.epl", SearchOption.AllDirectories))
-                combinedEpl.Concat(File.ReadAllBytes(eplFile));
-            File.WriteAllBytes("combined.epl", combinedEpl.ToArray());
+            var eplFiles = Directory.GetFiles("./Output", "*.epl", SearchOption.AllDirectories);
+            foreach (var eplFile in eplFiles)
+                combinedEpl = combinedEpl.Concat(File.ReadAllBytes(eplFile)).ToList();
+
+            // Output combined EPL file with attachment count at the beginning
+            File.WriteAllBytes("./combined.epl", BitConverter.GetBytes(Convert.ToUInt32(EndiannessSwapUtility.Swap(eplFiles.Count()))).Concat(combinedEpl).ToArray());
+
+            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./combined.epl")}", "EPL Export Successful");
         }
 
         private void Rename_Click(object sender, EventArgs e)
@@ -515,6 +796,14 @@ namespace EPLGen
                         LoadTexturePreview(texPaths[i]);
                 }
             }
+        }
+
+        private void SpritesList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                RemoveSelected_Click(sender, e);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
+                Rename_Click(sender, e);
         }
     }
 

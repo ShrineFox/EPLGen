@@ -53,15 +53,10 @@ namespace EPLGen
             this.setImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel_ModelSettings = new System.Windows.Forms.Panel();
             this.tlp_ModelSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.lbl_Rotation = new DarkUI.Controls.DarkLabel();
-            this.lbl_Scale = new DarkUI.Controls.DarkLabel();
             this.lbl_Mode = new DarkUI.Controls.DarkLabel();
             this.comboBox_Mode = new System.Windows.Forms.ComboBox();
             this.panel_ParticleSettings = new System.Windows.Forms.Panel();
             this.tlp_ParticleSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.lbl_ParticleRot = new DarkUI.Controls.DarkLabel();
-            this.lbl_ParticleScale = new DarkUI.Controls.DarkLabel();
-            this.lbl_ParticleTranslation = new DarkUI.Controls.DarkLabel();
             this.tlp_Main.SuspendLayout();
             this.groupBox_ParticleSettings.SuspendLayout();
             this.darkContextMenu_Sprites.SuspendLayout();
@@ -73,7 +68,6 @@ namespace EPLGen
             this.panel_ModelSettings.SuspendLayout();
             this.tlp_ModelSettings.SuspendLayout();
             this.panel_ParticleSettings.SuspendLayout();
-            this.tlp_ParticleSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlp_Main
@@ -105,7 +99,7 @@ namespace EPLGen
             this.groupBox_ParticleSettings.Size = new System.Drawing.Size(485, 257);
             this.groupBox_ParticleSettings.TabIndex = 3;
             this.groupBox_ParticleSettings.TabStop = false;
-            this.groupBox_ParticleSettings.Text = "Particle Settings";
+            this.groupBox_ParticleSettings.Text = "Sprite Settings";
             // 
             // listBox_Sprites
             // 
@@ -122,6 +116,7 @@ namespace EPLGen
             this.listBox_Sprites.Size = new System.Drawing.Size(485, 256);
             this.listBox_Sprites.TabIndex = 1;
             this.listBox_Sprites.SelectedIndexChanged += new System.EventHandler(this.SpriteList_IndexChanged);
+            this.listBox_Sprites.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SpritesList_KeyDown);
             // 
             // darkContextMenu_Sprites
             // 
@@ -172,7 +167,7 @@ namespace EPLGen
             this.groupBox_ModelSettings.Size = new System.Drawing.Size(485, 257);
             this.groupBox_ModelSettings.TabIndex = 2;
             this.groupBox_ModelSettings.TabStop = false;
-            this.groupBox_ModelSettings.Text = "Model Settings";
+            this.groupBox_ModelSettings.Text = "Effect Settings";
             // 
             // groupBox_Texture
             // 
@@ -311,6 +306,7 @@ namespace EPLGen
             // panel_ModelSettings
             // 
             this.panel_ModelSettings.AutoScroll = true;
+            this.panel_ModelSettings.AutoScrollMinSize = new System.Drawing.Size(1, 1);
             this.panel_ModelSettings.Controls.Add(this.tlp_ModelSettings);
             this.panel_ModelSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_ModelSettings.Location = new System.Drawing.Point(3, 18);
@@ -325,52 +321,29 @@ namespace EPLGen
             this.tlp_ModelSettings.ColumnCount = 2;
             this.tlp_ModelSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlp_ModelSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tlp_ModelSettings.Controls.Add(this.lbl_Rotation, 0, 0);
-            this.tlp_ModelSettings.Controls.Add(this.lbl_Scale, 0, 1);
-            this.tlp_ModelSettings.Controls.Add(this.lbl_Mode, 0, 2);
-            this.tlp_ModelSettings.Controls.Add(this.comboBox_Mode, 1, 2);
+            this.tlp_ModelSettings.Controls.Add(this.lbl_Mode, 0, 0);
+            this.tlp_ModelSettings.Controls.Add(this.comboBox_Mode, 1, 0);
             this.tlp_ModelSettings.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlp_ModelSettings.Location = new System.Drawing.Point(0, 0);
             this.tlp_ModelSettings.Name = "tlp_ModelSettings";
-            this.tlp_ModelSettings.RowCount = 3;
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ModelSettings.RowCount = 4;
             this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlp_ModelSettings.Size = new System.Drawing.Size(479, 160);
             this.tlp_ModelSettings.TabIndex = 1;
-            // 
-            // lbl_Rotation
-            // 
-            this.lbl_Rotation.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_Rotation.AutoSize = true;
-            this.lbl_Rotation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_Rotation.Location = new System.Drawing.Point(32, 14);
-            this.lbl_Rotation.Name = "lbl_Rotation";
-            this.lbl_Rotation.Size = new System.Drawing.Size(60, 32);
-            this.lbl_Rotation.TabIndex = 0;
-            this.lbl_Rotation.Text = "Model Rotation:";
-            // 
-            // lbl_Scale
-            // 
-            this.lbl_Scale.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_Scale.AutoSize = true;
-            this.lbl_Scale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_Scale.Location = new System.Drawing.Point(6, 82);
-            this.lbl_Scale.Name = "lbl_Scale";
-            this.lbl_Scale.Size = new System.Drawing.Size(86, 16);
-            this.lbl_Scale.TabIndex = 2;
-            this.lbl_Scale.Text = "Model Scale:";
             // 
             // lbl_Mode
             // 
             this.lbl_Mode.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lbl_Mode.AutoSize = true;
             this.lbl_Mode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_Mode.Location = new System.Drawing.Point(37, 124);
+            this.lbl_Mode.Location = new System.Drawing.Point(47, 12);
             this.lbl_Mode.Name = "lbl_Mode";
-            this.lbl_Mode.Size = new System.Drawing.Size(55, 32);
+            this.lbl_Mode.Size = new System.Drawing.Size(45, 16);
             this.lbl_Mode.TabIndex = 4;
-            this.lbl_Mode.Text = "Particle Mode:";
+            this.lbl_Mode.Text = "Mode:";
             // 
             // comboBox_Mode
             // 
@@ -383,15 +356,16 @@ namespace EPLGen
             this.comboBox_Mode.Items.AddRange(new object[] {
             "Cone",
             "Floor"});
-            this.comboBox_Mode.Location = new System.Drawing.Point(98, 128);
+            this.comboBox_Mode.Location = new System.Drawing.Point(98, 8);
             this.comboBox_Mode.Name = "comboBox_Mode";
-            this.comboBox_Mode.Size = new System.Drawing.Size(148, 24);
+            this.comboBox_Mode.Size = new System.Drawing.Size(199, 24);
             this.comboBox_Mode.TabIndex = 5;
+            this.comboBox_Mode.SelectedIndexChanged += new System.EventHandler(this.Mode_Changed);
             // 
             // panel_ParticleSettings
             // 
             this.panel_ParticleSettings.AutoScroll = true;
-            this.panel_ParticleSettings.AutoScrollMinSize = new System.Drawing.Size(100, 100);
+            this.panel_ParticleSettings.AutoScrollMinSize = new System.Drawing.Size(1, 1);
             this.panel_ParticleSettings.Controls.Add(this.tlp_ParticleSettings);
             this.panel_ParticleSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_ParticleSettings.Location = new System.Drawing.Point(3, 18);
@@ -406,52 +380,27 @@ namespace EPLGen
             this.tlp_ParticleSettings.ColumnCount = 2;
             this.tlp_ParticleSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22F));
             this.tlp_ParticleSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78F));
-            this.tlp_ParticleSettings.Controls.Add(this.lbl_ParticleRot, 0, 0);
-            this.tlp_ParticleSettings.Controls.Add(this.lbl_ParticleScale, 0, 1);
-            this.tlp_ParticleSettings.Controls.Add(this.lbl_ParticleTranslation, 0, 2);
             this.tlp_ParticleSettings.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlp_ParticleSettings.Location = new System.Drawing.Point(0, 0);
             this.tlp_ParticleSettings.Name = "tlp_ParticleSettings";
-            this.tlp_ParticleSettings.RowCount = 4;
+            this.tlp_ParticleSettings.RowCount = 14;
             this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.Size = new System.Drawing.Size(458, 240);
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlp_ParticleSettings.Size = new System.Drawing.Size(458, 840);
             this.tlp_ParticleSettings.TabIndex = 2;
-            // 
-            // lbl_ParticleRot
-            // 
-            this.lbl_ParticleRot.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_ParticleRot.AutoSize = true;
-            this.lbl_ParticleRot.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_ParticleRot.Location = new System.Drawing.Point(37, 14);
-            this.lbl_ParticleRot.Name = "lbl_ParticleRot";
-            this.lbl_ParticleRot.Size = new System.Drawing.Size(60, 32);
-            this.lbl_ParticleRot.TabIndex = 0;
-            this.lbl_ParticleRot.Text = "Particle Rotation:";
-            // 
-            // lbl_ParticleScale
-            // 
-            this.lbl_ParticleScale.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_ParticleScale.AutoSize = true;
-            this.lbl_ParticleScale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_ParticleScale.Location = new System.Drawing.Point(4, 82);
-            this.lbl_ParticleScale.Name = "lbl_ParticleScale";
-            this.lbl_ParticleScale.Size = new System.Drawing.Size(93, 16);
-            this.lbl_ParticleScale.TabIndex = 2;
-            this.lbl_ParticleScale.Text = "Particle Scale:";
-            // 
-            // lbl_ParticleTranslation
-            // 
-            this.lbl_ParticleTranslation.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_ParticleTranslation.AutoSize = true;
-            this.lbl_ParticleTranslation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_ParticleTranslation.Location = new System.Drawing.Point(30, 134);
-            this.lbl_ParticleTranslation.Name = "lbl_ParticleTranslation";
-            this.lbl_ParticleTranslation.Size = new System.Drawing.Size(67, 32);
-            this.lbl_ParticleTranslation.TabIndex = 4;
-            this.lbl_ParticleTranslation.Text = "Particle Translate:";
             // 
             // MainForm
             // 
@@ -479,8 +428,6 @@ namespace EPLGen
             this.tlp_ModelSettings.PerformLayout();
             this.panel_ParticleSettings.ResumeLayout(false);
             this.panel_ParticleSettings.PerformLayout();
-            this.tlp_ParticleSettings.ResumeLayout(false);
-            this.tlp_ParticleSettings.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -511,15 +458,10 @@ namespace EPLGen
         private System.Windows.Forms.ToolStripMenuItem setImageToolStripMenuItem;
         private System.Windows.Forms.Panel panel_ModelSettings;
         private System.Windows.Forms.TableLayoutPanel tlp_ModelSettings;
-        private DarkUI.Controls.DarkLabel lbl_Rotation;
-        private DarkUI.Controls.DarkLabel lbl_Scale;
         private DarkUI.Controls.DarkLabel lbl_Mode;
         private System.Windows.Forms.ComboBox comboBox_Mode;
         private System.Windows.Forms.Panel panel_ParticleSettings;
         private System.Windows.Forms.TableLayoutPanel tlp_ParticleSettings;
-        private DarkUI.Controls.DarkLabel lbl_ParticleRot;
-        private DarkUI.Controls.DarkLabel lbl_ParticleScale;
-        private DarkUI.Controls.DarkLabel lbl_ParticleTranslation;
     }
 }
 

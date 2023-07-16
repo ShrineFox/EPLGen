@@ -23,9 +23,9 @@ namespace EPLGen
             ushort length = Convert.ToUInt16(name.Length);
             int nameHash = StringHasher.GenerateStringHash(name);
 
-            data.Concat(BitConverter.GetBytes(length));
-            data.Concat(Encoding.ASCII.GetBytes(name));
-            data.Concat(BitConverter.GetBytes(nameHash));
+            data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(length))).ToList();
+            data = data.Concat(Encoding.ASCII.GetBytes(name)).ToList();
+            data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(nameHash))).ToList();
 
             return data.ToArray();
         }
@@ -33,24 +33,40 @@ namespace EPLGen
         public static void Build(ModelSettings model)
         {
             EPL epl = new EPL();
+            epl.childNodeName = NameData(model.Name);
             epl.eplNodeName = NameData(model.Name);
             epl.eplLeafName = NameData(model.Name);
             epl.particleEffect.embeddedFileName = NameData(model.Name);
+            epl.rootNodeRotation = model.Rotation;
+            epl.rootNodeTranslation = model.Translation;
+            epl.rootNodeScale = model.Scale;
+            epl.particleEffect.particleSpeed = model.Particle.ParticleSpeed;
+            epl.particleEffect.randomSpawnDelay = model.Particle.RandomSpawnDelay;
+            epl.particleEffect.respawnTimer = model.Particle.RespawnTimer;
+            epl.particleEffect.spawnChoker = model.Particle.SpawnChoker;
+            epl.particleEffect.spawnerAngles = model.Particle.SpawnerAngles;
+            epl.particleEffect.explosionEffect.Field170 = model.Particle.Field170;
+            epl.particleEffect.explosionEffect.Field188 = model.Particle.Field188;
+            epl.particleEffect.explosionEffect.Field178 = model.Particle.Field178;
+            epl.particleEffect.explosionEffect.Field180 = model.Particle.Field180;
+            epl.particleEffect.explosionEffect.Field190 = model.Particle.Field190;
 
             // Randomize angle that particles will appear at
             epl.particleEffect.angleSeed = Convert.ToUInt32(new Random().Next(0, 999999));
 
             // Use base GMD and update with new texture, texture name, and transforms
             ModelPack gmd = Resource.Load<ModelPack>("./model.gmd");
-            gmd.Textures.First().Value.Name = Path.GetFileName(model.TexturePath);
-            gmd.Textures.First().Value.Data = File.ReadAllBytes(model.TexturePath);
-            gmd.Materials.First().Value.Name = Path.GetFileNameWithoutExtension(model.TexturePath);
-            gmd.Materials.First().Value.DiffuseMap.Name = Path.GetFileName(model.TexturePath);
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Rotation = model.Rotation;
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Scale = model.Scale;
+            gmd.Textures.First().Value.Name = model.Name + ".dds";
+            if (File.Exists(model.TexturePath))
+                gmd.Textures.First().Value.Data = File.ReadAllBytes(model.TexturePath);
+            gmd.Materials.First().Value.Name = model.Name;
+            gmd.Materials.First().Value.DiffuseMap.Name = model.Name + ".dds";
+            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Translation = model.Particle.Translation;
+            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Rotation = model.Particle.Rotation;
+            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Scale = model.Particle.Scale;
             gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Attachments.First(x => 
-                x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = Path.GetFileNameWithoutExtension(model.TexturePath);
-            
+                x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = model.Name;
+
             // Get GMD as byte array
             using (MemoryStream memStream = new MemoryStream())
             {
@@ -59,21 +75,12 @@ namespace EPLGen
             }
             epl.particleEffect.dataLength = Convert.ToUInt32(epl.particleEffect.embeddedFile.Length);
 
-            // Update particle elements based on epl type selected 
-            switch (model.EplType)
-            {
-                case ModelType.Floor:
-                    // TODO: change this in editor instead
-                    epl.rootNodeRotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
-                    epl.particleEffect.spawnerAngles = new Tuple<float, float>(0f, 0f);
-                    break;
-            }
-
             using (EndianBinaryWriter writer = new EndianBinaryWriter(
                 new FileStream($".//Output//{model.Name}.epl", FileMode.OpenOrCreate), Endianness.BigEndian))
             {
                 // Start EPL
                 writer.Write(epl.header);
+                writer.Write(epl.childNodeName);
                 WriteVector3(writer, epl.rootNodeTranslation);
                 WriteQuaternion(writer, epl.rootNodeRotation);
                 WriteVector3(writer, epl.rootNodeScale);
@@ -88,6 +95,7 @@ namespace EPLGen
                 writer.Write(epl.eplLeafName);
                 // Start Particle Data
                 writer.Write(epl.particleEffect.particleHeader);
+                writer.Write(epl.particleEffect.randomSpawnDelay);
                 writer.Write(epl.particleEffect.particleLife);
                 writer.Write(epl.particleEffect.angleSeed);
                 writer.Write(epl.particleEffect.respawnTimer);
@@ -122,10 +130,10 @@ namespace EPLGen
             }
         }
 
-        private static void WriteVector2(EndianBinaryWriter writer, Tuple<float, float> vec2)
+        private static void WriteVector2(EndianBinaryWriter writer, Vector2 vec2)
         {
-            writer.Write(vec2.Item1); 
-            writer.Write(vec2.Item2);
+            writer.Write(vec2.X);
+            writer.Write(vec2.Y);
         }
 
         private static void WriteVector3(EndianBinaryWriter writer, Vector3 vec3)
@@ -143,8 +151,10 @@ namespace EPLGen
             writer.Write(BitConverter.GetBytes(quaternion.W));
         }
 
-        // Node Attachment Type: EPL (7), EplFlags: 5, HashString Name (empty)
-        public byte[] header { get; } = new byte[] { 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00 };
+        // Node Attachment Type: EPL (7), EplFlags: 5
+        public byte[] header { get; } = new byte[] { 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x05 };
+
+        public byte[] childNodeName = new byte[] { };
 
         // Translation, rotation, scale
         public Vector3 rootNodeTranslation { get; set; } = new Vector3() { X = 0f, Y = 0f, Z = 0f };
@@ -195,7 +205,8 @@ namespace EPLGen
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
             0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,
-            0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01
+            0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+            0x00, 0x00
         };
     }
 
@@ -211,10 +222,10 @@ namespace EPLGen
         public float particleLife { get; set; } = 0.5f;
         public uint angleSeed { get; set; } = 1;
         public float respawnTimer { get; set; } = 0f;
-        public Tuple<float, float> spawnChoker { get; set; } = new Tuple<float, float>(0f, 2f);
+        public Vector2 spawnChoker { get; set; } = new Vector2(0f, 2f);
         public float colorOverLifeOffset { get; set; } = 0.8980392f;
         public uint FieldC4 { get; set; } = 2;
-        public Tuple<float, float> opacityOverLife { get; set; } = new Tuple<float, float>(1f, 1f);
+        public Vector2 opacityOverLife { get; set; } = new Vector2(1f, 1f);
         public byte[] colorOverLife_Bezier { get; } = new byte[] {
             0x00, 0x02, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
             0xFF, 0xFF, 0x3D, 0xF1, 0x20, 0x22, 0x3E, 0xEA, 0x14, 0x51, 0x3E, 0xDB, 0x34, 0x70, 0x3F, 0x72,
@@ -233,8 +244,8 @@ namespace EPLGen
             0x9B, 0x1A, 0xA6, 0x97, 0xB1, 0xDF, 0xBC, 0xF4, 0xC7, 0xB8, 0xD2, 0x20, 0xDC, 0x20, 0xE5, 0xBC,
             0xEE, 0xEA, 0xF7, 0xB0, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00
         };
-        public Tuple<float, float> spawnerAngles { get; set; } = new Tuple<float, float>(-360f, 360f); // 0,0 for floor
-        public Tuple<float, float> cycleRateFromBirth { get; set; } = new Tuple<float, float>(0f, 0f);
+        public Vector2 spawnerAngles { get; set; } = new Vector2(-360f, 360f); // 0,0 for floor
+        public Vector2 cycleRateFromBirth { get; set; } = new Vector2(0f, 0f);
         public float cycleRateGlobal { get; set; } = 0.0001f;
         // Field138, 13C, 150: 0 
         public byte[] unknownFields { get; } = new byte[12];
@@ -248,18 +259,18 @@ namespace EPLGen
 
         // Field18, Field00: 2
         public byte[] embeddedFileFields { get; } = new byte[] { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02 };
-        public UInt32 dataLength { get; set; } = 0;
+        public uint dataLength { get; set; } = 0;
         public byte[] embeddedFile { get; set; } = new byte[0];
     }
 
     public class ExplosionEffect
     {
         // Explosion Effect Params
-        public Tuple<float, float> Field170 { get; set; } = new Tuple<float, float>(102.6f, 84f);
-        public Tuple<float, float> Field188 { get; set; } = new Tuple<float, float>(0f, 0f);
-        public Tuple<float, float> Field178 { get; set; } = new Tuple<float, float>(-1f, 2f);
-        public Tuple<float, float> Field180 { get; set; } = new Tuple<float, float>(-1f, 2f); // 0,0 for floor
-        public Tuple<float, float> Field190 { get; set; } = new Tuple<float, float>(0f, 0f);
+        public Vector2 Field170 { get; set; } = new Vector2(102.6f, 84f);
+        public Vector2 Field188 { get; set; } = new Vector2(0f, 0f);
+        public Vector2 Field178 { get; set; } = new Vector2(-1f, 2f);
+        public Vector2 Field180 { get; set; } = new Vector2(-1f, 2f); // 0,0 for floor
+        public Vector2 Field190 { get; set; } = new Vector2(0f, 0f);
         public float Field198 { get; set; } = 0f;
     }
 }
