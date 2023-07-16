@@ -738,11 +738,11 @@ namespace EPLGen
                 combinedEpl = combinedEpl.Concat(File.ReadAllBytes(eplFile)).ToList();
 
             // Output combined EPL file with attachment count at the beginning (for hex editing gmd attachments)
-            byte[] eplCount = BitConverter.GetBytes(Convert.ToUInt32(EndiannessSwapUtility.Swap(eplFiles.Count())));
+            byte[] eplCount = BitConverter.GetBytes(EndiannessSwapUtility.Swap(Convert.ToUInt32(eplFiles.Count())));
             byte[] combinedEpls = eplCount.Concat(combinedEpl).ToArray();
             File.WriteAllBytes("./COMBINED.EPL", combinedEpls);
             // Output combined EPL wrapped in a GMD (for attaching to objects)
-            byte[] combinedGMD = GMD.gmdHeader.Concat(combinedEpls).Concat(eplCount).Concat(GMD.gmdFooter).ToArray();
+            byte[] combinedGMD = GMD.gmdHeader.Concat(combinedEpls).Concat(GMD.gmdFooter).ToArray();
             File.WriteAllBytes("./COMBINED.GMD", combinedGMD);
 
             MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./COMBINED.EPL")}", "EPL Export Successful");
@@ -799,7 +799,10 @@ namespace EPLGen
                     if (i == 0)
                         modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).TexturePath = texPaths[i];
                     else
+                    {
                         AddModel(Path.GetFileNameWithoutExtension(texPaths[i]), texPaths[i]);
+                        UpdateSpriteList();
+                    }
 
                     // Show texture preview if it's the last one loaded
                     if (i == texPaths.Count - 1)
@@ -821,6 +824,10 @@ namespace EPLGen
             var selection = WinFormsEvents.FilePath_Click("Save preset file...", true, new string[] { "json (.json)" }, true);
             if (selection.Count == 0)
                 return;
+
+            string outPath = selection.First();
+            if (!outPath.ToLower().EndsWith(".json"))
+                outPath += ".json";
 
             File.WriteAllText(selection.First(), JsonConvert.SerializeObject(modelSettings, Newtonsoft.Json.Formatting.Indented));
             MessageBox.Show($"Saved preset file to:\n{selection.First()}", "Preset Saved Successfully");
