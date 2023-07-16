@@ -104,7 +104,7 @@ namespace EPLGen
                     columnWidth = 33f;
                 }
 
-                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Top, Name = $"num_{fieldPrefix}_{axis}" };
+                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Top, Name = $"num_{fieldPrefix}_{axis}", DecimalPlaces = 7 };
                 numUpDwn.ValueChanged += FieldValueChanged;
                 tlp.RowStyles.Add(new RowStyle() { SizeType = SizeType.Percent, Height = 50f });
                 tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
