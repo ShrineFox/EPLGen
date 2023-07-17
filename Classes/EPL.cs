@@ -30,7 +30,7 @@ namespace EPLGen
             return data.ToArray();
         }
 
-        public static void Build(ModelSettings model, string outputDir)
+        public static void Build(ModelSettings model, string outputDir, int angleSeed = 0)
         {
             EPL epl = new EPL();
             epl.childNodeName = NameData(model.Name);
@@ -52,7 +52,7 @@ namespace EPLGen
             epl.particleEffect.explosionEffect.Field190 = model.Particle.Field190;
 
             // Randomize angle that particles will appear at
-            epl.particleEffect.angleSeed = Convert.ToUInt32(new Random().Next(0, 999999));
+            epl.particleEffect.angleSeed = Convert.ToUInt32(angleSeed);
 
             // Use base GMD and update with new texture, texture name, and transforms
             ModelPack gmd = Resource.Load<ModelPack>("./model.gmd");
@@ -138,17 +138,17 @@ namespace EPLGen
 
         private static void WriteVector3(EndianBinaryWriter writer, Vector3 vec3)
         {
-            writer.Write(BitConverter.GetBytes(vec3.X));
-            writer.Write(BitConverter.GetBytes(vec3.Y));
-            writer.Write(BitConverter.GetBytes(vec3.Z));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.X)));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.Y)));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.Z)));
         }
 
         private static void WriteQuaternion(EndianBinaryWriter writer, Quaternion quaternion)
         {
-            writer.Write(BitConverter.GetBytes(quaternion.X)); 
-            writer.Write(BitConverter.GetBytes(quaternion.Y));
-            writer.Write(BitConverter.GetBytes(quaternion.Z));
-            writer.Write(BitConverter.GetBytes(quaternion.W));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.X))); 
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.Y)));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.Z)));
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.W)));
         }
 
         // Node Attachment Type: EPL (7), EplFlags: 5

@@ -729,8 +729,8 @@ namespace EPLGen
                 Directory.Delete("./Output", true);
             Directory.CreateDirectory("./Output/EPLs");
 
-            foreach (var model in modelSettings)
-                EPL.Build(model, "./Output/EPLs");
+            for (int i = 0; i < modelSettings.Count; i++)
+                EPL.Build(modelSettings[i], "./Output/EPLs", i);
 
             List<byte> combinedEpl = new List<byte>();
             var eplFiles = Directory.GetFiles("./Output/EPLs", "*.epl", SearchOption.AllDirectories);
