@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GlitchEPLGen
+namespace EPLGen
 {
     public static unsafe class UnsafeUtilities
     {

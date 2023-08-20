@@ -1,4 +1,4 @@
-﻿namespace GlitchEPLGen
+﻿namespace EPLGen
 {
     public enum StringBinaryFormat
     {

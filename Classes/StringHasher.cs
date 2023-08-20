@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlitchEPLGen
+namespace EPLGen
 {
     // From: https://github.com/tge-was-taken/GFD-Studio/blob/master/GFDLibrary/Common/StringHasher.cs
     public static class StringHasher

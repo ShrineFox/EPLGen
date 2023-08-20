@@ -1,15 +1,11 @@
 ﻿using GFDLibrary;
-using GFDLibrary.Effects;
 using GFDLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Threading.Tasks;
 using static EPLGen.MainForm;
 
 namespace EPLGen

@@ -827,16 +827,16 @@ namespace EPLGen
 
             string outPath = selection.First();
             if (!outPath.ToLower().EndsWith(".json"))
-                outPath += ".json";
+                outPath = $"{outPath}.json";
 
-            File.WriteAllText(selection.First(), JsonConvert.SerializeObject(modelSettings, Newtonsoft.Json.Formatting.Indented));
-            MessageBox.Show($"Saved preset file to:\n{selection.First()}", "Preset Saved Successfully");
+            File.WriteAllText(outPath, JsonConvert.SerializeObject(modelSettings, Newtonsoft.Json.Formatting.Indented));
+            MessageBox.Show($"Saved preset file to:\n{outPath}", "Preset Saved Successfully");
         }
 
         private void LoadPreset_Click(object sender, EventArgs e)
         {
             var selection = WinFormsEvents.FilePath_Click("Load preset file...", true, new string[] { "json (.json)" });
-            if (selection.Count == 0)
+            if (selection.Count == 0 || !File.Exists(selection.First()))
                 return;
 
             modelSettings = JsonConvert.DeserializeObject<List<ModelSettings>>(File.ReadAllText(selection.First()));
