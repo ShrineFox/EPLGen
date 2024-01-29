@@ -30,409 +30,419 @@ namespace EPLGen
         /// </summary>
         private void InitializeComponent()
         {
-            this.tlp_Main = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox_ParticleSettings = new System.Windows.Forms.GroupBox();
-            this.listBox_Sprites = new System.Windows.Forms.ListBox();
-            this.darkContextMenu_Sprites = new DarkUI.Controls.DarkContextMenu();
-            this.addSpriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox_ModelSettings = new System.Windows.Forms.GroupBox();
-            this.groupBox_Texture = new DarkUI.Controls.DarkGroupBox();
-            this.pictureBox_Tex = new System.Windows.Forms.PictureBox();
-            this.darkContextMenu_Texture = new DarkUI.Controls.DarkContextMenu();
-            this.chooseImageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.darkMenuStrip_MainMenu = new DarkUI.Controls.DarkMenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportEPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel_ModelSettings = new System.Windows.Forms.Panel();
-            this.tlp_ModelSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.lbl_Mode = new DarkUI.Controls.DarkLabel();
-            this.comboBox_Mode = new System.Windows.Forms.ComboBox();
-            this.panel_ParticleSettings = new System.Windows.Forms.Panel();
-            this.tlp_ParticleSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.tlp_Main.SuspendLayout();
-            this.groupBox_ParticleSettings.SuspendLayout();
-            this.darkContextMenu_Sprites.SuspendLayout();
-            this.groupBox_ModelSettings.SuspendLayout();
-            this.groupBox_Texture.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Tex)).BeginInit();
-            this.darkContextMenu_Texture.SuspendLayout();
-            this.darkMenuStrip_MainMenu.SuspendLayout();
-            this.panel_ModelSettings.SuspendLayout();
-            this.tlp_ModelSettings.SuspendLayout();
-            this.panel_ParticleSettings.SuspendLayout();
-            this.SuspendLayout();
+            tlp_Main = new TableLayoutPanel();
+            groupBox_ParticleSettings = new GroupBox();
+            panel_ParticleSettings = new Panel();
+            tlp_ParticleSettings = new TableLayoutPanel();
+            listBox_Sprites = new ListBox();
+            darkContextMenu_Sprites = new DarkUI.Controls.DarkContextMenu();
+            addSpriteToolStripMenuItem = new ToolStripMenuItem();
+            removeSelectedToolStripMenuItem = new ToolStripMenuItem();
+            renameSelectedToolStripMenuItem = new ToolStripMenuItem();
+            groupBox_ModelSettings = new GroupBox();
+            panel_ModelSettings = new Panel();
+            tlp_ModelSettings = new TableLayoutPanel();
+            lbl_Mode = new DarkUI.Controls.DarkLabel();
+            comboBox_Mode = new ComboBox();
+            groupBox_Texture = new DarkUI.Controls.DarkGroupBox();
+            pictureBox_Tex = new PictureBox();
+            darkContextMenu_Texture = new DarkUI.Controls.DarkContextMenu();
+            chooseImageFileToolStripMenuItem = new ToolStripMenuItem();
+            darkMenuStrip_MainMenu = new DarkUI.Controls.DarkMenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            loadToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            exportEPLToolStripMenuItem = new ToolStripMenuItem();
+            addToolStripMenuItem = new ToolStripMenuItem();
+            removeToolStripMenuItem = new ToolStripMenuItem();
+            renameToolStripMenuItem = new ToolStripMenuItem();
+            setImageToolStripMenuItem = new ToolStripMenuItem();
+            createEPTsToolStripMenuItem = new ToolStripMenuItem();
+            tlp_Main.SuspendLayout();
+            groupBox_ParticleSettings.SuspendLayout();
+            panel_ParticleSettings.SuspendLayout();
+            darkContextMenu_Sprites.SuspendLayout();
+            groupBox_ModelSettings.SuspendLayout();
+            panel_ModelSettings.SuspendLayout();
+            tlp_ModelSettings.SuspendLayout();
+            groupBox_Texture.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox_Tex).BeginInit();
+            darkContextMenu_Texture.SuspendLayout();
+            darkMenuStrip_MainMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // tlp_Main
             // 
-            this.tlp_Main.ColumnCount = 2;
-            this.tlp_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlp_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlp_Main.Controls.Add(this.groupBox_ParticleSettings, 1, 1);
-            this.tlp_Main.Controls.Add(this.listBox_Sprites, 0, 0);
-            this.tlp_Main.Controls.Add(this.groupBox_ModelSettings, 0, 1);
-            this.tlp_Main.Controls.Add(this.groupBox_Texture, 1, 0);
-            this.tlp_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_Main.Location = new System.Drawing.Point(0, 28);
-            this.tlp_Main.Name = "tlp_Main";
-            this.tlp_Main.RowCount = 2;
-            this.tlp_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlp_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlp_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlp_Main.Size = new System.Drawing.Size(982, 525);
-            this.tlp_Main.TabIndex = 0;
+            tlp_Main.ColumnCount = 2;
+            tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlp_Main.Controls.Add(groupBox_ParticleSettings, 1, 1);
+            tlp_Main.Controls.Add(listBox_Sprites, 0, 0);
+            tlp_Main.Controls.Add(groupBox_ModelSettings, 0, 1);
+            tlp_Main.Controls.Add(groupBox_Texture, 1, 0);
+            tlp_Main.Dock = DockStyle.Fill;
+            tlp_Main.Location = new Point(0, 28);
+            tlp_Main.Margin = new Padding(3, 4, 3, 4);
+            tlp_Main.Name = "tlp_Main";
+            tlp_Main.RowCount = 2;
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tlp_Main.Size = new Size(982, 663);
+            tlp_Main.TabIndex = 0;
             // 
             // groupBox_ParticleSettings
             // 
-            this.groupBox_ParticleSettings.Controls.Add(this.panel_ParticleSettings);
-            this.groupBox_ParticleSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox_ParticleSettings.ForeColor = System.Drawing.SystemColors.ScrollBar;
-            this.groupBox_ParticleSettings.Location = new System.Drawing.Point(494, 265);
-            this.groupBox_ParticleSettings.Name = "groupBox_ParticleSettings";
-            this.groupBox_ParticleSettings.Size = new System.Drawing.Size(485, 257);
-            this.groupBox_ParticleSettings.TabIndex = 3;
-            this.groupBox_ParticleSettings.TabStop = false;
-            this.groupBox_ParticleSettings.Text = "Sprite Settings";
-            // 
-            // listBox_Sprites
-            // 
-            this.listBox_Sprites.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.listBox_Sprites.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listBox_Sprites.ContextMenuStrip = this.darkContextMenu_Sprites;
-            this.listBox_Sprites.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox_Sprites.ForeColor = System.Drawing.SystemColors.ScrollBar;
-            this.listBox_Sprites.FormattingEnabled = true;
-            this.listBox_Sprites.ItemHeight = 16;
-            this.listBox_Sprites.Location = new System.Drawing.Point(3, 3);
-            this.listBox_Sprites.Name = "listBox_Sprites";
-            this.listBox_Sprites.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox_Sprites.Size = new System.Drawing.Size(485, 256);
-            this.listBox_Sprites.TabIndex = 1;
-            this.listBox_Sprites.SelectedIndexChanged += new System.EventHandler(this.SpriteList_IndexChanged);
-            this.listBox_Sprites.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SpritesList_KeyDown);
-            // 
-            // darkContextMenu_Sprites
-            // 
-            this.darkContextMenu_Sprites.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.darkContextMenu_Sprites.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkContextMenu_Sprites.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.darkContextMenu_Sprites.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addSpriteToolStripMenuItem,
-            this.removeSelectedToolStripMenuItem,
-            this.renameSelectedToolStripMenuItem});
-            this.darkContextMenu_Sprites.Name = "darkContextMenu_Sprites";
-            this.darkContextMenu_Sprites.Size = new System.Drawing.Size(194, 76);
-            // 
-            // addSpriteToolStripMenuItem
-            // 
-            this.addSpriteToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.addSpriteToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.addSpriteToolStripMenuItem.Name = "addSpriteToolStripMenuItem";
-            this.addSpriteToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
-            this.addSpriteToolStripMenuItem.Text = "Add Sprite";
-            this.addSpriteToolStripMenuItem.Click += new System.EventHandler(this.AddSprite_Click);
-            // 
-            // removeSelectedToolStripMenuItem
-            // 
-            this.removeSelectedToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.removeSelectedToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.removeSelectedToolStripMenuItem.Name = "removeSelectedToolStripMenuItem";
-            this.removeSelectedToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
-            this.removeSelectedToolStripMenuItem.Text = "Remove Selected";
-            this.removeSelectedToolStripMenuItem.Click += new System.EventHandler(this.RemoveSelected_Click);
-            // 
-            // renameSelectedToolStripMenuItem
-            // 
-            this.renameSelectedToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.renameSelectedToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.renameSelectedToolStripMenuItem.Name = "renameSelectedToolStripMenuItem";
-            this.renameSelectedToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
-            this.renameSelectedToolStripMenuItem.Text = "Rename Selected";
-            this.renameSelectedToolStripMenuItem.Click += new System.EventHandler(this.Rename_Click);
-            // 
-            // groupBox_ModelSettings
-            // 
-            this.groupBox_ModelSettings.Controls.Add(this.panel_ModelSettings);
-            this.groupBox_ModelSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox_ModelSettings.ForeColor = System.Drawing.SystemColors.ScrollBar;
-            this.groupBox_ModelSettings.Location = new System.Drawing.Point(3, 265);
-            this.groupBox_ModelSettings.Name = "groupBox_ModelSettings";
-            this.groupBox_ModelSettings.Size = new System.Drawing.Size(485, 257);
-            this.groupBox_ModelSettings.TabIndex = 2;
-            this.groupBox_ModelSettings.TabStop = false;
-            this.groupBox_ModelSettings.Text = "Effect Settings";
-            // 
-            // groupBox_Texture
-            // 
-            this.groupBox_Texture.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.groupBox_Texture.Controls.Add(this.pictureBox_Tex);
-            this.groupBox_Texture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox_Texture.Location = new System.Drawing.Point(494, 3);
-            this.groupBox_Texture.Name = "groupBox_Texture";
-            this.groupBox_Texture.Size = new System.Drawing.Size(485, 256);
-            this.groupBox_Texture.TabIndex = 4;
-            this.groupBox_Texture.TabStop = false;
-            this.groupBox_Texture.Text = "Sprite Texture";
-            // 
-            // pictureBox_Tex
-            // 
-            this.pictureBox_Tex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(53)))), ((int)(((byte)(55)))));
-            this.pictureBox_Tex.ContextMenuStrip = this.darkContextMenu_Texture;
-            this.pictureBox_Tex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_Tex.Location = new System.Drawing.Point(3, 18);
-            this.pictureBox_Tex.Name = "pictureBox_Tex";
-            this.pictureBox_Tex.Size = new System.Drawing.Size(479, 235);
-            this.pictureBox_Tex.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox_Tex.TabIndex = 1;
-            this.pictureBox_Tex.TabStop = false;
-            // 
-            // darkContextMenu_Texture
-            // 
-            this.darkContextMenu_Texture.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.darkContextMenu_Texture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkContextMenu_Texture.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.darkContextMenu_Texture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chooseImageFileToolStripMenuItem});
-            this.darkContextMenu_Texture.Name = "darkContextMenu_Texture";
-            this.darkContextMenu_Texture.Size = new System.Drawing.Size(210, 28);
-            // 
-            // chooseImageFileToolStripMenuItem
-            // 
-            this.chooseImageFileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.chooseImageFileToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.chooseImageFileToolStripMenuItem.Name = "chooseImageFileToolStripMenuItem";
-            this.chooseImageFileToolStripMenuItem.Size = new System.Drawing.Size(209, 24);
-            this.chooseImageFileToolStripMenuItem.Text = "Choose Image File...";
-            this.chooseImageFileToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFile_Click);
-            // 
-            // darkMenuStrip_MainMenu
-            // 
-            this.darkMenuStrip_MainMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.darkMenuStrip_MainMenu.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkMenuStrip_MainMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.darkMenuStrip_MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.addToolStripMenuItem,
-            this.removeToolStripMenuItem,
-            this.renameToolStripMenuItem,
-            this.setImageToolStripMenuItem});
-            this.darkMenuStrip_MainMenu.Location = new System.Drawing.Point(0, 0);
-            this.darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
-            this.darkMenuStrip_MainMenu.Padding = new System.Windows.Forms.Padding(3, 2, 0, 2);
-            this.darkMenuStrip_MainMenu.Size = new System.Drawing.Size(982, 28);
-            this.darkMenuStrip_MainMenu.TabIndex = 1;
-            this.darkMenuStrip_MainMenu.Text = "darkMenuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.exportEPLToolStripMenuItem});
-            this.fileToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // loadToolStripMenuItem
-            // 
-            this.loadToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.loadToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.loadToolStripMenuItem.Text = "Load Preset";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.LoadPreset_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.saveToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.saveToolStripMenuItem.Text = "Save Preset";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SavePreset_Click);
-            // 
-            // exportEPLToolStripMenuItem
-            // 
-            this.exportEPLToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.exportEPLToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
-            this.exportEPLToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
-            this.exportEPLToolStripMenuItem.Text = "Export EPL";
-            this.exportEPLToolStripMenuItem.Click += new System.EventHandler(this.ExportEPL_Click);
-            // 
-            // addToolStripMenuItem
-            // 
-            this.addToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.addToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
-            this.addToolStripMenuItem.Text = "Add";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.AddSprite_Click);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.removeToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(77, 24);
-            this.removeToolStripMenuItem.Text = "Remove";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveSelected_Click);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.renameToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(77, 24);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.Rename_Click);
-            // 
-            // setImageToolStripMenuItem
-            // 
-            this.setImageToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.setImageToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.setImageToolStripMenuItem.Name = "setImageToolStripMenuItem";
-            this.setImageToolStripMenuItem.Size = new System.Drawing.Size(90, 24);
-            this.setImageToolStripMenuItem.Text = "Set Image";
-            this.setImageToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFile_Click);
-            // 
-            // panel_ModelSettings
-            // 
-            this.panel_ModelSettings.AutoScroll = true;
-            this.panel_ModelSettings.AutoScrollMinSize = new System.Drawing.Size(1, 1);
-            this.panel_ModelSettings.Controls.Add(this.tlp_ModelSettings);
-            this.panel_ModelSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_ModelSettings.Location = new System.Drawing.Point(3, 18);
-            this.panel_ModelSettings.Name = "panel_ModelSettings";
-            this.panel_ModelSettings.Size = new System.Drawing.Size(479, 236);
-            this.panel_ModelSettings.TabIndex = 0;
-            // 
-            // tlp_ModelSettings
-            // 
-            this.tlp_ModelSettings.AutoSize = true;
-            this.tlp_ModelSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlp_ModelSettings.ColumnCount = 2;
-            this.tlp_ModelSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlp_ModelSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tlp_ModelSettings.Controls.Add(this.lbl_Mode, 0, 0);
-            this.tlp_ModelSettings.Controls.Add(this.comboBox_Mode, 1, 0);
-            this.tlp_ModelSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tlp_ModelSettings.Location = new System.Drawing.Point(0, 0);
-            this.tlp_ModelSettings.Name = "tlp_ModelSettings";
-            this.tlp_ModelSettings.RowCount = 4;
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ModelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_ModelSettings.Size = new System.Drawing.Size(479, 160);
-            this.tlp_ModelSettings.TabIndex = 1;
-            // 
-            // lbl_Mode
-            // 
-            this.lbl_Mode.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lbl_Mode.AutoSize = true;
-            this.lbl_Mode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.lbl_Mode.Location = new System.Drawing.Point(47, 12);
-            this.lbl_Mode.Name = "lbl_Mode";
-            this.lbl_Mode.Size = new System.Drawing.Size(45, 16);
-            this.lbl_Mode.TabIndex = 4;
-            this.lbl_Mode.Text = "Mode:";
-            // 
-            // comboBox_Mode
-            // 
-            this.comboBox_Mode.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.comboBox_Mode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.comboBox_Mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_Mode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox_Mode.ForeColor = System.Drawing.Color.Silver;
-            this.comboBox_Mode.FormattingEnabled = true;
-            this.comboBox_Mode.Items.AddRange(new object[] {
-            "Cone",
-            "Floor"});
-            this.comboBox_Mode.Location = new System.Drawing.Point(98, 8);
-            this.comboBox_Mode.Name = "comboBox_Mode";
-            this.comboBox_Mode.Size = new System.Drawing.Size(199, 24);
-            this.comboBox_Mode.TabIndex = 5;
-            this.comboBox_Mode.SelectedIndexChanged += new System.EventHandler(this.Mode_Changed);
+            groupBox_ParticleSettings.Controls.Add(panel_ParticleSettings);
+            groupBox_ParticleSettings.Dock = DockStyle.Fill;
+            groupBox_ParticleSettings.ForeColor = SystemColors.ScrollBar;
+            groupBox_ParticleSettings.Location = new Point(494, 335);
+            groupBox_ParticleSettings.Margin = new Padding(3, 4, 3, 4);
+            groupBox_ParticleSettings.Name = "groupBox_ParticleSettings";
+            groupBox_ParticleSettings.Padding = new Padding(3, 4, 3, 4);
+            groupBox_ParticleSettings.Size = new Size(485, 324);
+            groupBox_ParticleSettings.TabIndex = 3;
+            groupBox_ParticleSettings.TabStop = false;
+            groupBox_ParticleSettings.Text = "Sprite Settings";
             // 
             // panel_ParticleSettings
             // 
-            this.panel_ParticleSettings.AutoScroll = true;
-            this.panel_ParticleSettings.AutoScrollMinSize = new System.Drawing.Size(1, 1);
-            this.panel_ParticleSettings.Controls.Add(this.tlp_ParticleSettings);
-            this.panel_ParticleSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_ParticleSettings.Location = new System.Drawing.Point(3, 18);
-            this.panel_ParticleSettings.Name = "panel_ParticleSettings";
-            this.panel_ParticleSettings.Size = new System.Drawing.Size(479, 236);
-            this.panel_ParticleSettings.TabIndex = 0;
+            panel_ParticleSettings.AutoScroll = true;
+            panel_ParticleSettings.AutoScrollMinSize = new Size(1, 1);
+            panel_ParticleSettings.Controls.Add(tlp_ParticleSettings);
+            panel_ParticleSettings.Dock = DockStyle.Fill;
+            panel_ParticleSettings.Location = new Point(3, 24);
+            panel_ParticleSettings.Margin = new Padding(3, 4, 3, 4);
+            panel_ParticleSettings.Name = "panel_ParticleSettings";
+            panel_ParticleSettings.Size = new Size(479, 296);
+            panel_ParticleSettings.TabIndex = 0;
             // 
             // tlp_ParticleSettings
             // 
-            this.tlp_ParticleSettings.AutoSize = true;
-            this.tlp_ParticleSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlp_ParticleSettings.ColumnCount = 2;
-            this.tlp_ParticleSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22F));
-            this.tlp_ParticleSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78F));
-            this.tlp_ParticleSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tlp_ParticleSettings.Location = new System.Drawing.Point(0, 0);
-            this.tlp_ParticleSettings.Name = "tlp_ParticleSettings";
-            this.tlp_ParticleSettings.RowCount = 14;
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tlp_ParticleSettings.Size = new System.Drawing.Size(458, 840);
-            this.tlp_ParticleSettings.TabIndex = 2;
+            tlp_ParticleSettings.AutoSize = true;
+            tlp_ParticleSettings.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlp_ParticleSettings.ColumnCount = 2;
+            tlp_ParticleSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22F));
+            tlp_ParticleSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 78F));
+            tlp_ParticleSettings.Dock = DockStyle.Top;
+            tlp_ParticleSettings.Location = new Point(0, 0);
+            tlp_ParticleSettings.Margin = new Padding(3, 4, 3, 4);
+            tlp_ParticleSettings.Name = "tlp_ParticleSettings";
+            tlp_ParticleSettings.RowCount = 14;
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ParticleSettings.Size = new Size(458, 1050);
+            tlp_ParticleSettings.TabIndex = 2;
+            // 
+            // listBox_Sprites
+            // 
+            listBox_Sprites.BackColor = Color.FromArgb(60, 63, 65);
+            listBox_Sprites.BorderStyle = BorderStyle.None;
+            listBox_Sprites.ContextMenuStrip = darkContextMenu_Sprites;
+            listBox_Sprites.Dock = DockStyle.Fill;
+            listBox_Sprites.ForeColor = SystemColors.ScrollBar;
+            listBox_Sprites.FormattingEnabled = true;
+            listBox_Sprites.ItemHeight = 20;
+            listBox_Sprites.Location = new Point(3, 4);
+            listBox_Sprites.Margin = new Padding(3, 4, 3, 4);
+            listBox_Sprites.Name = "listBox_Sprites";
+            listBox_Sprites.SelectionMode = SelectionMode.MultiExtended;
+            listBox_Sprites.Size = new Size(485, 323);
+            listBox_Sprites.TabIndex = 1;
+            listBox_Sprites.SelectedIndexChanged += SpriteList_IndexChanged;
+            listBox_Sprites.KeyDown += SpritesList_KeyDown;
+            // 
+            // darkContextMenu_Sprites
+            // 
+            darkContextMenu_Sprites.BackColor = Color.FromArgb(60, 63, 65);
+            darkContextMenu_Sprites.ForeColor = Color.FromArgb(220, 220, 220);
+            darkContextMenu_Sprites.ImageScalingSize = new Size(20, 20);
+            darkContextMenu_Sprites.Items.AddRange(new ToolStripItem[] { addSpriteToolStripMenuItem, removeSelectedToolStripMenuItem, renameSelectedToolStripMenuItem });
+            darkContextMenu_Sprites.Name = "darkContextMenu_Sprites";
+            darkContextMenu_Sprites.Size = new Size(194, 76);
+            // 
+            // addSpriteToolStripMenuItem
+            // 
+            addSpriteToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            addSpriteToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            addSpriteToolStripMenuItem.Name = "addSpriteToolStripMenuItem";
+            addSpriteToolStripMenuItem.Size = new Size(193, 24);
+            addSpriteToolStripMenuItem.Text = "Add Sprite";
+            addSpriteToolStripMenuItem.Click += AddSprite_Click;
+            // 
+            // removeSelectedToolStripMenuItem
+            // 
+            removeSelectedToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            removeSelectedToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            removeSelectedToolStripMenuItem.Name = "removeSelectedToolStripMenuItem";
+            removeSelectedToolStripMenuItem.Size = new Size(193, 24);
+            removeSelectedToolStripMenuItem.Text = "Remove Selected";
+            removeSelectedToolStripMenuItem.Click += RemoveSelected_Click;
+            // 
+            // renameSelectedToolStripMenuItem
+            // 
+            renameSelectedToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            renameSelectedToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            renameSelectedToolStripMenuItem.Name = "renameSelectedToolStripMenuItem";
+            renameSelectedToolStripMenuItem.Size = new Size(193, 24);
+            renameSelectedToolStripMenuItem.Text = "Rename Selected";
+            renameSelectedToolStripMenuItem.Click += Rename_Click;
+            // 
+            // groupBox_ModelSettings
+            // 
+            groupBox_ModelSettings.Controls.Add(panel_ModelSettings);
+            groupBox_ModelSettings.Dock = DockStyle.Fill;
+            groupBox_ModelSettings.ForeColor = SystemColors.ScrollBar;
+            groupBox_ModelSettings.Location = new Point(3, 335);
+            groupBox_ModelSettings.Margin = new Padding(3, 4, 3, 4);
+            groupBox_ModelSettings.Name = "groupBox_ModelSettings";
+            groupBox_ModelSettings.Padding = new Padding(3, 4, 3, 4);
+            groupBox_ModelSettings.Size = new Size(485, 324);
+            groupBox_ModelSettings.TabIndex = 2;
+            groupBox_ModelSettings.TabStop = false;
+            groupBox_ModelSettings.Text = "Effect Settings";
+            // 
+            // panel_ModelSettings
+            // 
+            panel_ModelSettings.AutoScroll = true;
+            panel_ModelSettings.AutoScrollMinSize = new Size(1, 1);
+            panel_ModelSettings.Controls.Add(tlp_ModelSettings);
+            panel_ModelSettings.Dock = DockStyle.Fill;
+            panel_ModelSettings.Location = new Point(3, 24);
+            panel_ModelSettings.Margin = new Padding(3, 4, 3, 4);
+            panel_ModelSettings.Name = "panel_ModelSettings";
+            panel_ModelSettings.Size = new Size(479, 296);
+            panel_ModelSettings.TabIndex = 0;
+            // 
+            // tlp_ModelSettings
+            // 
+            tlp_ModelSettings.AutoSize = true;
+            tlp_ModelSettings.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlp_ModelSettings.ColumnCount = 2;
+            tlp_ModelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlp_ModelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+            tlp_ModelSettings.Controls.Add(lbl_Mode, 0, 0);
+            tlp_ModelSettings.Controls.Add(comboBox_Mode, 1, 0);
+            tlp_ModelSettings.Dock = DockStyle.Top;
+            tlp_ModelSettings.Location = new Point(0, 0);
+            tlp_ModelSettings.Margin = new Padding(3, 4, 3, 4);
+            tlp_ModelSettings.Name = "tlp_ModelSettings";
+            tlp_ModelSettings.RowCount = 4;
+            tlp_ModelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+            tlp_ModelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ModelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tlp_ModelSettings.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlp_ModelSettings.Size = new Size(479, 200);
+            tlp_ModelSettings.TabIndex = 1;
+            // 
+            // lbl_Mode
+            // 
+            lbl_Mode.Anchor = AnchorStyles.Right;
+            lbl_Mode.AutoSize = true;
+            lbl_Mode.ForeColor = Color.FromArgb(220, 220, 220);
+            lbl_Mode.Location = new Point(41, 15);
+            lbl_Mode.Name = "lbl_Mode";
+            lbl_Mode.Size = new Size(51, 20);
+            lbl_Mode.TabIndex = 4;
+            lbl_Mode.Text = "Mode:";
+            // 
+            // comboBox_Mode
+            // 
+            comboBox_Mode.Anchor = AnchorStyles.Left;
+            comboBox_Mode.BackColor = Color.FromArgb(60, 60, 60);
+            comboBox_Mode.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox_Mode.FlatStyle = FlatStyle.Flat;
+            comboBox_Mode.ForeColor = Color.Silver;
+            comboBox_Mode.FormattingEnabled = true;
+            comboBox_Mode.Items.AddRange(new object[] { "Cone", "Floor" });
+            comboBox_Mode.Location = new Point(98, 11);
+            comboBox_Mode.Margin = new Padding(3, 4, 3, 4);
+            comboBox_Mode.Name = "comboBox_Mode";
+            comboBox_Mode.Size = new Size(199, 28);
+            comboBox_Mode.TabIndex = 5;
+            comboBox_Mode.SelectedIndexChanged += Mode_Changed;
+            // 
+            // groupBox_Texture
+            // 
+            groupBox_Texture.BorderColor = Color.FromArgb(60, 63, 65);
+            groupBox_Texture.Controls.Add(pictureBox_Tex);
+            groupBox_Texture.Dock = DockStyle.Fill;
+            groupBox_Texture.Location = new Point(494, 4);
+            groupBox_Texture.Margin = new Padding(3, 4, 3, 4);
+            groupBox_Texture.Name = "groupBox_Texture";
+            groupBox_Texture.Padding = new Padding(3, 4, 3, 4);
+            groupBox_Texture.Size = new Size(485, 323);
+            groupBox_Texture.TabIndex = 4;
+            groupBox_Texture.TabStop = false;
+            groupBox_Texture.Text = "Sprite Texture";
+            // 
+            // pictureBox_Tex
+            // 
+            pictureBox_Tex.BackColor = Color.FromArgb(50, 53, 55);
+            pictureBox_Tex.ContextMenuStrip = darkContextMenu_Texture;
+            pictureBox_Tex.Dock = DockStyle.Fill;
+            pictureBox_Tex.Location = new Point(3, 24);
+            pictureBox_Tex.Margin = new Padding(3, 4, 3, 4);
+            pictureBox_Tex.Name = "pictureBox_Tex";
+            pictureBox_Tex.Size = new Size(479, 295);
+            pictureBox_Tex.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox_Tex.TabIndex = 1;
+            pictureBox_Tex.TabStop = false;
+            // 
+            // darkContextMenu_Texture
+            // 
+            darkContextMenu_Texture.BackColor = Color.FromArgb(60, 63, 65);
+            darkContextMenu_Texture.ForeColor = Color.FromArgb(220, 220, 220);
+            darkContextMenu_Texture.ImageScalingSize = new Size(20, 20);
+            darkContextMenu_Texture.Items.AddRange(new ToolStripItem[] { chooseImageFileToolStripMenuItem });
+            darkContextMenu_Texture.Name = "darkContextMenu_Texture";
+            darkContextMenu_Texture.Size = new Size(210, 28);
+            // 
+            // chooseImageFileToolStripMenuItem
+            // 
+            chooseImageFileToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            chooseImageFileToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            chooseImageFileToolStripMenuItem.Name = "chooseImageFileToolStripMenuItem";
+            chooseImageFileToolStripMenuItem.Size = new Size(209, 24);
+            chooseImageFileToolStripMenuItem.Text = "Choose Image File...";
+            chooseImageFileToolStripMenuItem.Click += ChooseImageFile_Click;
+            // 
+            // darkMenuStrip_MainMenu
+            // 
+            darkMenuStrip_MainMenu.BackColor = Color.FromArgb(60, 63, 65);
+            darkMenuStrip_MainMenu.ForeColor = Color.FromArgb(220, 220, 220);
+            darkMenuStrip_MainMenu.ImageScalingSize = new Size(20, 20);
+            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem });
+            darkMenuStrip_MainMenu.Location = new Point(0, 0);
+            darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
+            darkMenuStrip_MainMenu.Padding = new Padding(3, 2, 0, 2);
+            darkMenuStrip_MainMenu.Size = new Size(982, 28);
+            darkMenuStrip_MainMenu.TabIndex = 1;
+            darkMenuStrip_MainMenu.Text = "darkMenuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, exportEPLToolStripMenuItem });
+            fileToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // loadToolStripMenuItem
+            // 
+            loadToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            loadToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            loadToolStripMenuItem.Size = new Size(169, 26);
+            loadToolStripMenuItem.Text = "Load Preset";
+            loadToolStripMenuItem.Click += LoadPreset_Click;
+            // 
+            // saveToolStripMenuItem
+            // 
+            saveToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            saveToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.Size = new Size(169, 26);
+            saveToolStripMenuItem.Text = "Save Preset";
+            saveToolStripMenuItem.Click += SavePreset_Click;
+            // 
+            // exportEPLToolStripMenuItem
+            // 
+            exportEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            exportEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
+            exportEPLToolStripMenuItem.Size = new Size(169, 26);
+            exportEPLToolStripMenuItem.Text = "Export EPL";
+            exportEPLToolStripMenuItem.Click += ExportEPL_Click;
+            // 
+            // addToolStripMenuItem
+            // 
+            addToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            addToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            addToolStripMenuItem.Name = "addToolStripMenuItem";
+            addToolStripMenuItem.Size = new Size(51, 24);
+            addToolStripMenuItem.Text = "Add";
+            addToolStripMenuItem.Click += AddSprite_Click;
+            // 
+            // removeToolStripMenuItem
+            // 
+            removeToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            removeToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            removeToolStripMenuItem.Size = new Size(77, 24);
+            removeToolStripMenuItem.Text = "Remove";
+            removeToolStripMenuItem.Click += RemoveSelected_Click;
+            // 
+            // renameToolStripMenuItem
+            // 
+            renameToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            renameToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            renameToolStripMenuItem.Size = new Size(77, 24);
+            renameToolStripMenuItem.Text = "Rename";
+            renameToolStripMenuItem.Click += Rename_Click;
+            // 
+            // setImageToolStripMenuItem
+            // 
+            setImageToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            setImageToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            setImageToolStripMenuItem.Name = "setImageToolStripMenuItem";
+            setImageToolStripMenuItem.Size = new Size(90, 24);
+            setImageToolStripMenuItem.Text = "Set Image";
+            setImageToolStripMenuItem.Click += ChooseImageFile_Click;
+            // 
+            // createEPTsToolStripMenuItem
+            // 
+            createEPTsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            createEPTsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            createEPTsToolStripMenuItem.Name = "createEPTsToolStripMenuItem";
+            createEPTsToolStripMenuItem.Size = new Size(99, 24);
+            createEPTsToolStripMenuItem.Text = "Create EPTs";
+            createEPTsToolStripMenuItem.Click += CreateEPTs_Click;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(982, 553);
-            this.Controls.Add(this.tlp_Main);
-            this.Controls.Add(this.darkMenuStrip_MainMenu);
-            this.MainMenuStrip = this.darkMenuStrip_MainMenu;
-            this.MinimumSize = new System.Drawing.Size(650, 475);
-            this.Name = "MainForm";
-            this.Text = "EPLGen";
-            this.tlp_Main.ResumeLayout(false);
-            this.groupBox_ParticleSettings.ResumeLayout(false);
-            this.darkContextMenu_Sprites.ResumeLayout(false);
-            this.groupBox_ModelSettings.ResumeLayout(false);
-            this.groupBox_Texture.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Tex)).EndInit();
-            this.darkContextMenu_Texture.ResumeLayout(false);
-            this.darkMenuStrip_MainMenu.ResumeLayout(false);
-            this.darkMenuStrip_MainMenu.PerformLayout();
-            this.panel_ModelSettings.ResumeLayout(false);
-            this.panel_ModelSettings.PerformLayout();
-            this.tlp_ModelSettings.ResumeLayout(false);
-            this.tlp_ModelSettings.PerformLayout();
-            this.panel_ParticleSettings.ResumeLayout(false);
-            this.panel_ParticleSettings.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(982, 691);
+            Controls.Add(tlp_Main);
+            Controls.Add(darkMenuStrip_MainMenu);
+            MainMenuStrip = darkMenuStrip_MainMenu;
+            Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(650, 582);
+            Name = "MainForm";
+            Text = "EPLGen";
+            tlp_Main.ResumeLayout(false);
+            groupBox_ParticleSettings.ResumeLayout(false);
+            panel_ParticleSettings.ResumeLayout(false);
+            panel_ParticleSettings.PerformLayout();
+            darkContextMenu_Sprites.ResumeLayout(false);
+            groupBox_ModelSettings.ResumeLayout(false);
+            panel_ModelSettings.ResumeLayout(false);
+            panel_ModelSettings.PerformLayout();
+            tlp_ModelSettings.ResumeLayout(false);
+            tlp_ModelSettings.PerformLayout();
+            groupBox_Texture.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox_Tex).EndInit();
+            darkContextMenu_Texture.ResumeLayout(false);
+            darkMenuStrip_MainMenu.ResumeLayout(false);
+            darkMenuStrip_MainMenu.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -464,6 +474,7 @@ namespace EPLGen
         private System.Windows.Forms.ComboBox comboBox_Mode;
         private System.Windows.Forms.Panel panel_ParticleSettings;
         private System.Windows.Forms.TableLayoutPanel tlp_ParticleSettings;
+        private ToolStripMenuItem createEPTsToolStripMenuItem;
     }
 }
 

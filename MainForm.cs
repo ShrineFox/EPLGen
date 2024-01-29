@@ -16,6 +16,7 @@ using System.Xml;
 using System.Xml.Linq;
 using DarkUI.Controls;
 using DarkUI.Forms;
+using EPLGen.Classes;
 using GFDLibrary.Effects;
 using Newtonsoft.Json;
 using ShrineFox.IO;
@@ -29,54 +30,8 @@ namespace EPLGen
         public MainForm()
         {
             InitializeComponent();
-            SetMenuStripIcons();
+            MenuStripHelper.SetMenuStripIcons(MenuStripHelper.GetMenuStripIconPairs("./Dependencies/Icons.txt"), this);
             AddInputFields();
-        }
-
-        private void SetMenuStripIcons()
-        {
-            List<Tuple<string, string>> menuStripIcons = new List<Tuple<string, string>>() {
-                new Tuple<string, string>("fileToolStripMenuItem", "disk"),
-                new Tuple<string, string>("loadToolStripMenuItem", "folder_page"),
-                new Tuple<string, string>("saveToolStripMenuItem", "disk_multiple"),
-                new Tuple<string, string>("exportEPLToolStripMenuItem", "package_go"),
-                new Tuple<string, string>("addToolStripMenuItem", "add"),
-                new Tuple<string, string>("addSpriteToolStripMenuItem", "add"),
-                new Tuple<string, string>("removeToolStripMenuItem", "delete"),
-                new Tuple<string, string>("removeSelectedToolStripMenuItem", "delete"),
-                new Tuple<string, string>("renameToolStripMenuItem", "textfield_rename"),
-                new Tuple<string, string>("renameSelectedToolStripMenuItem", "textfield_rename"),
-                new Tuple<string, string>("setImageToolStripMenuItem", "picture_add"),
-                new Tuple<string, string>("chooseImageFileToolStripMenuItem", "picture_add"),
-            };
-
-            // Context Menu Strips
-            foreach (DarkContextMenu menuStrip in new DarkContextMenu[] { darkContextMenu_Sprites, darkContextMenu_Texture })
-                ApplyIconsFromList(menuStrip.Items, menuStripIcons);
-
-            // Menu Strip Items
-            foreach (DarkMenuStrip menuStrip in this.FlattenChildren<DarkMenuStrip>())
-                ApplyIconsFromList(menuStrip.Items, menuStripIcons);
-        }
-
-        private void ApplyIconsFromList(ToolStripItemCollection items, List<Tuple<string, string>> menuStripIcons)
-        {
-            foreach (ToolStripMenuItem tsmi in items)
-            {
-                // Apply context menu icon
-                if (menuStripIcons.Any(x => x.Item1 == tsmi.Name))
-                    ApplyIconFromFile(tsmi, menuStripIcons);
-                // Apply drop down menu icon
-                foreach (ToolStripMenuItem tsmi2 in tsmi.DropDownItems)
-                    if (menuStripIcons.Any(x => x.Item1 == tsmi2.Name))
-                        ApplyIconFromFile(tsmi2, menuStripIcons);
-            }
-        }
-
-        private void ApplyIconFromFile(ToolStripMenuItem tsmi, List<Tuple<string, string>> menuStripIcons)
-        {
-            tsmi.Image = Image.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        $"Icons\\{menuStripIcons.Single(x => x.Item1 == tsmi.Name).Item2}.png"));
         }
 
         private void AddInputFields()
@@ -103,8 +58,14 @@ namespace EPLGen
 
         private void AddNumControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int row, bool decimalPlaces = true)
         {
-            var numUpDwn = new DarkNumericUpDown() { Minimum = -999999, Maximum = 999999, Name = $"num_{fieldPrefix}_x",
-                Anchor = AnchorStyles.Left, AutoSize = true  };
+            var numUpDwn = new DarkNumericUpDown()
+            {
+                Minimum = -999999,
+                Maximum = 999999,
+                Name = $"num_{fieldPrefix}_x",
+                Anchor = AnchorStyles.Left,
+                AutoSize = true
+            };
             if (!decimalPlaces)
                 numUpDwn.DecimalPlaces = 7;
             parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
@@ -140,7 +101,7 @@ namespace EPLGen
                 tlp.Controls.Add(new DarkLabel() { Text = axis.ToUpper(), Dock = DockStyle.Bottom }, i, 0);
                 tlp.Controls.Add(numUpDwn, i, 1);
             }
-            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true  }, 0, row);
+            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
             parentTlp.Controls.Add(tlp, 1, row);
         }
 
@@ -337,7 +298,7 @@ namespace EPLGen
                         }
                         break;
                 }
-                
+
             }
         }
 
@@ -437,7 +398,7 @@ namespace EPLGen
         {
             comboBox_Mode.Enabled = false;
 
-            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled 
+            if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled
                 && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
             {
                 var selectedModel = modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
@@ -693,7 +654,7 @@ namespace EPLGen
 
             foreach (var item in listBox_Sprites.SelectedItems)
                 if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    ChangeMode(modelSettings.First(x => x.Name.Equals(item.ToString())), 
+                    ChangeMode(modelSettings.First(x => x.Name.Equals(item.ToString())),
                         (ModelType)Enum.Parse(typeof(ModelType), comboBox_Mode.SelectedItem.ToString()));
         }
 
@@ -792,7 +753,7 @@ namespace EPLGen
             if (listBox_Sprites.SelectedIndex != -1)
             {
                 // Ask user to select .dds file(s)
-                List<string> texPaths = WinFormsEvents.FilePath_Click("Choose sprite texture", true, new string[1] { "DDS Image (.dds)" });
+                List<string> texPaths = WinFormsDialogs.SelectFile("Choose sprite texture", true, new string[1] { "DDS Image (.dds)" });
                 for (int i = 0; i < texPaths.Count; i++)
                 {
                     // Update texture path for model object matching selected listbox item, otherwise create new one named after file
@@ -821,7 +782,7 @@ namespace EPLGen
 
         private void SavePreset_Click(object sender, EventArgs e)
         {
-            var selection = WinFormsEvents.FilePath_Click("Save preset file...", true, new string[] { "json (.json)" }, true);
+            var selection = WinFormsDialogs.SelectFile("Save preset file...", true, new string[] { "json (.json)" }, true);
             if (selection.Count == 0)
                 return;
 
@@ -835,13 +796,30 @@ namespace EPLGen
 
         private void LoadPreset_Click(object sender, EventArgs e)
         {
-            var selection = WinFormsEvents.FilePath_Click("Load preset file...", true, new string[] { "json (.json)" });
+            var selection = WinFormsDialogs.SelectFile("Load preset file...", true, new string[] { "json (.json)" });
             if (selection.Count == 0 || !File.Exists(selection.First()))
                 return;
 
             modelSettings = JsonConvert.DeserializeObject<List<ModelSettings>>(File.ReadAllText(selection.First()));
 
             UpdateSpriteList();
+        }
+
+        private void CreateEPTs_Click(object sender, EventArgs e)
+        {
+            var inputDir = WinFormsDialogs.SelectFolder("Choose DDS Files Directory");
+            if (!Directory.Exists(inputDir))
+                return;
+
+            foreach (var ddsPath in Directory.GetFiles(inputDir, "*.dds", SearchOption.AllDirectories))
+            {
+                EPT ept = new EPT();
+                ept.imageData = File.ReadAllBytes(ddsPath);
+                ept.imageName = Path.GetFileName(ddsPath);
+                ept.Build(inputDir);
+            }
+
+            MessageBox.Show($"Done converting DDS to EPT in:\n{inputDir}", "EPTs Saved Successfully");
         }
     }
 

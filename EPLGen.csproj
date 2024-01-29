@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GFD-Studio\Dependencies\Scarlet\Scarlet.IO.ImageFormats\Scarlet.IO.ImageFormats.csproj" />
     <ProjectReference Include="..\GFD-Studio\Dependencies\Scarlet\Scarlet\Scarlet.csproj" />
-    <ProjectReference Include="..\GFD-Studio\GFDLibrary\GFDLibrary.NET5.csproj" />
+    <ProjectReference Include="..\GFD-Studio\GFDLibrary\GFDLibrary.NET6.csproj" />
     <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj" />
   </ItemGroup>
 
@@ -24,6 +24,10 @@
     <None Update="model.gmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dependencies\" />
   </ItemGroup>
 
 </Project>

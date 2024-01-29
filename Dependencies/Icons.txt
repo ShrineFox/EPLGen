@@ -1,0 +1,12 @@
+fileToolStripMenuItem disk
+loadToolStripMenuItem folder_page
+saveToolStripMenuItem disk_multiple
+exportEPLToolStripMenuItem package_go
+addToolStripMenuItem add
+addSpriteToolStripMenuItem add
+removeToolStripMenuItem delete
+removeSelectedToolStripMenuItem delete
+renameToolStripMenuItem textfield_rename
+renameSelectedToolStripMenuItem textfield_rename
+setImageToolStripMenuItem picture_add
+chooseImageFileToolStripMenuItem picture_add
