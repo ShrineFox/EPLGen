@@ -12,11 +12,10 @@ namespace EPLGen.Classes
     public class EPT
     {
         private byte[] header { get; } = new byte[] {
-            0x47, 0x46, 0x53, 0x30, 0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 };
+            0x47, 0x46, 0x53, 0x30, 0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03 };
         public int tile_x { get; } = 32;
         public int tile_y { get; } = 32;
         public int fps { get; } = 6;
-        public byte[] afterParameters { get; } = new byte[] { 0x00, 0x00, 0x00, 0x01 };
         public string imageName { get; set; } = "sprite.dds";
         private byte[] beforeImageData { get; } = new byte[]{
             0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01 };
@@ -34,7 +33,6 @@ namespace EPLGen.Classes
                 writer.Write(tile_x);
                 writer.Write(tile_y);
                 writer.Write(fps);
-                writer.Write(afterParameters);
                 // Image
                 writer.Write(NameData(imageName));
                 writer.Write(beforeImageData);
