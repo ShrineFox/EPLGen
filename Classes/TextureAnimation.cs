@@ -34,7 +34,7 @@ namespace EPLGen
             for (int i = 0; i < keyCount; i++)
             {
                 float timing = 1f / keyCount;
-                keyTimings.Add( timing );
+                keyTimings.Add( (i + 1) * timing );
                 keys.Add( new TSingle5Key() { x_offset = i * timing });
             }
             foreach (var keyTiming in keyTimings)
