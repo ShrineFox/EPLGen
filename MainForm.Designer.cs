@@ -58,6 +58,8 @@ namespace EPLGen
             renameToolStripMenuItem = new ToolStripMenuItem();
             setImageToolStripMenuItem = new ToolStripMenuItem();
             createEPTsToolStripMenuItem = new ToolStripMenuItem();
+            createUVAnimToolStripMenuItem = new ToolStripMenuItem();
+            txt_SpriteCount = new ToolStripTextBox();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
             panel_ParticleSettings.SuspendLayout();
@@ -155,7 +157,6 @@ namespace EPLGen
             listBox_Sprites.Dock = DockStyle.Fill;
             listBox_Sprites.ForeColor = SystemColors.ScrollBar;
             listBox_Sprites.FormattingEnabled = true;
-            listBox_Sprites.ItemHeight = 20;
             listBox_Sprites.Location = new Point(3, 4);
             listBox_Sprites.Margin = new Padding(3, 4, 3, 4);
             listBox_Sprites.Name = "listBox_Sprites";
@@ -325,7 +326,7 @@ namespace EPLGen
             darkMenuStrip_MainMenu.BackColor = Color.FromArgb(60, 63, 65);
             darkMenuStrip_MainMenu.ForeColor = Color.FromArgb(220, 220, 220);
             darkMenuStrip_MainMenu.ImageScalingSize = new Size(20, 20);
-            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem });
+            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createUVAnimToolStripMenuItem });
             darkMenuStrip_MainMenu.Location = new Point(0, 0);
             darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
             darkMenuStrip_MainMenu.Padding = new Padding(3, 2, 0, 2);
@@ -414,6 +415,24 @@ namespace EPLGen
             createEPTsToolStripMenuItem.Text = "Create EPTs";
             createEPTsToolStripMenuItem.Click += CreateEPTs_Click;
             // 
+            // createUVAnimToolStripMenuItem
+            // 
+            createUVAnimToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            createUVAnimToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { txt_SpriteCount });
+            createUVAnimToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            createUVAnimToolStripMenuItem.Name = "createUVAnimToolStripMenuItem";
+            createUVAnimToolStripMenuItem.Size = new Size(128, 24);
+            createUVAnimToolStripMenuItem.Text = "Create UV Anim";
+            createUVAnimToolStripMenuItem.Click += CreateUVAnim_Click;
+            // 
+            // txt_SpriteCount
+            // 
+            txt_SpriteCount.BackColor = Color.FromArgb(60, 63, 65);
+            txt_SpriteCount.ForeColor = Color.FromArgb(220, 220, 220);
+            txt_SpriteCount.Name = "txt_SpriteCount";
+            txt_SpriteCount.Size = new Size(100, 27);
+            txt_SpriteCount.Text = "4";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -475,6 +494,8 @@ namespace EPLGen
         private System.Windows.Forms.Panel panel_ParticleSettings;
         private System.Windows.Forms.TableLayoutPanel tlp_ParticleSettings;
         private ToolStripMenuItem createEPTsToolStripMenuItem;
+        private ToolStripMenuItem createUVAnimToolStripMenuItem;
+        private ToolStripTextBox txt_SpriteCount;
     }
 }
 

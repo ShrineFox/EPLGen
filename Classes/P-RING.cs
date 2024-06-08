@@ -41,8 +41,12 @@ namespace EPLGen
                 for (int i = 0; i < eptFiles.Length; i++)
                 {
                     var eptData = File.ReadAllBytes(eptFiles[i]);
-                    childNodes.Add(new P_RING_ChildNode() { nameData = P_RING_ChildNode.GetNameData(Path.GetFileName(eptFiles[i])), 
-                        eptData = eptData, eptLength = eptData.Length });
+                    childNodes.Add(new P_RING_ChildNode()
+                    {
+                        nameData = P_RING_ChildNode.GetNameData(Path.GetFileName(eptFiles[i])),
+                        eptData = eptData,
+                        eptLength = eptData.Length
+                    });
 
                 }
                 foreach (var node in childNodes)
@@ -61,9 +65,9 @@ namespace EPLGen
             }
         }
 
-    public class P_RING_ChildNode
-    {
-        public byte[] beforeEPT = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        public class P_RING_ChildNode
+        {
+            public byte[] beforeEPT = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
             0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
             0x00, 0x08, 0x00, 0x00, 0x00, 0x05, 0x00, 0x07, 0x50, 0x2D, 0x52, 0x49, 0x4E, 0x47, 0x30, 0x1A,
@@ -88,67 +92,67 @@ namespace EPLGen
             0xF8, 0xCC, 0xCD, 0x44, 0xBB, 0xCC, 0xCD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xBF,
             0x80, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x3C, 0x23, 0xD7, 0x0A, 0x00, 0x00, 0x00, 0x00 };
-        public byte[] nameData;
-        public int eptLength;
-        public byte[] eptData;
-        public byte[] afterEPT = { 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            public byte[] nameData;
+            public int eptLength;
+            public byte[] eptData;
+            public byte[] afterEPT = { 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-        public static byte[] GetNameData(string name)
-        {
-            List<byte> data = new List<byte>();
+            public static byte[] GetNameData(string name)
+            {
+                List<byte> data = new List<byte>();
 
-            ushort length = Convert.ToUInt16(name.Length);
-            int nameHash = StringHasher.GenerateStringHash(name);
+                ushort length = Convert.ToUInt16(name.Length);
+                int nameHash = StringHasher.GenerateStringHash(name);
 
-            data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(length))).ToList();
-            data = data.Concat(Encoding.ASCII.GetBytes(name)).ToList();
-            data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(nameHash))).ToList();
-            byte[] afterEPTName = new byte[] { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02 };
-            data = data.Concat(afterEPTName).ToList();
+                data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(length))).ToList();
+                data = data.Concat(Encoding.ASCII.GetBytes(name)).ToList();
+                data = data.Concat(BitConverter.GetBytes(EndiannessSwapUtility.Swap(nameHash))).ToList();
+                byte[] afterEPTName = new byte[] { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02 };
+                data = data.Concat(afterEPTName).ToList();
 
-            return data.ToArray();
+                return data.ToArray();
+            }
         }
-    }
 
-    public class P_RING_TEPLAnimation
-    {
-        public byte[] beforeControllerCount = new byte[] {0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xF0, 0x00,
+        public class P_RING_TEPLAnimation
+        {
+            public byte[] beforeControllerCount = new byte[] {0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xF0, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x01, 0x3F, 0x80, 0x00, 0x00};
-        public int controllerCount; // same as childCount
-        public List<TEPLAnimation> tEplAnimData;
-        public int idk; // childCount + 1
-        public List<TEPLAnimationController> AnimControllers;
-    }
+            public int controllerCount; // same as childCount
+            public List<TEPLAnimation> tEplAnimData;
+            public int idk; // childCount + 1
+            public List<TEPLAnimationController> AnimControllers;
+        }
 
-    public class TEPLAnimation
-    {
-        int Field00 = 0;
-        float Field04 = 30;
-        public TAnimation tAnimData;
+        public class TEPLAnimation
+        {
+            int Field00 = 0;
+            float Field04 = 30;
+            public TAnimation tAnimData;
 
-    }
+        }
 
-    public class TAnimation
-    {
-        public byte[] beforeControllerCount = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x3F, 0x80, 0x00, 0x00 };
-        int controllerCount; // childCount
-        List<TAnimController> controllers;
-    }
+        public class TAnimation
+        {
+            public byte[] beforeControllerCount = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x3F, 0x80, 0x00, 0x00 };
+            int controllerCount; // childCount
+            List<TAnimController> controllers;
+        }
 
-    public class TAnimController
-    {
-        public byte[] targetKind = new byte[] { 0x00, 0x01 };
-        int targetId = 901273936; // random number?
-        public byte[] afterTargetId = new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        public class TAnimController
+        {
+            public byte[] targetKind = new byte[] { 0x00, 0x01 };
+            int targetId = 901273936; // random number?
+            public byte[] afterTargetId = new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x00 };
-    }
+        }
 
-    public class TEPLAnimationController
-    {
-        float Field00 = 0f; // always 0?
-        float Field04 = 1f;
-        int controllerIndex = -1; // -1 first entry, next entry childCount, decrement 1 each subsequent entry
-        int Field10; // 0 first entry, next entry 1, count up to childCount - 1
-
+        public class TEPLAnimationController
+        {
+            float Field00 = 0f; // always 0?
+            float Field04 = 1f;
+            int controllerIndex = -1; // -1 first entry, next entry childCount, decrement 1 each subsequent entry
+            int Field10; // 0 first entry, next entry 1, count up to childCount - 1
+        }
     }
 }

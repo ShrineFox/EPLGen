@@ -821,6 +821,14 @@ namespace EPLGen
 
             MessageBox.Show($"Done converting DDS to EPT in:\n{inputDir}", "EPTs Saved Successfully");
         }
+
+        private void CreateUVAnim_Click(object sender, EventArgs e)
+        {
+            string outPath = "./animdata.bin";
+            TextureAnimation texAnim = new TextureAnimation();
+            texAnim.Build(outPath, Convert.ToInt32(txt_SpriteCount.Text));
+            MessageBox.Show($"Done outputting UV anim data to:\n{outPath}", "UV Anim Data Saved Successfully");
+        }
     }
 
     public static class ControlExtensions
