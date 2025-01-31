@@ -16,11 +16,14 @@
   <ItemGroup>
     <ProjectReference Include="..\GFD-Studio\Dependencies\Scarlet\Scarlet.IO.ImageFormats\Scarlet.IO.ImageFormats.csproj" />
     <ProjectReference Include="..\GFD-Studio\Dependencies\Scarlet\Scarlet\Scarlet.csproj" />
-    <ProjectReference Include="..\GFD-Studio\GFDLibrary\GFDLibrary.NET6.csproj" />
+    <ProjectReference Include="..\GFD-Studio\GFDLibrary\GFDLibrary.csproj" />
     <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="GMD\sprite.GMD">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="model.gmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

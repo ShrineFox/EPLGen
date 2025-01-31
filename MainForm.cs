@@ -1,27 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
-using System.Data.Common;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Data;
 using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 using DarkUI.Controls;
 using DarkUI.Forms;
 using EPLGen.Classes;
-using GFDLibrary.Effects;
 using Newtonsoft.Json;
 using ShrineFox.IO;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using static EPLGen.MainForm;
 
 namespace EPLGen
 {
@@ -115,23 +98,23 @@ namespace EPLGen
         {
             foreach (var item in listBox_Sprites.SelectedItems)
             {
-                var modelSetting = modelSettings.First(x => x.Name.Equals(item.ToString()));
+                var particle = userSettings.Particles.First(x => x.Name.Equals(item.ToString()));
                 switch (name)
                 {
                     case "ModelRot":
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Rotation.X = value;
+                                userSettings.Rotation.X = value;
                                 break;
                             case "y":
-                                modelSetting.Rotation.Y = value;
+                                userSettings.Rotation.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Rotation.Z = value;
+                                userSettings.Rotation.Z = value;
                                 break;
                             case "w":
-                                modelSetting.Rotation.W = value;
+                                userSettings.Rotation.W = value;
                                 break;
                         }
                         break;
@@ -139,16 +122,16 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Rotation.X = value;
+                                particle.Rotation.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Rotation.Y = value;
+                                particle.Rotation.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Particle.Rotation.Z = value;
+                                particle.Rotation.Z = value;
                                 break;
                             case "w":
-                                modelSetting.Particle.Rotation.W = value;
+                                particle.Rotation.W = value;
                                 break;
                         }
                         break;
@@ -156,13 +139,13 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Scale.X = value;
+                                userSettings.Scale.X = value;
                                 break;
                             case "y":
-                                modelSetting.Scale.Y = value;
+                                userSettings.Scale.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Scale.Z = value;
+                                userSettings.Scale.Z = value;
                                 break;
                         }
                         break;
@@ -170,13 +153,13 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Scale.X = value;
+                                particle.Scale.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Scale.Y = value;
+                                particle.Scale.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Particle.Scale.Z = value;
+                                particle.Scale.Z = value;
                                 break;
                         }
                         break;
@@ -184,13 +167,13 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Translation.X = value;
+                                userSettings.Translation.X = value;
                                 break;
                             case "y":
-                                modelSetting.Translation.Y = value;
+                                userSettings.Translation.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Translation.Z = value;
+                                userSettings.Translation.Z = value;
                                 break;
                         }
                         break;
@@ -198,36 +181,36 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Translation.X = value;
+                                particle.Translation.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Translation.Y = value;
+                                particle.Translation.Y = value;
                                 break;
                             case "z":
-                                modelSetting.Particle.Translation.Z = value;
+                                particle.Translation.Z = value;
                                 break;
                         }
                         break;
                     case "ParticleSpeed":
-                        modelSetting.Particle.ParticleSpeed = value;
+                        particle.ParticleSpeed = value;
                         break;
                     case "RandomSpawnDelay":
-                        modelSetting.Particle.RandomSpawnDelay = Convert.ToUInt32(value);
+                        particle.RandomSpawnDelay = Convert.ToUInt32(value);
                         break;
                     case "ParticleLife":
-                        modelSetting.Particle.ParticleLife = value;
+                        particle.ParticleLife = value;
                         break;
                     case "RespawnTimer":
-                        modelSetting.Particle.RespawnTimer = value;
+                        particle.RespawnTimer = value;
                         break;
                     case "SpawnChoker":
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.SpawnChoker.X = value;
+                                particle.SpawnChoker.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.SpawnChoker.Y = value;
+                                particle.SpawnChoker.Y = value;
                                 break;
                         }
                         break;
@@ -235,10 +218,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.SpawnerAngles.X = value;
+                                particle.SpawnerAngles.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.SpawnerAngles.Y = value;
+                                particle.SpawnerAngles.Y = value;
                                 break;
                         }
                         break;
@@ -246,10 +229,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Field170.X = value;
+                                particle.Field170.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Field170.Y = value;
+                                particle.Field170.Y = value;
                                 break;
                         }
                         break;
@@ -257,10 +240,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Field188.X = value;
+                                particle.Field188.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Field188.Y = value;
+                                particle.Field188.Y = value;
                                 break;
                         }
                         break;
@@ -268,10 +251,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Field178.X = value;
+                                particle.Field178.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Field178.Y = value;
+                                particle.Field178.Y = value;
                                 break;
                         }
                         break;
@@ -279,10 +262,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Field180.X = value;
+                                particle.Field180.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Field180.Y = value;
+                                particle.Field180.Y = value;
                                 break;
                         }
                         break;
@@ -290,10 +273,10 @@ namespace EPLGen
                         switch (axis)
                         {
                             case "x":
-                                modelSetting.Particle.Field190.X = value;
+                                particle.Field190.X = value;
                                 break;
                             case "y":
-                                modelSetting.Particle.Field190.Y = value;
+                                particle.Field190.Y = value;
                                 break;
                         }
                         break;
@@ -302,10 +285,23 @@ namespace EPLGen
             }
         }
 
-        List<ModelSettings> modelSettings = new List<ModelSettings>();
+        UserSettings userSettings = new UserSettings();
 
-        public class ParticleSettings
+        public class UserSettings()
         {
+            public string ModelName { get; set; } = "Untitled";
+            public Vector3 Translation = new Vector3(0f, 0f, 0f);
+            public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
+            public Vector3 Scale = new Vector3(1f, 1f, 1f);
+            public ModelType EplType = ModelType.Cone;
+            public List<Particle> Particles = new List<Particle>();
+        }
+
+
+        public class Particle
+        {
+            public string TexturePath = "";
+            public string Name { get; set; } = "Untitled";
             public Vector3 Translation = new Vector3(0f, 0f, 0f);
             public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
             public Vector3 Scale = new Vector3(1f, 1f, 1f);
@@ -322,17 +318,6 @@ namespace EPLGen
             public Vector2 Field190 = new Vector2(0f, 0f);
         }
 
-        public class ModelSettings
-        {
-            public string Name = "Untitled";
-            public string TexturePath = "";
-            public Vector3 Translation = new Vector3(0f, 0f, 0f);
-            public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
-            public Vector3 Scale = new Vector3(1f, 1f, 1f);
-            public ModelType EplType = ModelType.Cone;
-            public ParticleSettings Particle = new ParticleSettings();
-        }
-
         public enum ModelType
         {
             Cone,
@@ -341,29 +326,29 @@ namespace EPLGen
 
         private void AddSprite_Click(object sender, EventArgs e)
         {
-            AddModel();
+            AddParticle();
 
             UpdateSpriteList();
         }
 
-        private void AddModel(string name = "", string texPath = "")
+        private void AddParticle(string name = "", string texPath = "")
         {
-            ModelSettings model = new ModelSettings();
+            Particle particle = new Particle();
             if (string.IsNullOrEmpty(name))
-                name = model.Name;
+                name = particle.Name;
             else
-                model.Name = name;
+                particle.Name = name;
 
             if (!string.IsNullOrEmpty(texPath))
-                model.TexturePath = texPath;
+                particle.TexturePath = texPath;
 
             int i = 1;
-            while (modelSettings.Any(x => x.Name.Equals(model.Name)))
+            while (userSettings.Particles.Any(x => x.Name.Equals(particle.Name)))
             {
                 i++;
-                model.Name = name + i;
+                particle.Name = name + i;
             }
-            modelSettings.Add(model);
+            userSettings.Particles.Add(particle);
         }
 
         private void UpdateSpriteList()
@@ -376,7 +361,7 @@ namespace EPLGen
 
             // Re-add items to listbox
             listBox_Sprites.Items.Clear();
-            foreach (var item in modelSettings)
+            foreach (var item in userSettings.Particles)
             {
                 listBox_Sprites.Items.Add(item.Name);
             }
@@ -399,39 +384,39 @@ namespace EPLGen
             comboBox_Mode.Enabled = false;
 
             if (listBox_Sprites.SelectedIndex != -1 && listBox_Sprites.Enabled
-                && modelSettings.Count - 1 >= listBox_Sprites.SelectedIndex)
+                && userSettings.Particles.Count - 1 >= listBox_Sprites.SelectedIndex)
             {
-                var selectedModel = modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
+                var selectedParticle = userSettings.Particles.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString()));
 
                 // Try to use values from selected model object
                 foreach (var ctrl in new string[] { "ModelRot", "ParticleRot" })
                     foreach (var axis in new string[] { "x", "y", "z", "w" })
                     {
                         DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
-                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                        LoadOptionValue(selectedParticle, numUpDwn, ctrl, axis);
                     }
                 foreach (var ctrl in new string[] { "ModelScale", "ModelTranslation", "ParticleScale", "ParticleTranslation" })
                     foreach (var axis in new string[] { "x", "y", "z", })
                     {
                         DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
-                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                        LoadOptionValue(selectedParticle, numUpDwn, ctrl, axis);
                     }
 
                 foreach (var ctrl in new string[] { "SpawnChoker", "SpawnerAngles", "Field170", "Field188", "Field178", "Field180", "Field190" })
                     foreach (var axis in new string[] { "x", "y" })
                     {
                         DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_{axis}");
-                        LoadOptionValue(selectedModel, numUpDwn, ctrl, axis);
+                        LoadOptionValue(selectedParticle, numUpDwn, ctrl, axis);
                     }
 
                 foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "RespawnTimer" })
                 {
                     DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_x");
-                    LoadOptionValue(selectedModel, numUpDwn, ctrl, "x");
+                    LoadOptionValue(selectedParticle, numUpDwn, ctrl, "x");
                 }
-                comboBox_Mode.SelectedIndex = comboBox_Mode.Items.IndexOf(selectedModel.EplType.ToString());
+                comboBox_Mode.SelectedIndex = comboBox_Mode.Items.IndexOf(userSettings.EplType.ToString());
 
-                LoadTexturePreview(selectedModel.TexturePath);
+                LoadTexturePreview(selectedParticle.TexturePath);
             }
             else
                 LoadTexturePreview();
@@ -439,7 +424,7 @@ namespace EPLGen
             comboBox_Mode.Enabled = true;
         }
 
-        private void LoadOptionValue(ModelSettings selectedModel, DarkNumericUpDown numUpDwn, string ctrl, string axis)
+        private void LoadOptionValue(Particle particle, DarkNumericUpDown numUpDwn, string ctrl, string axis)
         {
             switch (ctrl)
             {
@@ -447,16 +432,16 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.X);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.Y);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.Z);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.Z);
                             break;
                         case "w":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Rotation.W);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.W);
                             break;
                     }
                     break;
@@ -464,16 +449,16 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.Z);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.Z);
                             break;
                         case "w":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Rotation.W);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.W);
                             break;
                     }
                     break;
@@ -481,13 +466,13 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.X);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.Y);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Scale.Z);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.Z);
                             break;
                     }
                     break;
@@ -495,13 +480,13 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Scale.Z);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.Z);
                             break;
                     }
                     break;
@@ -509,13 +494,13 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.X);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.Y);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Translation.Z);
+                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.Z);
                             break;
                     }
                     break;
@@ -523,36 +508,36 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.Y);
                             break;
                         case "z":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Translation.Z);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.Z);
                             break;
                     }
                     break;
                 case "ParticleSpeed":
-                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.ParticleSpeed);
+                    numUpDwn.Value = Convert.ToDecimal(particle.ParticleSpeed);
                     break;
                 case "RandomSpawnDelay":
-                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.RandomSpawnDelay);
+                    numUpDwn.Value = Convert.ToDecimal(particle.RandomSpawnDelay);
                     break;
                 case "ParticleLife":
-                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.ParticleLife);
+                    numUpDwn.Value = Convert.ToDecimal(particle.ParticleLife);
                     break;
                 case "RespawnTimer":
-                    numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.RespawnTimer);
+                    numUpDwn.Value = Convert.ToDecimal(particle.RespawnTimer);
                     break;
                 case "SpawnChoker":
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnChoker.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnChoker.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnChoker.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnChoker.Y);
                             break;
                     }
                     break;
@@ -560,10 +545,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnerAngles.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnerAngles.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.SpawnerAngles.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnerAngles.Y);
                             break;
                     }
                     break;
@@ -571,10 +556,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field170.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field170.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field170.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field170.Y);
                             break;
                     }
                     break;
@@ -582,10 +567,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field188.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field188.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field188.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field188.Y);
                             break;
                     }
                     break;
@@ -593,10 +578,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field178.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field178.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field178.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field178.Y);
                             break;
                     }
                     break;
@@ -604,10 +589,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field180.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field180.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field180.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field180.Y);
                             break;
                     }
                     break;
@@ -615,10 +600,10 @@ namespace EPLGen
                     switch (axis)
                     {
                         case "x":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field190.X);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field190.X);
                             break;
                         case "y":
-                            numUpDwn.Value = Convert.ToDecimal(selectedModel.Particle.Field190.Y);
+                            numUpDwn.Value = Convert.ToDecimal(particle.Field190.Y);
                             break;
                     }
                     break;
@@ -641,8 +626,8 @@ namespace EPLGen
         private void RemoveSelected_Click(object sender, EventArgs e)
         {
             foreach (var item in listBox_Sprites.SelectedItems)
-                if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    modelSettings.Remove(modelSettings.First(x => x.Name.Equals(item.ToString())));
+                if (userSettings.Particles.Any(x => x.Name.Equals(item.ToString())))
+                    userSettings.Particles.Remove(userSettings.Particles.First(x => x.Name.Equals(item.ToString())));
 
             UpdateSpriteList();
         }
@@ -652,32 +637,35 @@ namespace EPLGen
             if (listBox_Sprites.SelectedIndex == -1 || !comboBox_Mode.Enabled)
                 return;
 
-            foreach (var item in listBox_Sprites.SelectedItems)
-                if (modelSettings.Any(x => x.Name.Equals(item.ToString())))
-                    ChangeMode(modelSettings.First(x => x.Name.Equals(item.ToString())),
-                        (ModelType)Enum.Parse(typeof(ModelType), comboBox_Mode.SelectedItem.ToString()));
+            ChangeMode(userSettings, (ModelType)Enum.Parse(typeof(ModelType), comboBox_Mode.SelectedItem.ToString()));
         }
 
-        private void ChangeMode(ModelSettings model, ModelType eplType)
+        private void ChangeMode(UserSettings settings, ModelType eplType)
         {
-            model.EplType = eplType;
+            settings.EplType = eplType;
 
             // Change values based on selected type
             switch (eplType)
             {
                 case ModelType.Floor:
-                    model.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
-                    model.Particle.SpawnerAngles = new Vector2(0f, 0f);
-                    model.Particle.Field180 = new Vector2(0f, 0f);
-                    model.Particle.Translation = new Vector3(0, 0.5f, 0);
-                    model.Particle.Rotation = new Quaternion(0f, 1f, 0f, 0f);
+                    settings.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
+                    foreach (var particle in settings.Particles)
+                    {
+                        particle.SpawnerAngles = new Vector2(0f, 0f);
+                        particle.Field180 = new Vector2(0f, 0f);
+                        particle.Translation = new Vector3(0, 0.5f, 0);
+                        particle.Rotation = new Quaternion(0f, 1f, 0f, 0f);
+                    }
                     break;
                 default:
-                    model.Rotation = new Quaternion(0, 0f, 0f, 1f);
-                    model.Particle.SpawnerAngles = new Vector2(-360f, 360f);
-                    model.Particle.Field180 = new Vector2(-1f, 2f);
-                    model.Particle.Translation = new Vector3(0, 0f, 0);
-                    model.Particle.Rotation = new Quaternion(0f, 0f, 0f, 1f);
+                    settings.Rotation = new Quaternion(0, 0f, 0f, 1f);
+                    foreach (var particle in settings.Particles)
+                    {
+                        particle.SpawnerAngles = new Vector2(-360f, 360f);
+                        particle.Field180 = new Vector2(-1f, 2f);
+                        particle.Translation = new Vector3(0, 0f, 0);
+                        particle.Rotation = new Quaternion(0f, 0f, 0f, 1f);
+                    }
                     break;
             }
 
@@ -690,8 +678,8 @@ namespace EPLGen
                 Directory.Delete("./Output", true);
             Directory.CreateDirectory("./Output/EPLs");
 
-            for (int i = 0; i < modelSettings.Count; i++)
-                EPL.Build(modelSettings[i], "./Output/EPLs", i);
+            for (int i = 0; i < userSettings.Particles.Count; i++)
+                EPL.Build(userSettings, "./Output/EPLs", i);
 
             List<byte> combinedEpl = new List<byte>();
             var eplFiles = Directory.GetFiles("./Output/EPLs", "*.epl", SearchOption.AllDirectories);
@@ -711,7 +699,7 @@ namespace EPLGen
 
         private void Rename_Click(object sender, EventArgs e)
         {
-            if (listBox_Sprites.SelectedIndex != -1 && modelSettings.Any(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())))
+            if (listBox_Sprites.SelectedIndex != -1 && userSettings.Particles.Any(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())))
             {
                 RenameForm renameForm = new RenameForm(listBox_Sprites.SelectedItem.ToString());
                 var result = renameForm.ShowDialog();
@@ -725,7 +713,7 @@ namespace EPLGen
                         return;
                     }
 
-                    if (modelSettings.Any(x => x.Name.Equals(renameForm.RenameText)))
+                    if (userSettings.Particles.Any(x => x.Name.Equals(renameForm.RenameText)))
                     {
                         MessageBox.Show("There is already an item with the same name! Please choose a different one.",
                             "Error: Duplicate entry name");
@@ -733,7 +721,7 @@ namespace EPLGen
                     }
                     else
                     {
-                        modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).Name = renameForm.RenameText;
+                        userSettings.Particles.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).Name = renameForm.RenameText;
                     }
                 }
                 else
@@ -758,10 +746,10 @@ namespace EPLGen
                 {
                     // Update texture path for model object matching selected listbox item, otherwise create new one named after file
                     if (i == 0)
-                        modelSettings.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).TexturePath = texPaths[i];
+                        userSettings.Particles.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).TexturePath = texPaths[i];
                     else
                     {
-                        AddModel(Path.GetFileNameWithoutExtension(texPaths[i]), texPaths[i]);
+                        AddParticle(Path.GetFileNameWithoutExtension(texPaths[i]), texPaths[i]);
                         UpdateSpriteList();
                     }
 
@@ -790,7 +778,7 @@ namespace EPLGen
             if (!outPath.ToLower().EndsWith(".json"))
                 outPath = $"{outPath}.json";
 
-            File.WriteAllText(outPath, JsonConvert.SerializeObject(modelSettings, Newtonsoft.Json.Formatting.Indented));
+            File.WriteAllText(outPath, JsonConvert.SerializeObject(userSettings, Newtonsoft.Json.Formatting.Indented));
             MessageBox.Show($"Saved preset file to:\n{outPath}", "Preset Saved Successfully");
         }
 
@@ -800,7 +788,7 @@ namespace EPLGen
             if (selection.Count == 0 || !File.Exists(selection.First()))
                 return;
 
-            modelSettings = JsonConvert.DeserializeObject<List<ModelSettings>>(File.ReadAllText(selection.First()));
+            userSettings = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(selection.First()));
 
             UpdateSpriteList();
         }

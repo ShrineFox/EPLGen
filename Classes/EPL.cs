@@ -1,9 +1,5 @@
 ﻿using GFDLibrary;
 using GFDLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 using static EPLGen.MainForm;
@@ -26,103 +22,154 @@ namespace EPLGen
             return data.ToArray();
         }
 
-        public static void Build(ModelSettings model, string outputDir, int angleSeed = 0)
+        public static void Build(UserSettings settings, string outputDir, int angleSeed = 0)
         {
             EPL epl = new EPL();
-            epl.childNodeName = NameData(model.Name);
-            epl.eplNodeName = NameData(model.Name);
-            epl.eplLeafName = NameData(model.Name);
-            epl.particleEffect.embeddedFileName = NameData(model.Name);
-            epl.rootNodeRotation = model.Rotation;
-            epl.rootNodeTranslation = model.Translation;
-            epl.rootNodeScale = model.Scale;
-            epl.particleEffect.particleSpeed = model.Particle.ParticleSpeed;
-            epl.particleEffect.randomSpawnDelay = model.Particle.RandomSpawnDelay;
-            epl.particleEffect.respawnTimer = model.Particle.RespawnTimer;
-            epl.particleEffect.spawnChoker = model.Particle.SpawnChoker;
-            epl.particleEffect.spawnerAngles = model.Particle.SpawnerAngles;
-            epl.particleEffect.explosionEffect.Field170 = model.Particle.Field170;
-            epl.particleEffect.explosionEffect.Field188 = model.Particle.Field188;
-            epl.particleEffect.explosionEffect.Field178 = model.Particle.Field178;
-            epl.particleEffect.explosionEffect.Field180 = model.Particle.Field180;
-            epl.particleEffect.explosionEffect.Field190 = model.Particle.Field190;
+            epl.Name = NameData(settings.ModelName);
 
-            // Randomize angle that particles will appear at
-            epl.particleEffect.angleSeed = Convert.ToUInt32(angleSeed);
-
-            // Use base GMD and update with new texture, texture name, and transforms
-            ModelPack gmd = Resource.Load<ModelPack>("./model.gmd");
-            gmd.Textures.First().Value.Name = model.Name + ".dds";
-            if (File.Exists(model.TexturePath))
-                gmd.Textures.First().Value.Data = File.ReadAllBytes(model.TexturePath);
-            gmd.Materials.First().Value.Name = model.Name;
-            gmd.Materials.First().Value.DiffuseMap.Name = model.Name + ".dds";
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Translation = model.Particle.Translation;
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Rotation = model.Particle.Rotation;
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Scale = model.Particle.Scale;
-            gmd.Model.Nodes.Single(x => x.Name.Equals("SMWSpriteMesh1x4")).Attachments.First(x => 
-                x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = model.Name;
-
-            // Get GMD as byte array
-            using (MemoryStream memStream = new MemoryStream())
+            // Add child nodes
+            epl.ChildCount = settings.Particles.Count;
+            foreach (var particle in settings.Particles)
             {
-                gmd.Save(memStream, false);
-                epl.particleEffect.embeddedFile = memStream.ToArray();
+                // Apply settings from mainform
+                var eplNode = new EplChildNode()
+                {
+                    Name = NameData(particle.Name),
+                    LeafName = NameData(particle.Name),
+                    Translation = particle.Translation,
+                    Rotation = particle.Rotation,
+                    Scale = particle.Scale,
+                    ParticleData = new ParticleData() { AngleSeed = Convert.ToUInt32(angleSeed), 
+                        EmbeddedFileName = NameData(settings.ModelName), ParticleSpeed = particle.ParticleSpeed, 
+                        RandomSpawnDelay = particle.RandomSpawnDelay, DespawnTimer = particle.RespawnTimer,
+                        SpawnChoker = particle.SpawnChoker,
+                        SpawnerAngles = particle.SpawnerAngles,
+                        ExplosionEffect = new ExplosionEffectData()
+                        {
+                            Field170 = particle.Field170,
+                            Field188 = particle.Field188,
+                            Field178 = particle.Field178,
+                            Field180 = particle.Field180,
+                            Field190 = particle.Field190
+                        }
+                    }
+                };
+
+                // Use base GMD and update with new texture, texture name, and transforms
+                ModelPack gmd = Resource.Load<ModelPack>("./GMD/sprite.gmd");
+                string textureName = Path.GetFileNameWithoutExtension(particle.TexturePath);
+                gmd.Textures.First().Value.Name = textureName + ".dds";
+                if (File.Exists(particle.TexturePath))
+                    gmd.Textures.First().Value.Data = File.ReadAllBytes(particle.TexturePath);
+                gmd.Materials.First().Value.Name = textureName;
+                gmd.Materials.First().Value.DiffuseMap.Name = textureName + ".dds";
+                gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Translation = particle.Translation;
+                gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Rotation = particle.Rotation;
+                gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Scale = particle.Scale;
+                gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Attachments.First(x =>
+                    x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = textureName;
+
+                // Get GMD as byte array
+                using (MemoryStream memStream = new MemoryStream())
+                {
+                    gmd.Save(memStream, false);
+                    eplNode.ParticleData.EmbeddedFile = memStream.ToArray();
+                }
+                eplNode.ParticleData.DataLength = Convert.ToUInt32(eplNode.ParticleData.EmbeddedFile.Length);
+
+                epl.ChildNodes.Add(eplNode);
+
+                epl.Animation.SubControllerCount = epl.ChildCount - 1;
+                for (int i = 0; i < epl.Animation.SubControllerCount; i++)
+                {
+                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = Convert.ToUInt32(i) });
+                }
+                epl.Animation.Field10 = epl.ChildCount;
+                for (int i = 0; i < epl.ChildCount; i++)
+                {
+                    int ctrlIndex = i - 1;
+                    int fieldValue = epl.ChildCount - i;
+
+                    epl.Animation.Controllers.Add(new AnimController() { Field0C = Convert.ToUInt32(i), ControllerIndex = Convert.ToUInt32(ctrlIndex) });
+                }
             }
-            epl.particleEffect.dataLength = Convert.ToUInt32(epl.particleEffect.embeddedFile.Length);
 
             using (EndianBinaryWriter writer = new EndianBinaryWriter(
-                new FileStream(Path.Combine(outputDir, $"{model.Name}.epl"), FileMode.OpenOrCreate), Endianness.BigEndian))
+                new FileStream(Path.Combine(outputDir, $"{settings.ModelName}.epl"), FileMode.OpenOrCreate), Endianness.BigEndian))
             {
                 // Start EPL
-                writer.Write(epl.header);
-                writer.Write(epl.childNodeName);
-                WriteVector3(writer, epl.rootNodeTranslation);
-                WriteQuaternion(writer, epl.rootNodeRotation);
-                WriteVector3(writer, epl.rootNodeScale);
-                writer.Write(epl.beforeLeaf);
-                writer.Write(epl.dummyChild);
-                writer.Write(epl.eplNodeName);
-                WriteVector3(writer, epl.eplNodeTranslation);
-                WriteQuaternion(writer, epl.eplNodeRotation);
-                WriteVector3(writer, epl.eplNodeScale);
-                // Start EPL Leaf
-                writer.Write(epl.subNodeHeader);
-                writer.Write(epl.eplLeafName);
-                // Start Particle Data
-                writer.Write(epl.particleEffect.particleHeader);
-                writer.Write(epl.particleEffect.randomSpawnDelay);
-                writer.Write(epl.particleEffect.particleLife);
-                writer.Write(epl.particleEffect.angleSeed);
-                writer.Write(epl.particleEffect.respawnTimer);
-                WriteVector2(writer, epl.particleEffect.spawnChoker);
-                writer.Write(epl.particleEffect.colorOverLifeOffset);
-                writer.Write(epl.particleEffect.FieldC4);
-                WriteVector2(writer, epl.particleEffect.opacityOverLife);
-                writer.Write(epl.particleEffect.colorOverLife_Bezier);
-                writer.Write(epl.particleEffect.sizeOverLife);
-                WriteVector2(writer, epl.particleEffect.spawnerAngles);
-                WriteVector2(writer, epl.particleEffect.cycleRateFromBirth);
-                writer.Write(epl.particleEffect.cycleRateGlobal);
-                writer.Write(epl.particleEffect.unknownFields);
-                writer.Write(epl.particleEffect.particleScale);
-                writer.Write(epl.particleEffect.particleSpeed);
-                // Start Explosion Effect
-                WriteVector2(writer, epl.particleEffect.explosionEffect.Field170);
-                WriteVector2(writer, epl.particleEffect.explosionEffect.Field188);
-                WriteVector2(writer, epl.particleEffect.explosionEffect.Field178);
-                WriteVector2(writer, epl.particleEffect.explosionEffect.Field180);
-                WriteVector2(writer, epl.particleEffect.explosionEffect.Field190);
-                writer.Write(epl.particleEffect.explosionEffect.Field198);
-                // End Explosion Effect
-                writer.Write(epl.particleEffect.embeddedFileName);
-                writer.Write(epl.particleEffect.embeddedFileFields);
-                writer.Write(epl.particleEffect.dataLength);
-                writer.Write(epl.particleEffect.embeddedFile);
-                // End EPL Leaf
-                writer.Write(epl.subNodeFooter);
-                writer.Write(epl.animationData);
-                // End EPL
+                writer.Write(epl.Header);
+                WriteVector3(writer, epl.Translation);
+                WriteQuaternion(writer, epl.Rotation);
+                WriteVector3(writer, epl.Scale);
+                writer.Write(epl.BeforeLeaf);
+                
+                // Child Nodes
+                writer.Write(epl.ChildCount);
+                
+                foreach (EplChildNode node in epl.ChildNodes)
+                { 
+                    writer.Write(node.Name);
+                    WriteVector3(writer, node.Translation);
+                    WriteQuaternion(writer, node.Rotation);
+                    WriteVector3(writer, node.Scale);
+                    // Particle Data
+                    writer.Write(node.LeafHeader);
+                    writer.Write(node.LeafName);
+                    writer.Write(node.ParticleData.ParticleHeader);
+                    writer.Write(node.ParticleData.RandomSpawnDelay);
+                    writer.Write(node.ParticleData.ParticleLife);
+                    writer.Write(node.ParticleData.AngleSeed);
+                    writer.Write(node.ParticleData.DespawnTimer);
+                    WriteVector2(writer, node.ParticleData.SpawnChoker);
+                    writer.Write(node.ParticleData.ColorOverLifeOffset);
+                    writer.Write(node.ParticleData.FieldC4);
+                    WriteVector2(writer, node.ParticleData.OpacityOverLife);
+                    writer.Write(node.ParticleData.ColorOverLife_Bezier);
+                    writer.Write(node.ParticleData.SizeOverLife);
+                    WriteVector2(writer, node.ParticleData.SpawnerAngles);
+                    WriteVector2(writer, node.ParticleData.CycleRateFromBirth);
+                    writer.Write(node.ParticleData.CycleRateGlobal);
+                    writer.Write(node.ParticleData.UnknownFields);
+                    writer.Write(node.ParticleData.ParticleScale);
+                    writer.Write(node.ParticleData.ParticleSpeed);
+                    // Explosion Data
+                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field170);
+                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field188);
+                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field178);
+                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field180);
+                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field190);
+                    // Embedded Data
+                    writer.Write(node.ParticleData.EmbeddedFileName);
+                    writer.Write(node.ParticleData.EmbeddedFileFields);
+                    writer.Write(node.ParticleData.DataLength);
+                    writer.Write(node.ParticleData.EmbeddedFile);
+                    writer.Write(node.SubNodeFooter);
+                }
+
+                // Animation Data
+                writer.Write(epl.Animation.Field00);
+                writer.Write(epl.Animation.Field04);
+                writer.Write(epl.Animation.Flags);
+                writer.Write(epl.Animation.Duration);
+                writer.Write(epl.Animation.SubControllerCount);
+                foreach (var subCtrl in epl.Animation.SubControllers)
+                {
+                    writer.Write(subCtrl.TargetKind);
+                    writer.Write(subCtrl.TargetID);
+                    writer.Write(subCtrl.TargetName);
+                    writer.Write(subCtrl.Layers);
+                }
+                writer.Write(epl.Animation.Field10);
+                foreach (var ctrl in epl.Animation.Controllers)
+                {
+                    writer.Write(ctrl.Field00);
+                    writer.Write(ctrl.Field04);
+                    writer.Write(ctrl.ControllerIndex);
+                    writer.Write(ctrl.Field0C);
+                }
+
+                writer.Write(epl.Field40);
             }
         }
 
@@ -141,134 +188,180 @@ namespace EPLGen
 
         private static void WriteQuaternion(EndianBinaryWriter writer, Quaternion quaternion)
         {
-            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.X))); 
+            writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.X)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.Y)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.Z)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.W)));
         }
 
-        // Node Attachment Type: EPL (7), EplFlags: 5
-        public byte[] header { get; } = new byte[] { 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x05 };
+        // GFS0 header + EEplFlags (5)
+        public byte[] Header { get; } = new byte[] { 0x47, 0x46, 0x53, 0x30,
+            0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 };
 
-        public byte[] childNodeName = new byte[] { };
+        public byte[] Flags { get; } = new byte[] { 0x00, 0x00, 0x00, 0x05 };
+
+        public byte[] Name = new byte[] { };
 
         // Translation, rotation, scale
-        public Vector3 rootNodeTranslation { get; set; } = new Vector3() { X = 0f, Y = 0f, Z = 0f };
-        public Quaternion rootNodeRotation { get; set; } = new Quaternion(0f, 0f, 0f, 1f); // -0.7071068, 0, 0, 0.7071068 for floor
-        public Vector3 rootNodeScale { get; set; } = new Vector3() { X = 1f, Y = 1f, Z = 1f };
+        public Vector3 Translation { get; set; } = new Vector3() { X = 0f, Y = 0f, Z = 0f };
+        public Quaternion Rotation { get; set; } = new Quaternion(0f, 0f, 0f, 1f);
+        public Vector3 Scale { get; set; } = new Vector3() { X = 1f, Y = 1f, Z = 1f };
 
         // AttachmentCount: 0, HasProperties: 0, FieldE0: 1, ChildCount: 2
-        public byte[] beforeLeaf { get; } = new byte[] { 
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 };
+        public byte[] BeforeLeaf { get; } = new byte[] { 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00 };
 
-        // First child of EPL node, nothing to edit
-        public byte[] dummyChild { get; } = new byte[] { 
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
-            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
-            0x00, 0x08, 0x00, 0x00, 0x00, 0x05, 0x00, 0x05, 0x45, 0x4D, 0x50, 0x54, 0x59, 0x91, 0x51, 0x87,
-            0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00 };
+        public int ChildCount { get; set; } = 0;
 
-        // 2nd Child of EPL node
-        public byte[] eplNodeName { get; set; } = new byte[] { };
-        public Vector3 eplNodeTranslation { get; set; } = new Vector3() { X = 0f, Y = 0f, Z = 0f };
-        public Quaternion eplNodeRotation { get; set; } = new Quaternion(0f, 0f, 0f, 1f);
-        public Vector3 eplNodeScale { get; set; } = new Vector3() { X = 1f, Y = 1f, Z = 1f };
+        public List<EplChildNode> ChildNodes { get; set; } = new List<EplChildNode>();
+
+        // Binary representation of particle animation controllers & frame timings
+        public AnimationData Animation { get; set; } = new AnimationData();
+        public byte[] Field40 { get; set; } = new byte[] { 0x00, 0x00 };
+
+    }
+
+    public class EplChildNode
+    {
+        public byte[] Name { get; set; } = new byte[] { };
+        public Vector3 Translation { get; set; } = new Vector3() { X = 0f, Y = 0f, Z = 0f };
+        public Quaternion Rotation { get; set; } = new Quaternion(0f, 0f, 0f, 1f);
+        public Vector3 Scale { get; set; } = new Vector3() { X = 1f, Y = 1f, Z = 1f };
 
         // Start of EPL Leaf 
         // Attachment count: 1, Attachment Type: EPL Leaf (8), EfPL Flags: 5
-        public byte[] subNodeHeader { get; } = new byte[] { 
+        public byte[] LeafHeader { get; } = new byte[] {
             0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x05 };
 
-        public byte[] eplLeafName { get; set; } = new byte[] { };
+        public byte[] LeafName { get; set; } = new byte[] { };
 
-        // Particle data
-        public ParticleEffect particleEffect { get; set; } = new ParticleEffect();
+        // Explosion effect (animated sprites appearing and disappearing on floor)
+        public ParticleData ParticleData { get; set; } = new ParticleData();
 
         // Has Properties: 0, FieldE0: 1, ChildCount: 0
-        public byte[] subNodeFooter { get; } = new byte[] {
+        public byte[] SubNodeFooter { get; } = new byte[] {
             0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-
-        // Binary representation of particle animation controllers & frame timings
-        public byte[] animationData { get; } = new byte[]
-        {
-            0x00, 0x00, 0x00, 0x00, 0x41, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x3F, 0xC0, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x02, 0x00, 0x01, 0x08, 0x56, 0xC2, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
-            0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x08, 0x56, 0xC4, 0x40, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
-            0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,
-            0x00, 0x00, 0x00, 0x00, 0x3F, 0xBB, 0xBB, 0xBC, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-            0x00, 0x00
-        };
     }
 
-    public class ParticleEffect
+    public class ParticleData
     {
-        // Type: 10, Field04: 2, Type: 2, Field00: 0, Field04: 30, Field08, Field0C, Field10
-        public byte[] particleHeader { get; } = new byte[] {
-            0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x1E, 0x08, 0xB9, 0x91, 0x40, 0x00, 0x00, 0x00, 0x80, 0x10, 0xF6, 0xFA, 0xE0 };
+        // Type: 10, Field04: 2, Type: 2, Field00: 0, Field04: 2, Field08, Field0C, Field10
+        public byte[] ParticleHeader { get; } = new byte[] {
+            0x00, 0x00, 0x00, 0x0A, 
+            0x00, 0x00, 0x00, 0x02, 
+            0x00, 0x00, 0x00, 0x02, 
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x02, 
+            0x08, 0xB9, 0x91, 0x40, // 1.116843e-33
+            0x00, 0x00, 0x00, 0x80, // 1.793662e-43
+            0x10, 0xF6, 0xFA, 0xE0 // 9.741643e-29
+        };
 
         // Particle Emitter (Effect Generator)
-        public uint randomSpawnDelay { get; set; } = 0;
-        public float particleLife { get; set; } = 0.5f;
-        public uint angleSeed { get; set; } = 1;
-        public float respawnTimer { get; set; } = 0f;
-        public Vector2 spawnChoker { get; set; } = new Vector2(0f, 2f);
-        public float colorOverLifeOffset { get; set; } = 0.8980392f;
+        public uint RandomSpawnDelay { get; set; } = 6;
+        public float ParticleLife { get; set; } = 3f;
+        public uint AngleSeed { get; set; } = 0;
+        public float DespawnTimer { get; set; } = 0f;
+        public Vector2 SpawnChoker { get; set; } = new Vector2(0f, 4.18f);
+        public float ColorOverLifeOffset { get; set; } = 1f;
         public uint FieldC4 { get; set; } = 2;
-        public Vector2 opacityOverLife { get; set; } = new Vector2(1f, 1f);
-        public byte[] colorOverLife_Bezier { get; } = new byte[] {
+        public Vector2 OpacityOverLife { get; set; } = new Vector2(0f, 1f);
+        public byte[] ColorOverLife_Bezier { get; } = new byte[] {
             0x00, 0x02, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0x3D, 0xF1, 0x20, 0x22, 0x3E, 0xEA, 0x14, 0x51, 0x3E, 0xDB, 0x34, 0x70, 0x3F, 0x72,
-            0x4C, 0xBD, 0x23, 0x92, 0x3F, 0xA8, 0x57, 0x28, 0x6B, 0x76, 0x7D, 0x42, 0x8C, 0xFE, 0x9B, 0x2B,
-            0xA7, 0xD4, 0xB3, 0x3C, 0xBD, 0x81, 0xC6, 0xCC, 0xCF, 0x28, 0xD6, 0xAC, 0xDD, 0x6F, 0xE3, 0x82,
-            0xE8, 0xE2, 0xED, 0xA1, 0xF1, 0xC6, 0xF5, 0x60, 0xF8, 0x74, 0xFB, 0x08, 0xFD, 0x24, 0xFE, 0xC9 };
+            0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
+            0x00, 0x00, 0x0A, 0xA7, 0x15, 0x5B, 0x20, 0x00, 0x2A, 0xAA, 0x35, 0x50, 0x3F, 0xFA, 0x4A, 0xB0,
+            0x55, 0x60, 0x60, 0x01, 0x6A, 0xAA, 0x75, 0x5E, 0x7F, 0xF3, 0x8A, 0xA0, 0x95, 0x54, 0x9F, 0xFD,
+            0xAA, 0x9E, 0xB5, 0x4E, 0xC0, 0x04, 0xCA, 0xAE, 0xD5, 0x54, 0xDF, 0xFE, 0xEA, 0xA3, 0xF5, 0x57,
+        };
 
         // Field C0, SizeOverLife, Field12C: 1, Field130: 1
-        public byte[] sizeOverLife { get; } = new byte[]
+        public byte[] SizeOverLife { get; } = new byte[]
         {
-            0x3F, 0x80, 0x00, 0x00, 0x00, 0x03, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
-            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
-            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3E, 0xAD, 0x33, 0x8A, 0x3D, 0xC4, 0x03, 0x6C, 0x3F, 0x62,
-            0x6D, 0xE0, 0x3F, 0x0A, 0xFB, 0xC4, 0x0A, 0x07, 0x14, 0x44, 0x1E, 0xA8, 0x29, 0x44, 0x34, 0x13,
-            0x3F, 0x12, 0x4A, 0x3C, 0x55, 0x8C, 0x60, 0xFF, 0x6C, 0x90, 0x78, 0x2A, 0x83, 0xDA, 0x8F, 0x8B,
-            0x9B, 0x1A, 0xA6, 0x97, 0xB1, 0xDF, 0xBC, 0xF4, 0xC7, 0xB8, 0xD2, 0x20, 0xDC, 0x20, 0xE5, 0xBC,
-            0xEE, 0xEA, 0xF7, 0xB0, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00
+            0x00, 0x80, 0x00, 0x00,
+            0x00, 0x03, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
+            0x00, 0x00, 0x0A, 0xA7, 0x15, 0x5B, 0x20, 0x00, 0x2A, 0xAA, 0x35, 0x50, 0x3F, 0xFA, 0x4A, 0xB0,
+            0x55, 0x60, 0x60, 0x01, 0x6A, 0xAA, 0x75, 0x5E, 0x7F, 0xF3, 0x8A, 0xA0, 0x95, 0x54, 0x9F, 0xFD,
+            0xAA, 0x9E, 0xB5, 0x4E, 0xC0, 0x04, 0xCA, 0xAE, 0xD5, 0x54, 0xDF, 0xFE, 0xEA, 0xA3, 0xF5, 0x57,
+            0x3F, 0x80, 0x00, 0x00, 
+            0x3F, 0x80, 0x00, 0x00
         };
-        public Vector2 spawnerAngles { get; set; } = new Vector2(-360f, 360f); // 0,0 for floor
-        public Vector2 cycleRateFromBirth { get; set; } = new Vector2(0f, 0f);
-        public float cycleRateGlobal { get; set; } = 0.0001f;
-        // Field138, 13C, 150: 0 
-        public byte[] unknownFields { get; } = new byte[12];
-        public float particleScale { get; set; } = 1f;
-        public float particleSpeed { get; set; } = 0.5f;
+        public Vector2 SpawnerAngles { get; set; } = new Vector2(0f, 0f); // 0,0 for flat against floor, -360, 360 for dome
+        public Vector2 CycleRateFromBirth { get; set; } = new Vector2(0f, 0f);
+        public float CycleRateGlobal { get; set; } = 0f;
 
-        public ExplosionEffect explosionEffect { get; set; } = new ExplosionEffect();
+        // Field138, 13C, 150: 0 
+        public byte[] UnknownFields { get; } = new byte[12];
+        public float ParticleScale { get; set; } = 0.52f;
+        public float ParticleSpeed { get; set; } = 1f;
+
+        public ExplosionEffectData ExplosionEffect { get; set; } = new ExplosionEffectData();
 
         // Particle Embedded File (GMD)
-        public byte[] embeddedFileName { get; set; } = new byte[] { };
+        public byte[] EmbeddedFileName { get; set; } = new byte[] { };
 
         // Field18, Field00: 2
-        public byte[] embeddedFileFields { get; } = new byte[] { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02 };
-        public uint dataLength { get; set; } = 0;
-        public byte[] embeddedFile { get; set; } = new byte[0];
+        public byte[] EmbeddedFileFields { get; } = new byte[] { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x05 };
+        public uint DataLength { get; set; } = 0;
+        public byte[] EmbeddedFile { get; set; } = new byte[0];
     }
 
-    public class ExplosionEffect
+    public class ExplosionEffectData
     {
         // Explosion Effect Params
-        public Vector2 Field170 { get; set; } = new Vector2(102.6f, 84f);
+        public Vector2 Field170 { get; set; } = new Vector2(34.2f, 91.2f);
         public Vector2 Field188 { get; set; } = new Vector2(0f, 0f);
         public Vector2 Field178 { get; set; } = new Vector2(-1f, 2f);
-        public Vector2 Field180 { get; set; } = new Vector2(-1f, 2f); // 0,0 for floor
+        public Vector2 Field180 { get; set; } = new Vector2(0f, 0f); // 0,0 for floor, -1f, 2f for dome
         public Vector2 Field190 { get; set; } = new Vector2(0f, 0f);
         public float Field198 { get; set; } = 0f;
     }
+
+
+    public class AnimationData
+    {
+        public int Field00 { get; set; } = 0;
+        public float Field04 { get; set; } = 30f; // total frames?
+        public byte[] Flags { get; } = new byte[] {
+            0x00, 0x00, 0x00, 0x01 }; // 1
+
+        public float Duration { get; set; } = 1f;
+        public int SubControllerCount { get; set; } = 0;  // controller count - 1
+        public List<SubAnimController> SubControllers { get; set; } = new List<SubAnimController>();
+        public int Field10 { get; set; } = 0; // controller count
+        public List<AnimController> Controllers { get; set; } = new List<AnimController>();
+    }
+
+    public class SubAnimController
+    {
+        public byte[] TargetKind { get; } = new byte[] {
+            0x00, 0x01 }; // 1
+        public uint TargetID { get; set; } = 0;
+
+        public byte[] TargetName { get; set; } = new byte[] { };
+
+        public byte[] Layers { get; set; } =
+        {
+            0x00, 0x00, 0x00, 0x03, // layer count = 3
+            0x00, 0x00, 0x00, 0x11, // KeyType = PRSByte (17)
+            0x00, 0x00, 0x00, 0x00, // KeyCount = 0
+            0x00, 0x00, 0x00, 0x12, // KeyType = MeshColor (18)
+            0x00, 0x00, 0x00, 0x00, // KeyCount = 0
+            0x00, 0x00, 0x00, 0x13,  // KeyType = SingleByte (19)
+            0x00, 0x00, 0x00, 0x00 // KeyCount = 0
+        };
+    }
+
+    public class AnimController
+    {
+        public float Field00 { get; set; } = 0f;
+        public float Field04 { get; set; } = 0.9666666f;
+        public uint ControllerIndex { get; set; } = 0; // -1 for first one, counting up for each subsequent one
+        public uint Field0C { get; set; } = 0; // 0 for the first one, then childnode count - 1 and counting down for each subsequent one
+
+    }
+
 
     public class GMD
     {
@@ -289,6 +382,10 @@ namespace EPLGen
         };
 
         // attachment count
+
+        // 0x00, 0x00, 0x00, 0x07
+
+        // epl minus first 16 bytes
 
         // End of a GMD container
         public static byte[] gmdFooter { get; } = new byte[]
