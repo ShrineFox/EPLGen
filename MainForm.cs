@@ -10,6 +10,8 @@ namespace EPLGen
 {
     public partial class MainForm : DarkForm
     {
+        List<Particle> copiedParticles = new List<Particle>();
+        Particle copiedParams = new Particle();
         public MainForm()
         {
             InitializeComponent();
@@ -337,29 +339,25 @@ namespace EPLGen
                 return;
 
             foreach(var file in files)
-                AddParticle(Path.GetFileNameWithoutExtension(file), file);
+                AddParticle(new Particle() { Name = Path.GetFileNameWithoutExtension(file), TexturePath = file });
 
             UpdateSpriteList();
         }
 
-        private void AddParticle(string name = "", string texPath = "")
+        private void AddParticle(Particle particle = null, int index = 0)
         {
-            Particle particle = new Particle();
-            if (string.IsNullOrEmpty(name))
-                name = particle.Name;
-            else
-                particle.Name = name;
-
-            if (!string.IsNullOrEmpty(texPath))
-                particle.TexturePath = texPath;
+            if (particle == null)
+                particle = new Particle() { };
 
             int i = 1;
+            string name = particle.Name.Copy();
             while (userSettings.Particles.Any(x => x.Name.Equals(particle.Name)))
             {
                 i++;
                 particle.Name = name + i;
             }
-            userSettings.Particles.Add(particle);
+
+            userSettings.Particles.Insert(index, particle);
         }
 
         private void UpdateSpriteList()
@@ -643,6 +641,80 @@ namespace EPLGen
             UpdateSpriteList();
         }
 
+        private void CopyParams_Click(object sender, EventArgs e)
+        {
+            foreach (var item in listBox_Sprites.SelectedItems)
+                if (userSettings.Particles.Any(x => x.Name.Equals(item.ToString())))
+                    copiedParams = userSettings.Particles.First(x => x.Name.Equals(item.ToString())).Copy();
+        }
+
+        private void PasteParams_Click(object sender, EventArgs e)
+        {
+            foreach (var item in listBox_Sprites.SelectedItems)
+                if (userSettings.Particles.Any(x => x.Name.Equals(item.ToString())))
+                {
+                    var copy = copiedParams.Copy();
+                    var particle = userSettings.Particles.First(x => x.Name.Equals(item.ToString()));
+
+                    particle.SpawnChoker = copy.SpawnChoker.Copy();
+                    particle.SpawnerAngles = copy.SpawnerAngles.Copy();
+                    particle.Translation = copy.Translation.Copy();
+                    particle.Rotation = copy.Rotation.Copy();
+                    particle.Scale = copy.Scale.Copy();
+                    particle.ParticleSpeed = copy.ParticleSpeed.Copy();
+                    particle.RandomSpawnDelay = copy.RandomSpawnDelay.Copy();
+                    particle.ParticleLife = copy.ParticleLife.Copy();
+                    particle.DespawnTimer = copy.DespawnTimer.Copy();
+                    particle.Field170 = copy.Field170.Copy();
+                    particle.Field188 = copy.Field188.Copy();
+                    particle.Field178 = copy.Field178.Copy();
+                    particle.Field180 = copy.Field180.Copy();
+                    particle.Field190 = copy.Field190.Copy();
+                }
+                    
+
+            UpdateSpriteList();
+        }
+
+        private void CopyParticles_Click(object sender, EventArgs e)
+        {
+            copiedParticles.Clear();
+
+            foreach (var item in listBox_Sprites.SelectedItems)
+                if (userSettings.Particles.Any(x => x.Name.Equals(item.ToString())))
+                    copiedParticles.Add(userSettings.Particles.First(x => x.Name.Equals(item.ToString())).Copy());
+
+            copiedParticles.Reverse();
+        }
+
+        private void PasteParticles_Click(object sender, EventArgs e)
+        {
+            int index = 0;
+
+            foreach (var item in listBox_Sprites.SelectedItems)
+            {
+                if (userSettings.Particles.Any(x => x.Name.Equals(item.ToString())))
+                {
+                    var particle = userSettings.Particles.First(x => x.Name.Equals(item.ToString()));
+                    index = userSettings.Particles.IndexOf(particle);
+                    userSettings.Particles.Remove(particle);
+                }
+            }
+
+            foreach (var particle in copiedParticles)
+                AddParticle(particle.Copy(), index);
+
+            UpdateSpriteList();
+        }
+
+        private void PasteNew_Click(object sender, EventArgs e)
+        {
+            foreach (var particle in copiedParticles)
+                AddParticle(particle.Copy(), 0);
+
+            UpdateSpriteList();
+        }
+
         private void Mode_Changed(object sender, EventArgs e)
         {
             if (listBox_Sprites.SelectedIndex == -1 || !comboBox_Mode.Enabled)
@@ -659,10 +731,10 @@ namespace EPLGen
             switch (eplType)
             {
                 case ModelType.Floor:
-                    settings.Rotation = new Quaternion(0f, 0f, 0f, 1f);
+                    settings.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
                     foreach (var particle in settings.Particles)
                     {
-                        particle.SpawnerAngles = new Vector2(90f, 90f);
+                        particle.SpawnerAngles = new Vector2(90f, 0f);
                         particle.Field180 = new Vector2(0f, 0f);
                     }
                     break;
@@ -671,7 +743,7 @@ namespace EPLGen
                     foreach (var particle in settings.Particles)
                     {
                         particle.SpawnerAngles = new Vector2(-360f, 360f);
-                        particle.Field180 = new Vector2(-1f, 2f);                    
+                        particle.Field180 = new Vector2(-1f, 2f);
                     }
                     break;
             }
@@ -752,7 +824,7 @@ namespace EPLGen
                         userSettings.Particles.First(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())).TexturePath = texPaths[i];
                     else
                     {
-                        AddParticle(Path.GetFileNameWithoutExtension(texPaths[i]), texPaths[i]);
+                        AddParticle(new Particle() { Name = Path.GetFileNameWithoutExtension(texPaths[i]), TexturePath = texPaths[i] });
                         UpdateSpriteList();
                     }
 
@@ -769,6 +841,16 @@ namespace EPLGen
                 RemoveSelected_Click(sender, e);
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
                 Rename_Click(sender, e);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
+                CopyParticles_Click(sender, e);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
+                PasteParticles_Click(sender, e);
+            else if (e.Modifiers == (Keys.Control | Keys.Alt) && e.KeyCode == Keys.V)
+                PasteNew_Click(sender, e);
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.V)
+                PasteParams_Click(sender, e);
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.C)
+                CopyParams_Click(sender, e);
         }
 
         private void SavePreset_Click(object sender, EventArgs e)

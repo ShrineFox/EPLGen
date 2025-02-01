@@ -27,6 +27,9 @@ namespace EPLGen
         {
             EPL epl = new EPL();
             epl.Name = NameData(settings.ModelName);
+            epl.Translation = settings.Translation;
+            epl.Rotation = settings.Rotation;
+            epl.Scale = settings.Scale;
 
             // Add child nodes
             epl.ChildCount = settings.Particles.Count;
@@ -214,7 +217,7 @@ namespace EPLGen
         public byte[] Header { get; } = new byte[] { 0x47, 0x46, 0x53, 0x30,
             0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 };
 
-        public byte[] Flags { get; } = new byte[] { 0x00, 0x00, 0x00, 0x05 };
+        public byte[] Flags { get; } = new byte[] { 0x00, 0x00, 0x00, 0x05 }; 
 
         public byte[] Name = new byte[] { };
 
@@ -247,7 +250,7 @@ namespace EPLGen
         // Start of EPL Leaf 
         // Attachment count: 1, Attachment Type: EPL Leaf (8), EfPL Flags: 5
         public byte[] LeafHeader { get; } = new byte[] {
-            0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x05 };
+            0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x05 }; // 0D instead of 05 = fix y to ground
 
         public byte[] LeafName { get; set; } = new byte[] { };
 
