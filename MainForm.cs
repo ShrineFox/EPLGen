@@ -15,6 +15,12 @@ namespace EPLGen
             InitializeComponent();
             MenuStripHelper.SetMenuStripIcons(MenuStripHelper.GetMenuStripIconPairs("./Dependencies/Icons.txt"), this);
             AddInputFields();
+
+#if DEBUG
+            LoadJson("./test.json");
+            ExportEPL("./Test.EPL");
+            Environment.Exit(0);
+#endif
         }
 
         private void AddInputFields()
@@ -648,13 +654,11 @@ namespace EPLGen
             switch (eplType)
             {
                 case ModelType.Floor:
-                    settings.Rotation = new Quaternion(-0.7071068f, 0f, 0f, 0.7071068f);
+                    settings.Rotation = new Quaternion(0f, 0f, 0f, 1f);
                     foreach (var particle in settings.Particles)
                     {
                         particle.SpawnerAngles = new Vector2(0f, 0f);
                         particle.Field180 = new Vector2(0f, 0f);
-                        particle.Translation = new Vector3(0, 0.5f, 0);
-                        particle.Rotation = new Quaternion(0f, 1f, 0f, 0f);
                     }
                     break;
                 default:
@@ -662,9 +666,7 @@ namespace EPLGen
                     foreach (var particle in settings.Particles)
                     {
                         particle.SpawnerAngles = new Vector2(-360f, 360f);
-                        particle.Field180 = new Vector2(-1f, 2f);
-                        particle.Translation = new Vector3(0, 0f, 0);
-                        particle.Rotation = new Quaternion(0f, 0f, 0f, 1f);
+                        particle.Field180 = new Vector2(-1f, 2f);                    
                     }
                     break;
             }
@@ -674,27 +676,20 @@ namespace EPLGen
 
         private void ExportEPL_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists("./Output"))
-                Directory.Delete("./Output", true);
-            Directory.CreateDirectory("./Output/EPLs");
+            var outPath = WinFormsDialogs.SelectFile("Choose EPL Destination", false, new string[] { "EPL (.EPL)" }, true);
+            if (string.IsNullOrEmpty(outPath.First()))
+                return;
 
-            for (int i = 0; i < userSettings.Particles.Count; i++)
-                EPL.Build(userSettings, "./Output/EPLs", i);
-
-            List<byte> combinedEpl = new List<byte>();
-            var eplFiles = Directory.GetFiles("./Output/EPLs", "*.epl", SearchOption.AllDirectories);
-            foreach (var eplFile in eplFiles)
-                combinedEpl = combinedEpl.Concat(File.ReadAllBytes(eplFile)).ToList();
-
-            // Output combined EPL file with attachment count at the beginning (for hex editing gmd attachments)
-            byte[] eplCount = BitConverter.GetBytes(EndiannessSwapUtility.Swap(Convert.ToUInt32(eplFiles.Count())));
-            byte[] combinedEpls = eplCount.Concat(combinedEpl).ToArray();
-            File.WriteAllBytes("./Output/COMBINED.EPL", combinedEpls);
-            // Output combined EPL wrapped in a GMD (for attaching to objects)
-            byte[] combinedGMD = GMD.gmdHeader.Concat(combinedEpls).Concat(GMD.gmdFooter).ToArray();
-            File.WriteAllBytes("./Output/COMBINED.GMD", combinedGMD);
+            ExportEPL(outPath.First());
 
             MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./Output/COMBINED.EPL")}", "EPL Export Successful");
+        }
+
+        private void ExportEPL(string outPath)
+        {
+            userSettings.ModelName = Path.GetFileNameWithoutExtension(outPath);
+
+            EPL.Build(userSettings, outPath);
         }
 
         private void Rename_Click(object sender, EventArgs e)
@@ -788,7 +783,12 @@ namespace EPLGen
             if (selection.Count == 0 || !File.Exists(selection.First()))
                 return;
 
-            userSettings = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(selection.First()));
+            LoadJson(selection.First());
+        }
+
+        private void LoadJson(string file)
+        {
+            userSettings = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(file));
 
             UpdateSpriteList();
         }

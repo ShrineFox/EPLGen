@@ -22,7 +22,7 @@ namespace EPLGen
             return data.ToArray();
         }
 
-        public static void Build(UserSettings settings, string outputDir, int angleSeed = 0)
+        public static void Build(UserSettings settings, string outputPath, int angleSeed = 0)
         {
             EPL epl = new EPL();
             epl.Name = NameData(settings.ModelName);
@@ -80,9 +80,12 @@ namespace EPLGen
                 epl.ChildNodes.Add(eplNode);
 
                 epl.Animation.SubControllerCount = epl.ChildCount - 1;
+                if (epl.Animation.SubControllerCount < 1)
+                    epl.Animation.SubControllerCount = 1;
+
                 for (int i = 0; i < epl.Animation.SubControllerCount; i++)
                 {
-                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = Convert.ToUInt32(i) });
+                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = i * 220 });
                 }
                 epl.Animation.Field10 = epl.ChildCount;
                 for (int i = 0; i < epl.ChildCount; i++)
@@ -90,15 +93,19 @@ namespace EPLGen
                     int ctrlIndex = i - 1;
                     int fieldValue = epl.ChildCount - i;
 
-                    epl.Animation.Controllers.Add(new AnimController() { Field0C = Convert.ToUInt32(i), ControllerIndex = Convert.ToUInt32(ctrlIndex) });
+                    epl.Animation.Controllers.Add(new AnimController() { Field0C = i, ControllerIndex = ctrlIndex });
                 }
             }
 
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+
             using (EndianBinaryWriter writer = new EndianBinaryWriter(
-                new FileStream(Path.Combine(outputDir, $"{settings.ModelName}.epl"), FileMode.OpenOrCreate), Endianness.BigEndian))
+                new FileStream(outputPath, FileMode.Create), Endianness.BigEndian))
             {
                 // Start EPL
                 writer.Write(epl.Header);
+                writer.Write(epl.Flags);
+                writer.Write(epl.Name);
                 WriteVector3(writer, epl.Translation);
                 WriteQuaternion(writer, epl.Rotation);
                 WriteVector3(writer, epl.Scale);
@@ -139,6 +146,7 @@ namespace EPLGen
                     WriteVector2(writer, node.ParticleData.ExplosionEffect.Field178);
                     WriteVector2(writer, node.ParticleData.ExplosionEffect.Field180);
                     WriteVector2(writer, node.ParticleData.ExplosionEffect.Field190);
+                    writer.Write(node.ParticleData.ExplosionEffect.Field198);
                     // Embedded Data
                     writer.Write(node.ParticleData.EmbeddedFileName);
                     writer.Write(node.ParticleData.EmbeddedFileFields);
@@ -171,6 +179,12 @@ namespace EPLGen
 
                 writer.Write(epl.Field40);
             }
+
+            using (ShrineFox.IO.FileSys.WaitForFile(outputPath)) { };
+
+            // Output combined EPL wrapped in a GMD (for attaching to objects)
+            byte[] combinedGMD = GMD.gmdHeader.Concat(File.ReadAllBytes(outputPath).Skip(16)).Concat(GMD.gmdFooter).ToArray();
+            File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(outputPath), Path.GetFileNameWithoutExtension(outputPath) + ".GMD"), combinedGMD);
         }
 
         private static void WriteVector2(EndianBinaryWriter writer, Vector2 vec2)
@@ -196,7 +210,7 @@ namespace EPLGen
 
         // GFS0 header + EEplFlags (5)
         public byte[] Header { get; } = new byte[] { 0x47, 0x46, 0x53, 0x30,
-            0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 };
+            0x01, 0x10, 0x50, 0x70, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 };
 
         public byte[] Flags { get; } = new byte[] { 0x00, 0x00, 0x00, 0x05 };
 
@@ -337,9 +351,9 @@ namespace EPLGen
     {
         public byte[] TargetKind { get; } = new byte[] {
             0x00, 0x01 }; // 1
-        public uint TargetID { get; set; } = 0;
+        public int TargetID { get; set; } = 0;
 
-        public byte[] TargetName { get; set; } = new byte[] { };
+        public byte[] TargetName { get; set; } = new byte[] { 0x00, 0x00 };
 
         public byte[] Layers { get; set; } =
         {
@@ -357,8 +371,8 @@ namespace EPLGen
     {
         public float Field00 { get; set; } = 0f;
         public float Field04 { get; set; } = 0.9666666f;
-        public uint ControllerIndex { get; set; } = 0; // -1 for first one, counting up for each subsequent one
-        public uint Field0C { get; set; } = 0; // 0 for the first one, then childnode count - 1 and counting down for each subsequent one
+        public int ControllerIndex { get; set; } = 0; // -1 for first one, counting up for each subsequent one
+        public int Field0C { get; set; } = 0; // 0 for the first one, then childnode count - 1 and counting down for each subsequent one
 
     }
 
@@ -378,7 +392,9 @@ namespace EPLGen
             0x40, 0xE2, 0x46, 0x31, 0x00, 0x08, 0x52, 0x6F, 0x6F, 0x74, 0x4E, 0x6F, 0x64, 0x65, 0x48, 0xE1,
             0xB0, 0xE5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80,
-            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00
+            0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 
+            0x00, 0x00, 0x00, 0x01, // attachment count
+            0x00, 0x00, 0x00, 0x07 // attachment type (epl)
         };
 
         // attachment count
