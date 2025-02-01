@@ -79,21 +79,17 @@ namespace EPLGen
 
                 epl.ChildNodes.Add(eplNode);
 
-                epl.Animation.SubControllerCount = epl.ChildCount - 1;
-                if (epl.Animation.SubControllerCount < 1)
-                    epl.Animation.SubControllerCount = 1;
+                epl.Animation.SubControllerCount = epl.ChildCount;
 
                 for (int i = 0; i < epl.Animation.SubControllerCount; i++)
                 {
-                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = i * 220 });
+                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = i * 220  });
                 }
-                epl.Animation.Field10 = epl.ChildCount;
+                epl.Animation.Field10 = epl.ChildCount + 1;
+                epl.Animation.Controllers.Add(new AnimController() { Field0C = 0, ControllerIndex = -1 });
                 for (int i = 0; i < epl.ChildCount; i++)
                 {
-                    int ctrlIndex = i - 1;
-                    int fieldValue = epl.ChildCount - i;
-
-                    epl.Animation.Controllers.Add(new AnimController() { Field0C = i, ControllerIndex = ctrlIndex });
+                    epl.Animation.Controllers.Add(new AnimController() { Field0C = epl.ChildCount - i, ControllerIndex = i });
                 }
             }
 
