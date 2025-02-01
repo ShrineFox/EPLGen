@@ -1,13 +1,5 @@
-﻿using EPLGen.Classes;
-using GFDLibrary.Common;
-using SixLabors.ImageSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ShrineFox.IO;
 using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace EPLGen
 {

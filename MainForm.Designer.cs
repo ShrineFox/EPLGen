@@ -348,7 +348,7 @@ namespace EPLGen
             loadToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             loadToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(169, 26);
+            loadToolStripMenuItem.Size = new Size(224, 26);
             loadToolStripMenuItem.Text = "Load Preset";
             loadToolStripMenuItem.Click += LoadPreset_Click;
             // 
@@ -357,7 +357,7 @@ namespace EPLGen
             saveToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             saveToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(169, 26);
+            saveToolStripMenuItem.Size = new Size(224, 26);
             saveToolStripMenuItem.Text = "Save Preset";
             saveToolStripMenuItem.Click += SavePreset_Click;
             // 
@@ -366,7 +366,7 @@ namespace EPLGen
             exportEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             exportEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
-            exportEPLToolStripMenuItem.Size = new Size(169, 26);
+            exportEPLToolStripMenuItem.Size = new Size(224, 26);
             exportEPLToolStripMenuItem.Text = "Export EPL";
             exportEPLToolStripMenuItem.Click += ExportEPL_Click;
             // 

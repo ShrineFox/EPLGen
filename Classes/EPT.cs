@@ -1,12 +1,5 @@
-﻿using GFDLibrary.Effects;
-using GFDLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using ShrineFox.IO;
 using System.Text;
-using System.Threading.Tasks;
-using static EPLGen.MainForm;
 
 namespace EPLGen.Classes
 {

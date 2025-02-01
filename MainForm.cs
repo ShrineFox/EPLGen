@@ -17,9 +17,8 @@ namespace EPLGen
             AddInputFields();
 
 #if DEBUG
-            LoadJson("./test.json");
-            ExportEPL("./Test.EPL");
-            Environment.Exit(0);
+            LoadJson("./test2.json");
+            ExportEPL("./Test6.EPL");
 #endif
         }
 
@@ -35,7 +34,7 @@ namespace EPLGen
             AddNumControls(tlp_ParticleSettings, "Speed:", "ParticleSpeed", 3);
             AddNumControls(tlp_ParticleSettings, "Spawn Delay:", "RandomSpawnDelay", 4, false);
             AddNumControls(tlp_ParticleSettings, "Life Length:", "ParticleLife", 5);
-            AddNumControls(tlp_ParticleSettings, "Repawn Time:", "RespawnTimer", 6);
+            AddNumControls(tlp_ParticleSettings, "Depawn Time:", "DespawnTimer", 6);
             AddAxisControls(tlp_ParticleSettings, "Spawn Choke:", "SpawnChoker", 2, 7);
             AddAxisControls(tlp_ParticleSettings, "Spawn Angles:", "SpawnerAngles", 2, 8);
             AddAxisControls(tlp_ParticleSettings, "Field170:", "Field170", 2, 9);
@@ -206,8 +205,8 @@ namespace EPLGen
                     case "ParticleLife":
                         particle.ParticleLife = value;
                         break;
-                    case "RespawnTimer":
-                        particle.RespawnTimer = value;
+                    case "DespawnTimer":
+                        particle.DespawnTimer = value;
                         break;
                     case "SpawnChoker":
                         switch (axis)
@@ -311,10 +310,10 @@ namespace EPLGen
             public Vector3 Translation = new Vector3(0f, 0f, 0f);
             public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
             public Vector3 Scale = new Vector3(1f, 1f, 1f);
-            public float ParticleSpeed = 0.5f;
-            public uint RandomSpawnDelay = 0;
-            public float ParticleLife = 0.5f;
-            public float RespawnTimer = 0f;
+            public float ParticleSpeed = 1f;
+            public uint RandomSpawnDelay = 6;
+            public float ParticleLife = 1f;
+            public float DespawnTimer = 0f;
             public Vector2 SpawnChoker = new Vector2(0f, 2f);
             public Vector2 SpawnerAngles = new Vector2(-360f, 360f);
             public Vector2 Field170 = new Vector2(102.6f, 84f);
@@ -332,7 +331,13 @@ namespace EPLGen
 
         private void AddSprite_Click(object sender, EventArgs e)
         {
-            AddParticle();
+            var files = WinFormsDialogs.SelectFile("Choose DDS Textures", true, new string[] { "DDS Texture (.DDS)" });
+
+            if (files.Count <= 0)
+                return;
+
+            foreach(var file in files)
+                AddParticle(Path.GetFileNameWithoutExtension(file), file);
 
             UpdateSpriteList();
         }
@@ -415,7 +420,7 @@ namespace EPLGen
                         LoadOptionValue(selectedParticle, numUpDwn, ctrl, axis);
                     }
 
-                foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "RespawnTimer" })
+                foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "DespawnTimer" })
                 {
                     DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_x");
                     LoadOptionValue(selectedParticle, numUpDwn, ctrl, "x");
@@ -533,8 +538,8 @@ namespace EPLGen
                 case "ParticleLife":
                     numUpDwn.Value = Convert.ToDecimal(particle.ParticleLife);
                     break;
-                case "RespawnTimer":
-                    numUpDwn.Value = Convert.ToDecimal(particle.RespawnTimer);
+                case "DespawnTimer":
+                    numUpDwn.Value = Convert.ToDecimal(particle.DespawnTimer);
                     break;
                 case "SpawnChoker":
                     switch (axis)
@@ -657,7 +662,7 @@ namespace EPLGen
                     settings.Rotation = new Quaternion(0f, 0f, 0f, 1f);
                     foreach (var particle in settings.Particles)
                     {
-                        particle.SpawnerAngles = new Vector2(0f, 0f);
+                        particle.SpawnerAngles = new Vector2(90f, 90f);
                         particle.Field180 = new Vector2(0f, 0f);
                     }
                     break;
@@ -680,9 +685,12 @@ namespace EPLGen
             if (string.IsNullOrEmpty(outPath.First()))
                 return;
 
+            if (!outPath.First().ToLower().EndsWith(".epl"))
+                outPath[0] += ".EPL";
+
             ExportEPL(outPath.First());
 
-            MessageBox.Show($"Done exporting EPL:\n{Path.GetFullPath("./Output/COMBINED.EPL")}", "EPL Export Successful");
+            MessageBox.Show($"Done exporting EPL:\n{outPath.First()}", "EPL Export Successful");
         }
 
         private void ExportEPL(string outPath)

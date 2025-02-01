@@ -3,6 +3,7 @@ using GFDLibrary.Models;
 using System.Numerics;
 using System.Text;
 using static EPLGen.MainForm;
+using ShrineFox.IO;
 
 namespace EPLGen
 {
@@ -40,8 +41,8 @@ namespace EPLGen
                     Rotation = particle.Rotation,
                     Scale = particle.Scale,
                     ParticleData = new ParticleData() { AngleSeed = Convert.ToUInt32(angleSeed), 
-                        EmbeddedFileName = NameData(settings.ModelName), ParticleSpeed = particle.ParticleSpeed, 
-                        RandomSpawnDelay = particle.RandomSpawnDelay, DespawnTimer = particle.RespawnTimer,
+                        EmbeddedFileName = NameData(particle.Name), ParticleSpeed = particle.ParticleSpeed, 
+                        RandomSpawnDelay = particle.RandomSpawnDelay, DespawnTimer = particle.DespawnTimer,
                         SpawnChoker = particle.SpawnChoker,
                         SpawnerAngles = particle.SpawnerAngles,
                         ExplosionEffect = new ExplosionEffectData()
@@ -164,6 +165,7 @@ namespace EPLGen
                     writer.Write(subCtrl.TargetName);
                     writer.Write(subCtrl.Layers);
                 }
+
                 writer.Write(epl.Animation.Field10);
                 foreach (var ctrl in epl.Animation.Controllers)
                 {
@@ -297,13 +299,13 @@ namespace EPLGen
             0x3F, 0x80, 0x00, 0x00, 
             0x3F, 0x80, 0x00, 0x00
         };
-        public Vector2 SpawnerAngles { get; set; } = new Vector2(0f, 0f); // 0,0 for flat against floor, -360, 360 for dome
+        public Vector2 SpawnerAngles { get; set; } = new Vector2(90f, 90f); // 90,90 for flat against floor, -360, 360 for dome
         public Vector2 CycleRateFromBirth { get; set; } = new Vector2(0f, 0f);
         public float CycleRateGlobal { get; set; } = 0f;
 
         // Field138, 13C, 150: 0 
         public byte[] UnknownFields { get; } = new byte[12];
-        public float ParticleScale { get; set; } = 0.52f;
+        public float ParticleScale { get; set; } = 1f;
         public float ParticleSpeed { get; set; } = 1f;
 
         public ExplosionEffectData ExplosionEffect { get; set; } = new ExplosionEffectData();
@@ -345,8 +347,7 @@ namespace EPLGen
 
     public class SubAnimController
     {
-        public byte[] TargetKind { get; } = new byte[] {
-            0x00, 0x01 }; // 1
+        public byte[] TargetKind { get; } = new byte[] { 0x00, 0x01 }; // 1
         public int TargetID { get; set; } = 0;
 
         public byte[] TargetName { get; set; } = new byte[] { 0x00, 0x00 };
