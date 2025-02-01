@@ -43,6 +43,7 @@ namespace EPLGen
             pasteParamsToolStripMenuItem = new ToolStripMenuItem();
             copyToolStripMenuItem = new ToolStripMenuItem();
             pasteToolStripMenuItem = new ToolStripMenuItem();
+            pasteNewtoolStripMenuItem = new ToolStripMenuItem();
             groupBox_ModelSettings = new GroupBox();
             panel_ModelSettings = new Panel();
             tlp_ModelSettings = new TableLayoutPanel();
@@ -64,7 +65,7 @@ namespace EPLGen
             createEPTsToolStripMenuItem = new ToolStripMenuItem();
             createUVAnimToolStripMenuItem = new ToolStripMenuItem();
             txt_SpriteCount = new ToolStripTextBox();
-            pasteNewtoolStripMenuItem = new ToolStripMenuItem();
+            toolStripComboBox_GMD = new ToolStripComboBox();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
             panel_ParticleSettings.SuspendLayout();
@@ -88,14 +89,14 @@ namespace EPLGen
             tlp_Main.Controls.Add(groupBox_ModelSettings, 0, 1);
             tlp_Main.Controls.Add(groupBox_Texture, 1, 0);
             tlp_Main.Dock = DockStyle.Fill;
-            tlp_Main.Location = new Point(0, 28);
+            tlp_Main.Location = new Point(0, 32);
             tlp_Main.Margin = new Padding(3, 4, 3, 4);
             tlp_Main.Name = "tlp_Main";
             tlp_Main.RowCount = 2;
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
-            tlp_Main.Size = new Size(982, 663);
+            tlp_Main.Size = new Size(982, 659);
             tlp_Main.TabIndex = 0;
             // 
             // groupBox_ParticleSettings
@@ -103,11 +104,11 @@ namespace EPLGen
             groupBox_ParticleSettings.Controls.Add(panel_ParticleSettings);
             groupBox_ParticleSettings.Dock = DockStyle.Fill;
             groupBox_ParticleSettings.ForeColor = SystemColors.ScrollBar;
-            groupBox_ParticleSettings.Location = new Point(494, 335);
+            groupBox_ParticleSettings.Location = new Point(494, 333);
             groupBox_ParticleSettings.Margin = new Padding(3, 4, 3, 4);
             groupBox_ParticleSettings.Name = "groupBox_ParticleSettings";
             groupBox_ParticleSettings.Padding = new Padding(3, 4, 3, 4);
-            groupBox_ParticleSettings.Size = new Size(485, 324);
+            groupBox_ParticleSettings.Size = new Size(485, 322);
             groupBox_ParticleSettings.TabIndex = 3;
             groupBox_ParticleSettings.TabStop = false;
             groupBox_ParticleSettings.Text = "Sprite Settings";
@@ -121,7 +122,7 @@ namespace EPLGen
             panel_ParticleSettings.Location = new Point(3, 24);
             panel_ParticleSettings.Margin = new Padding(3, 4, 3, 4);
             panel_ParticleSettings.Name = "panel_ParticleSettings";
-            panel_ParticleSettings.Size = new Size(479, 296);
+            panel_ParticleSettings.Size = new Size(479, 294);
             panel_ParticleSettings.TabIndex = 0;
             // 
             // tlp_ParticleSettings
@@ -166,7 +167,7 @@ namespace EPLGen
             listBox_Sprites.Margin = new Padding(3, 4, 3, 4);
             listBox_Sprites.Name = "listBox_Sprites";
             listBox_Sprites.SelectionMode = SelectionMode.MultiExtended;
-            listBox_Sprites.Size = new Size(485, 323);
+            listBox_Sprites.Size = new Size(485, 321);
             listBox_Sprites.TabIndex = 1;
             listBox_Sprites.SelectedIndexChanged += SpriteList_IndexChanged;
             listBox_Sprites.KeyDown += SpritesList_KeyDown;
@@ -178,14 +179,14 @@ namespace EPLGen
             darkContextMenu_Sprites.ImageScalingSize = new Size(20, 20);
             darkContextMenu_Sprites.Items.AddRange(new ToolStripItem[] { addSpriteToolStripMenuItem, removeSelectedToolStripMenuItem, renameSelectedToolStripMenuItem, copyParamsToolStripMenuItem, pasteParamsToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, pasteNewtoolStripMenuItem });
             darkContextMenu_Sprites.Name = "darkContextMenu_Sprites";
-            darkContextMenu_Sprites.Size = new Size(211, 224);
+            darkContextMenu_Sprites.Size = new Size(312, 196);
             // 
             // addSpriteToolStripMenuItem
             // 
             addSpriteToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             addSpriteToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             addSpriteToolStripMenuItem.Name = "addSpriteToolStripMenuItem";
-            addSpriteToolStripMenuItem.Size = new Size(210, 24);
+            addSpriteToolStripMenuItem.Size = new Size(311, 24);
             addSpriteToolStripMenuItem.Text = "Add Sprite";
             addSpriteToolStripMenuItem.Click += AddSprite_Click;
             // 
@@ -194,7 +195,7 @@ namespace EPLGen
             removeSelectedToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             removeSelectedToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             removeSelectedToolStripMenuItem.Name = "removeSelectedToolStripMenuItem";
-            removeSelectedToolStripMenuItem.Size = new Size(210, 24);
+            removeSelectedToolStripMenuItem.Size = new Size(311, 24);
             removeSelectedToolStripMenuItem.Text = "Remove Selected";
             removeSelectedToolStripMenuItem.Click += RemoveSelected_Click;
             // 
@@ -203,7 +204,7 @@ namespace EPLGen
             renameSelectedToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             renameSelectedToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             renameSelectedToolStripMenuItem.Name = "renameSelectedToolStripMenuItem";
-            renameSelectedToolStripMenuItem.Size = new Size(210, 24);
+            renameSelectedToolStripMenuItem.Size = new Size(311, 24);
             renameSelectedToolStripMenuItem.Text = "Rename Selected";
             renameSelectedToolStripMenuItem.Click += Rename_Click;
             // 
@@ -212,7 +213,7 @@ namespace EPLGen
             copyParamsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             copyParamsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             copyParamsToolStripMenuItem.Name = "copyParamsToolStripMenuItem";
-            copyParamsToolStripMenuItem.Size = new Size(210, 24);
+            copyParamsToolStripMenuItem.Size = new Size(311, 24);
             copyParamsToolStripMenuItem.Text = "Copy Parameters";
             copyParamsToolStripMenuItem.Click += CopyParams_Click;
             // 
@@ -221,7 +222,7 @@ namespace EPLGen
             pasteParamsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             pasteParamsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             pasteParamsToolStripMenuItem.Name = "pasteParamsToolStripMenuItem";
-            pasteParamsToolStripMenuItem.Size = new Size(210, 24);
+            pasteParamsToolStripMenuItem.Size = new Size(311, 24);
             pasteParamsToolStripMenuItem.Text = "Paste Parameters";
             pasteParamsToolStripMenuItem.Click += PasteParams_Click;
             // 
@@ -230,7 +231,7 @@ namespace EPLGen
             copyToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             copyToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            copyToolStripMenuItem.Size = new Size(210, 24);
+            copyToolStripMenuItem.Size = new Size(311, 24);
             copyToolStripMenuItem.Text = "Copy";
             copyToolStripMenuItem.Click += CopyParticles_Click;
             // 
@@ -239,20 +240,29 @@ namespace EPLGen
             pasteToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             pasteToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            pasteToolStripMenuItem.Size = new Size(210, 24);
+            pasteToolStripMenuItem.Size = new Size(311, 24);
             pasteToolStripMenuItem.Text = "Overwrite Selected From Clipboard";
             pasteToolStripMenuItem.Click += PasteParticles_Click;
+            // 
+            // pasteNewtoolStripMenuItem
+            // 
+            pasteNewtoolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            pasteNewtoolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            pasteNewtoolStripMenuItem.Name = "pasteNewtoolStripMenuItem";
+            pasteNewtoolStripMenuItem.Size = new Size(311, 24);
+            pasteNewtoolStripMenuItem.Text = "Paste New";
+            pasteNewtoolStripMenuItem.Click += PasteNew_Click;
             // 
             // groupBox_ModelSettings
             // 
             groupBox_ModelSettings.Controls.Add(panel_ModelSettings);
             groupBox_ModelSettings.Dock = DockStyle.Fill;
             groupBox_ModelSettings.ForeColor = SystemColors.ScrollBar;
-            groupBox_ModelSettings.Location = new Point(3, 335);
+            groupBox_ModelSettings.Location = new Point(3, 333);
             groupBox_ModelSettings.Margin = new Padding(3, 4, 3, 4);
             groupBox_ModelSettings.Name = "groupBox_ModelSettings";
             groupBox_ModelSettings.Padding = new Padding(3, 4, 3, 4);
-            groupBox_ModelSettings.Size = new Size(485, 324);
+            groupBox_ModelSettings.Size = new Size(485, 322);
             groupBox_ModelSettings.TabIndex = 2;
             groupBox_ModelSettings.TabStop = false;
             groupBox_ModelSettings.Text = "Effect Settings";
@@ -266,7 +276,7 @@ namespace EPLGen
             panel_ModelSettings.Location = new Point(3, 24);
             panel_ModelSettings.Margin = new Padding(3, 4, 3, 4);
             panel_ModelSettings.Name = "panel_ModelSettings";
-            panel_ModelSettings.Size = new Size(479, 296);
+            panel_ModelSettings.Size = new Size(479, 294);
             panel_ModelSettings.TabIndex = 0;
             // 
             // tlp_ModelSettings
@@ -326,7 +336,7 @@ namespace EPLGen
             groupBox_Texture.Margin = new Padding(3, 4, 3, 4);
             groupBox_Texture.Name = "groupBox_Texture";
             groupBox_Texture.Padding = new Padding(3, 4, 3, 4);
-            groupBox_Texture.Size = new Size(485, 323);
+            groupBox_Texture.Size = new Size(485, 321);
             groupBox_Texture.TabIndex = 4;
             groupBox_Texture.TabStop = false;
             groupBox_Texture.Text = "Sprite Texture";
@@ -339,7 +349,7 @@ namespace EPLGen
             pictureBox_Tex.Location = new Point(3, 24);
             pictureBox_Tex.Margin = new Padding(3, 4, 3, 4);
             pictureBox_Tex.Name = "pictureBox_Tex";
-            pictureBox_Tex.Size = new Size(479, 295);
+            pictureBox_Tex.Size = new Size(479, 293);
             pictureBox_Tex.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox_Tex.TabIndex = 1;
             pictureBox_Tex.TabStop = false;
@@ -367,11 +377,11 @@ namespace EPLGen
             darkMenuStrip_MainMenu.BackColor = Color.FromArgb(60, 63, 65);
             darkMenuStrip_MainMenu.ForeColor = Color.FromArgb(220, 220, 220);
             darkMenuStrip_MainMenu.ImageScalingSize = new Size(20, 20);
-            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createUVAnimToolStripMenuItem });
+            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createUVAnimToolStripMenuItem, toolStripComboBox_GMD });
             darkMenuStrip_MainMenu.Location = new Point(0, 0);
             darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
             darkMenuStrip_MainMenu.Padding = new Padding(3, 2, 0, 2);
-            darkMenuStrip_MainMenu.Size = new Size(982, 28);
+            darkMenuStrip_MainMenu.Size = new Size(982, 32);
             darkMenuStrip_MainMenu.TabIndex = 1;
             darkMenuStrip_MainMenu.Text = "darkMenuStrip1";
             // 
@@ -381,7 +391,7 @@ namespace EPLGen
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, exportEPLToolStripMenuItem });
             fileToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Size = new Size(46, 28);
             fileToolStripMenuItem.Text = "File";
             // 
             // loadToolStripMenuItem
@@ -416,7 +426,7 @@ namespace EPLGen
             addToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             addToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             addToolStripMenuItem.Name = "addToolStripMenuItem";
-            addToolStripMenuItem.Size = new Size(51, 24);
+            addToolStripMenuItem.Size = new Size(51, 28);
             addToolStripMenuItem.Text = "Add";
             addToolStripMenuItem.Click += AddSprite_Click;
             // 
@@ -425,7 +435,7 @@ namespace EPLGen
             removeToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             removeToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            removeToolStripMenuItem.Size = new Size(77, 24);
+            removeToolStripMenuItem.Size = new Size(77, 28);
             removeToolStripMenuItem.Text = "Remove";
             removeToolStripMenuItem.Click += RemoveSelected_Click;
             // 
@@ -434,7 +444,7 @@ namespace EPLGen
             renameToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             renameToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            renameToolStripMenuItem.Size = new Size(77, 24);
+            renameToolStripMenuItem.Size = new Size(77, 28);
             renameToolStripMenuItem.Text = "Rename";
             renameToolStripMenuItem.Click += Rename_Click;
             // 
@@ -443,7 +453,7 @@ namespace EPLGen
             setImageToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             setImageToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             setImageToolStripMenuItem.Name = "setImageToolStripMenuItem";
-            setImageToolStripMenuItem.Size = new Size(90, 24);
+            setImageToolStripMenuItem.Size = new Size(90, 28);
             setImageToolStripMenuItem.Text = "Set Image";
             setImageToolStripMenuItem.Click += ChooseImageFile_Click;
             // 
@@ -452,7 +462,7 @@ namespace EPLGen
             createEPTsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             createEPTsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             createEPTsToolStripMenuItem.Name = "createEPTsToolStripMenuItem";
-            createEPTsToolStripMenuItem.Size = new Size(99, 24);
+            createEPTsToolStripMenuItem.Size = new Size(99, 28);
             createEPTsToolStripMenuItem.Text = "Create EPTs";
             createEPTsToolStripMenuItem.Click += CreateEPTs_Click;
             // 
@@ -462,7 +472,7 @@ namespace EPLGen
             createUVAnimToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { txt_SpriteCount });
             createUVAnimToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             createUVAnimToolStripMenuItem.Name = "createUVAnimToolStripMenuItem";
-            createUVAnimToolStripMenuItem.Size = new Size(128, 24);
+            createUVAnimToolStripMenuItem.Size = new Size(128, 28);
             createUVAnimToolStripMenuItem.Text = "Create UV Anim";
             createUVAnimToolStripMenuItem.Click += CreateUVAnim_Click;
             // 
@@ -474,14 +484,15 @@ namespace EPLGen
             txt_SpriteCount.Size = new Size(100, 27);
             txt_SpriteCount.Text = "4";
             // 
-            // pasteNewtoolStripMenuItem
+            // toolStripComboBox_GMD
             // 
-            pasteNewtoolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            pasteNewtoolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            pasteNewtoolStripMenuItem.Name = "pasteNewtoolStripMenuItem";
-            pasteNewtoolStripMenuItem.Size = new Size(210, 24);
-            pasteNewtoolStripMenuItem.Text = "Paste New";
-            pasteNewtoolStripMenuItem.Click += PasteNew_Click;
+            toolStripComboBox_GMD.BackColor = Color.FromArgb(60, 63, 65);
+            toolStripComboBox_GMD.DropDownStyle = ComboBoxStyle.DropDownList;
+            toolStripComboBox_GMD.DropDownWidth = 150;
+            toolStripComboBox_GMD.ForeColor = Color.FromArgb(220, 220, 220);
+            toolStripComboBox_GMD.Name = "toolStripComboBox_GMD";
+            toolStripComboBox_GMD.Size = new Size(150, 28);
+            toolStripComboBox_GMD.SelectedIndexChanged += GMD_Changed;
             // 
             // MainForm
             // 
@@ -551,6 +562,7 @@ namespace EPLGen
         private ToolStripMenuItem copyToolStripMenuItem;
         private ToolStripMenuItem pasteToolStripMenuItem;
         private ToolStripMenuItem pasteNewtoolStripMenuItem;
+        private ToolStripComboBox toolStripComboBox_GMD;
     }
 }
 

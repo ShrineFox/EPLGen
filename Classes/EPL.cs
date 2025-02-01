@@ -64,7 +64,7 @@ namespace EPLGen
                 };
 
                 // Use base GMD and update with new texture, texture name, and transforms
-                ModelPack gmd = Resource.Load<ModelPack>("./GMD/sprite.gmd");
+                ModelPack gmd = Resource.Load<ModelPack>(settings.GMD);
                 string textureName = Path.GetFileNameWithoutExtension(particle.TexturePath);
                 gmd.Textures.First().Value.Name = textureName + ".dds";
                 if (File.Exists(particle.TexturePath))

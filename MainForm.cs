@@ -12,16 +12,22 @@ namespace EPLGen
     {
         List<Particle> copiedParticles = new List<Particle>();
         Particle copiedParams = new Particle();
+        List<string> gmds = new List<string>();
+
         public MainForm()
         {
             InitializeComponent();
             MenuStripHelper.SetMenuStripIcons(MenuStripHelper.GetMenuStripIconPairs("./Dependencies/Icons.txt"), this);
             AddInputFields();
 
-#if DEBUG
-            LoadJson("./test2.json");
-            ExportEPL("./Test2.EPL");
-#endif
+            gmds = Directory.GetFiles("./Dependencies/GMD", "*.gmd").ToList();
+            toolStripComboBox_GMD.ComboBox.Items.AddRange(gmds.Select(x => Path.GetFileName(x)).ToArray());
+            toolStripComboBox_GMD.ComboBox.SelectedIndex = 0;
+        }
+
+        private void GMD_Changed(object sender, EventArgs e)
+        {
+            userSettings.GMD = gmds[toolStripComboBox_GMD.ComboBox.SelectedIndex];
         }
 
         private void AddInputFields()
@@ -297,6 +303,8 @@ namespace EPLGen
         public class UserSettings()
         {
             public string ModelName { get; set; } = "Untitled";
+            public string GMD { get; set; } = "";
+
             public Vector3 Translation = new Vector3(0f, 0f, 0f);
             public Quaternion Rotation = new Quaternion(0f, 0f, 0f, 1f);
             public Vector3 Scale = new Vector3(1f, 1f, 1f);

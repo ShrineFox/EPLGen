@@ -21,16 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="GMD\sprite.GMD">
+    <None Update="Dependencies\GMD\sprite.GMD">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dependencies\GMD\sprite2.GMD">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="model.gmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dependencies\" />
   </ItemGroup>
 
 </Project>
