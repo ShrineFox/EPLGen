@@ -18,7 +18,7 @@ namespace EPLGen
 
 #if DEBUG
             LoadJson("./test2.json");
-            ExportEPL("./Test6.EPL");
+            ExportEPL("./Test2.EPL");
 #endif
         }
 

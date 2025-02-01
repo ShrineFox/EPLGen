@@ -40,9 +40,13 @@ namespace EPLGen
                     Translation = particle.Translation,
                     Rotation = particle.Rotation,
                     Scale = particle.Scale,
-                    ParticleData = new ParticleData() { AngleSeed = Convert.ToUInt32(angleSeed), 
-                        EmbeddedFileName = NameData(particle.Name), ParticleSpeed = particle.ParticleSpeed, 
-                        RandomSpawnDelay = particle.RandomSpawnDelay, DespawnTimer = particle.DespawnTimer,
+                    ParticleData = new ParticleData()
+                    {
+                        AngleSeed = Convert.ToUInt32(angleSeed),
+                        EmbeddedFileName = NameData(particle.Name),
+                        ParticleSpeed = particle.ParticleSpeed,
+                        RandomSpawnDelay = particle.RandomSpawnDelay,
+                        DespawnTimer = particle.DespawnTimer,
                         SpawnChoker = particle.SpawnChoker,
                         SpawnerAngles = particle.SpawnerAngles,
                         ExplosionEffect = new ExplosionEffectData()
@@ -79,19 +83,19 @@ namespace EPLGen
                 eplNode.ParticleData.DataLength = Convert.ToUInt32(eplNode.ParticleData.EmbeddedFile.Length);
 
                 epl.ChildNodes.Add(eplNode);
+            }
 
-                epl.Animation.SubControllerCount = epl.ChildCount;
+            epl.Animation.SubControllerCount = epl.ChildCount;
 
-                for (int i = 0; i < epl.Animation.SubControllerCount; i++)
-                {
-                    epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = i * 220  });
-                }
-                epl.Animation.Field10 = epl.ChildCount + 1;
-                epl.Animation.Controllers.Add(new AnimController() { Field0C = 0, ControllerIndex = -1 });
-                for (int i = 0; i < epl.ChildCount; i++)
-                {
-                    epl.Animation.Controllers.Add(new AnimController() { Field0C = epl.ChildCount - i, ControllerIndex = i });
-                }
+            for (int i = 0; i < epl.Animation.SubControllerCount; i++)
+            {
+                epl.Animation.SubControllers.Add(new SubAnimController() { TargetID = i * 220  });
+            }
+            epl.Animation.Field10 = epl.ChildCount + 1;
+            epl.Animation.Controllers.Add(new AnimController() { Field0C = 0, ControllerIndex = -1 });
+            for (int i = 0; i < epl.ChildCount; i++)
+            {
+                epl.Animation.Controllers.Add(new AnimController() { Field0C = epl.ChildCount - i, ControllerIndex = i });
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
