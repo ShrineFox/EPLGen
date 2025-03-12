@@ -3,8 +3,12 @@ using System.Numerics;
 using DarkUI.Controls;
 using DarkUI.Forms;
 using EPLGen.Classes;
+using GFDLibrary.Models;
+using GFDLibrary;
 using Newtonsoft.Json;
 using ShrineFox.IO;
+using static EPLGen.MainForm;
+using YamlDotNet.Serialization;
 
 namespace EPLGen
 {
@@ -346,7 +350,7 @@ namespace EPLGen
             if (files.Count <= 0)
                 return;
 
-            foreach(var file in files)
+            foreach (var file in files)
                 AddParticle(new Particle() { Name = Path.GetFileNameWithoutExtension(file), TexturePath = file });
 
             UpdateSpriteList();
@@ -679,7 +683,7 @@ namespace EPLGen
                     particle.Field180 = copy.Field180.Copy();
                     particle.Field190 = copy.Field190.Copy();
                 }
-                    
+
 
             UpdateSpriteList();
         }
@@ -906,6 +910,28 @@ namespace EPLGen
             }
 
             MessageBox.Show($"Done converting DDS to EPT in:\n{inputDir}", "EPTs Saved Successfully");
+        }
+
+        private void CreateGMDs_Click(object sender, EventArgs e)
+        {
+            var inputDir = WinFormsDialogs.SelectFolder("Choose DDS Files Directory");
+            if (!Directory.Exists(inputDir))
+                return;
+
+            foreach (var ddsPath in Directory.GetFiles(inputDir, "*.dds", SearchOption.AllDirectories))
+            {
+                ModelPack gmd = Resource.Load<ModelPack>(userSettings.GMD);
+                string textureName = Path.GetFileNameWithoutExtension(ddsPath);
+                gmd.Textures.First().Value.Name = textureName + ".dds";
+                gmd.Textures.First().Value.Data = File.ReadAllBytes(ddsPath);
+                gmd.Materials.First().Value.Name = textureName;
+                gmd.Materials.First().Value.DiffuseMap.Name = textureName + ".dds";
+                gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Attachments.First(x =>
+                    x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = textureName;
+                gmd.Save(ddsPath.Replace(".dds",".gmd").Replace(".DDS",".GMD"));
+            }
+
+            MessageBox.Show($"Done converting DDS to GMD in:\n{inputDir}", "GMDs Saved Successfully");
         }
 
         private void CreateUVAnim_Click(object sender, EventArgs e)

@@ -66,6 +66,7 @@ namespace EPLGen
             createUVAnimToolStripMenuItem = new ToolStripMenuItem();
             txt_SpriteCount = new ToolStripTextBox();
             toolStripComboBox_GMD = new ToolStripComboBox();
+            createGMDsToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
             panel_ParticleSettings.SuspendLayout();
@@ -377,7 +378,7 @@ namespace EPLGen
             darkMenuStrip_MainMenu.BackColor = Color.FromArgb(60, 63, 65);
             darkMenuStrip_MainMenu.ForeColor = Color.FromArgb(220, 220, 220);
             darkMenuStrip_MainMenu.ImageScalingSize = new Size(20, 20);
-            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createUVAnimToolStripMenuItem, toolStripComboBox_GMD });
+            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createGMDsToolStripMenuItem, createUVAnimToolStripMenuItem, toolStripComboBox_GMD });
             darkMenuStrip_MainMenu.Location = new Point(0, 0);
             darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
             darkMenuStrip_MainMenu.Padding = new Padding(3, 2, 0, 2);
@@ -494,6 +495,15 @@ namespace EPLGen
             toolStripComboBox_GMD.Size = new Size(150, 28);
             toolStripComboBox_GMD.SelectedIndexChanged += GMD_Changed;
             // 
+            // createGMDsToolStripMenuItem
+            // 
+            createGMDsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            createGMDsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            createGMDsToolStripMenuItem.Name = "createGMDsToolStripMenuItem";
+            createGMDsToolStripMenuItem.Size = new Size(110, 28);
+            createGMDsToolStripMenuItem.Text = "Create GMDs";
+            createGMDsToolStripMenuItem.Click += CreateGMDs_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -563,6 +573,7 @@ namespace EPLGen
         private ToolStripMenuItem pasteToolStripMenuItem;
         private ToolStripMenuItem pasteNewtoolStripMenuItem;
         private ToolStripComboBox toolStripComboBox_GMD;
+        private ToolStripMenuItem createGMDsToolStripMenuItem;
     }
 }
 

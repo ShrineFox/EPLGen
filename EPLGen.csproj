@@ -27,6 +27,12 @@
     <None Update="Dependencies\GMD\sprite2.GMD">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Dependencies\GMD\sprite_noanim.GMD">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dependencies\Icons.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="model.gmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
