@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ShrineFox.IO;
 using static EPLGen.MainForm;
 using YamlDotNet.Serialization;
+using Microsoft.Toolkit.HighPerformance;
 
 namespace EPLGen
 {
@@ -54,6 +55,7 @@ namespace EPLGen
             AddAxisControls(tlp_ParticleSettings, "Field178:", "Field178", 2, 11);
             AddAxisControls(tlp_ParticleSettings, "Field180:", "Field180", 2, 12);
             AddAxisControls(tlp_ParticleSettings, "Field190:", "Field190", 2, 13);
+            AddNumControls(tlp_ParticleSettings, "Distance From Screen:", "DistanceFromScreen", 14, false);
         }
 
         private void AddNumControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int row, bool decimalPlaces = true)
@@ -66,6 +68,7 @@ namespace EPLGen
                 Anchor = AnchorStyles.Left,
                 AutoSize = true
             };
+            numUpDwn.ValueChanged += FieldValueChanged;
             if (!decimalPlaces)
                 numUpDwn.DecimalPlaces = 7;
             parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
@@ -297,6 +300,9 @@ namespace EPLGen
                                 break;
                         }
                         break;
+                    case "DistanceFromScreen":
+                        particle.DistanceFromScreen = value;
+                        break;
                 }
 
             }
@@ -335,6 +341,7 @@ namespace EPLGen
             public Vector2 Field178 = new Vector2(-1f, 2f);
             public Vector2 Field180 = new Vector2(-1f, 2f); // 0,0 for floor
             public Vector2 Field190 = new Vector2(0f, 0f);
+            public float DistanceFromScreen = 10f;
         }
 
         public enum ModelType
@@ -345,7 +352,7 @@ namespace EPLGen
 
         private void AddSprite_Click(object sender, EventArgs e)
         {
-            var files = WinFormsDialogs.SelectFile("Choose DDS Textures", true, new string[] { "DDS Texture (.DDS)" });
+            var files = WinFormsDialogs.SelectFile("Choose DDS Textures", true, new string[] { "DDS Texture (.DDS)", "GMD Model (.GMD)" });
 
             if (files.Count <= 0)
                 return;
@@ -430,7 +437,7 @@ namespace EPLGen
                         LoadOptionValue(selectedParticle, numUpDwn, ctrl, axis);
                     }
 
-                foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "DespawnTimer" })
+                foreach (var ctrl in new string[] { "ParticleSpeed", "RandomSpawnDelay", "ParticleLife", "DespawnTimer", "DistanceFromScreen" })
                 {
                     DarkNumericUpDown numUpDwn = WinForms.GetControl(this, $"num_{ctrl}_x");
                     LoadOptionValue(selectedParticle, numUpDwn, ctrl, "x");
@@ -628,12 +635,15 @@ namespace EPLGen
                             break;
                     }
                     break;
+                case "DistanceFromScreen":
+                    numUpDwn.Value = Convert.ToDecimal(particle.DistanceFromScreen);
+                    break;
             }
         }
 
         private void LoadTexturePreview(string texPath = "")
         {
-            if (!String.IsNullOrEmpty(texPath) && File.Exists(texPath))
+            if (!String.IsNullOrEmpty(texPath) && File.Exists(texPath) && Path.GetExtension(texPath).ToLower() == ".dds")
             {
                 pictureBox_Tex.Image = GFDLibrary.Textures.TextureDecoder.Decode(File.ReadAllBytes(texPath),
                     GFDLibrary.Textures.TextureFormat.DDS);
@@ -682,6 +692,7 @@ namespace EPLGen
                     particle.Field178 = copy.Field178.Copy();
                     particle.Field180 = copy.Field180.Copy();
                     particle.Field190 = copy.Field190.Copy();
+                    particle.DistanceFromScreen = copy.DistanceFromScreen.Copy();
                 }
 
 
@@ -781,7 +792,72 @@ namespace EPLGen
         {
             userSettings.ModelName = Path.GetFileNameWithoutExtension(outPath);
 
-            EPL.Build(userSettings, outPath);
+            if (userSettings.Particles.Any(x => x.TexturePath.ToLower().EndsWith(".dds")))
+                EPL.Build(userSettings, outPath);
+        }
+
+        private void ExportWrappedEPL_Click(object sender, EventArgs e)
+        {
+            var outPath = WinFormsDialogs.SelectFile("Choose GMD Destination", false, new string[] { "GMD (.GMD)" }, true);
+            if (string.IsNullOrEmpty(outPath.First()))
+                return;
+
+            if (!outPath.First().ToLower().EndsWith(".gmd"))
+                outPath[0] += ".GMD";
+
+            string eplOutPath = outPath[0].Replace(".GMD", ".EPL");
+
+            ExportEPL(eplOutPath);
+
+            // Output combined EPL wrapped in a GMD (for attaching to objects)
+            byte[] combinedGMD = GMD.gmdHeader.Concat(File.ReadAllBytes(eplOutPath).Skip(16)).Concat(GMD.gmdFooter).ToArray();
+            File.WriteAllBytes(outPath[0], combinedGMD);
+
+            MessageBox.Show($"Done exporting GMD:\n{outPath.First()}", "GMD Export Successful");
+        }
+
+        private void ExportMetaWrappedEPL_Click(object sender, EventArgs e)
+        {
+            var outDir = WinFormsDialogs.SelectFolder("Choose GMD Destination Folder");
+            if (string.IsNullOrEmpty(outDir))
+                return;
+
+            Directory.CreateDirectory(outDir);
+
+            var eplBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\firsthalf.epl"));
+            var eplBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\secondhalf.epl"));
+
+            foreach (var gmdParticle in userSettings.Particles.Where(x => x.TexturePath.ToLower().EndsWith(".gmd")))
+            {
+                var gmd = gmdParticle.TexturePath;
+
+                using (MemoryStream memStream = new MemoryStream())
+                {
+                    using (EndianBinaryWriter writer = new EndianBinaryWriter(memStream, Endianness.BigEndian))
+                    {
+                        byte[] gmdBytes = File.ReadAllBytes(gmd);
+                        writer.Write(eplBytes);
+                        writer.Write(gmdParticle.DistanceFromScreen);
+                        writer.Write(new byte[] { 0x01 }); // Attachment Count
+                        writer.Write(EPL.NameData($"{Path.GetFileName(gmd)}"));
+                        writer.Write(2);
+                        writer.Write(5);
+                        writer.Write(Convert.ToUInt32(gmdBytes.Length));
+                        writer.Write(gmdBytes);
+                        writer.Write(eplBytes2);
+
+                        using (EndianBinaryWriter writer2 = new EndianBinaryWriter(
+                            new FileStream(Path.Combine(outDir, Path.GetFileName(gmd)), FileMode.Create), Endianness.BigEndian))
+                        {
+                            writer2.Write(GMD.gmdHeader);
+                            writer2.Write(memStream.ToArray().Skip(16).ToArray());
+                            writer2.Write(GMD.gmdFooter);
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show($"Done exporting GMDs.", "GMD Export Successful");
         }
 
         private void Rename_Click(object sender, EventArgs e)
@@ -828,7 +904,7 @@ namespace EPLGen
             if (listBox_Sprites.SelectedIndex != -1)
             {
                 // Ask user to select .dds file(s)
-                List<string> texPaths = WinFormsDialogs.SelectFile("Choose sprite texture", true, new string[1] { "DDS Image (.dds)" });
+                List<string> texPaths = WinFormsDialogs.SelectFile("Choose sprite texture", true, new string[] { "DDS Image (.dds)", "GMD Model (.gmd)" });
                 for (int i = 0; i < texPaths.Count; i++)
                 {
                     // Update texture path for model object matching selected listbox item, otherwise create new one named after file
@@ -928,7 +1004,7 @@ namespace EPLGen
                 gmd.Materials.First().Value.DiffuseMap.Name = textureName + ".dds";
                 gmd.Model.Nodes.Single(x => x.Name.Equals("Bone")).Attachments.First(x =>
                     x.GetValue().ResourceType.Equals(ResourceType.Mesh)).GetValue<Mesh>().MaterialName = textureName;
-                gmd.Save(ddsPath.Replace(".dds",".gmd").Replace(".DDS",".GMD"));
+                gmd.Save(ddsPath.Replace(".dds", ".gmd").Replace(".DDS", ".GMD"));
             }
 
             MessageBox.Show($"Done converting DDS to GMD in:\n{inputDir}", "GMDs Saved Successfully");
