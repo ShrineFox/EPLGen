@@ -188,20 +188,20 @@ namespace EPLGen
             using (ShrineFox.IO.FileSys.WaitForFile(outputPath)) { };
         }
 
-        private static void WriteVector2(EndianBinaryWriter writer, Vector2 vec2)
+        public static void WriteVector2(EndianBinaryWriter writer, Vector2 vec2)
         {
             writer.Write(vec2.X);
             writer.Write(vec2.Y);
         }
 
-        private static void WriteVector3(EndianBinaryWriter writer, Vector3 vec3)
+        public static void WriteVector3(EndianBinaryWriter writer, Vector3 vec3)
         {
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.X)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.Y)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(vec3.Z)));
         }
 
-        private static void WriteQuaternion(EndianBinaryWriter writer, Quaternion quaternion)
+        public static void WriteQuaternion(EndianBinaryWriter writer, Quaternion quaternion)
         {
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.X)));
             writer.Write(BitConverter.GetBytes(EndiannessSwapUtility.Swap(quaternion.Y)));

@@ -69,6 +69,7 @@ namespace EPLGen
             createUVAnimToolStripMenuItem = new ToolStripMenuItem();
             txt_SpriteCount = new ToolStripTextBox();
             toolStripComboBox_GMD = new ToolStripComboBox();
+            wrappedInGAPToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
             panel_ParticleSettings.SuspendLayout();
@@ -418,7 +419,7 @@ namespace EPLGen
             // exportEPLToolStripMenuItem
             // 
             exportEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            exportEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem });
+            exportEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem, wrappedInGAPToolStripMenuItem });
             exportEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
             exportEPLToolStripMenuItem.Size = new Size(224, 26);
@@ -431,7 +432,7 @@ namespace EPLGen
             wrappedInGMDToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { withGMDsWrappedInEPLToolStripMenuItem });
             wrappedInGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             wrappedInGMDToolStripMenuItem.Name = "wrappedInGMDToolStripMenuItem";
-            wrappedInGMDToolStripMenuItem.Size = new Size(217, 26);
+            wrappedInGMDToolStripMenuItem.Size = new Size(224, 26);
             wrappedInGMDToolStripMenuItem.Text = "...Wrapped in GMD";
             wrappedInGMDToolStripMenuItem.Click += ExportWrappedEPL_Click;
             // 
@@ -526,6 +527,15 @@ namespace EPLGen
             toolStripComboBox_GMD.Size = new Size(150, 28);
             toolStripComboBox_GMD.SelectedIndexChanged += GMD_Changed;
             // 
+            // wrappedInGAPToolStripMenuItem
+            // 
+            wrappedInGAPToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGAPToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGAPToolStripMenuItem.Name = "wrappedInGAPToolStripMenuItem";
+            wrappedInGAPToolStripMenuItem.Size = new Size(224, 26);
+            wrappedInGAPToolStripMenuItem.Text = "...Wrapped in GAP";
+            wrappedInGAPToolStripMenuItem.Click += ExportGAPWrappedEPL_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -598,6 +608,7 @@ namespace EPLGen
         private ToolStripMenuItem createGMDsToolStripMenuItem;
         private ToolStripMenuItem wrappedInGMDToolStripMenuItem;
         private ToolStripMenuItem withGMDsWrappedInEPLToolStripMenuItem;
+        private ToolStripMenuItem wrappedInGAPToolStripMenuItem;
     }
 }
 

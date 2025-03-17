@@ -860,6 +860,17 @@ namespace EPLGen
             MessageBox.Show($"Done exporting GMDs.", "GMD Export Successful");
         }
 
+        private void ExportGAPWrappedEPL_Click(object sender, EventArgs e)
+        {
+            var outPath = WinFormsDialogs.SelectFile("Choose GAP Destination", false, new string[] { "GFD Animation Pack (.GAP)" }, true);
+            if (outPath.Count <= 0 || string.IsNullOrEmpty(outPath[0]))
+                return;
+
+            GAP.Build(userSettings, outPath[0]);
+
+            MessageBox.Show($"Done exporting GAP.", "GAP Export Successful");
+        }
+
         private void Rename_Click(object sender, EventArgs e)
         {
             if (listBox_Sprites.SelectedIndex != -1 && userSettings.Particles.Any(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())))
