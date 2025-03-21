@@ -63,47 +63,43 @@ namespace EPLGen
                             }
                         }
 
-                        // Write EmbeddedEPLCount
                         writer.Write(controller.EmbeddedEPLCount);
 
-                        // Write each embedded EPL data
-                        foreach (var eplData in controller.EmbeddedEPLData)
+                        var gmd = particle.TexturePath;
+
+                        using (MemoryStream memStream = new MemoryStream())
                         {
-                            writer.Write(eplData.HashString.Length);
-                            writer.Write(EPL.NameData(particle.Name));
-
-                            var eplBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\firsthalf.epl"));
-                            var eplBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\secondhalf.epl"));
-
-                            var gmd = particle.TexturePath;
-
-                            using (MemoryStream memStream = new MemoryStream())
+                            using (EndianBinaryWriter memWriter = new EndianBinaryWriter(memStream, Endianness.BigEndian))
                             {
-                                using (EndianBinaryWriter memWriter = new EndianBinaryWriter(memStream, Endianness.BigEndian))
-                                {
-                                    byte[] gmdBytes = File.ReadAllBytes(gmd);
-                                    memWriter.Write(eplBytes);
-                                    memWriter.Write(particle.DistanceFromScreen);
-                                    memWriter.Write(new byte[] { 0x01 }); // Attachment Count
-                                    memWriter.Write(EPL.NameData($"{Path.GetFileName(gmd)}"));
-                                    memWriter.Write(2);
-                                    memWriter.Write(5);
-                                    memWriter.Write(Convert.ToUInt32(gmdBytes.Length));
-                                    memWriter.Write(gmdBytes);
-                                    memWriter.Write(eplBytes2);
+                                var eplBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\firsthalf.epl"));
+                                memWriter.Write(eplBytes);
 
-                                    eplData.EPLDataBytes = memStream.ToArray().Skip(16).ToArray();
-                                }
+                                memWriter.Write(particle.DistanceFromScreen);
+                                memWriter.Write(new byte[] { 0x01 }); // Attachment Count
+                                memWriter.Write(EPL.NameData($"{Path.GetFileName(gmd)}"));
+                                memWriter.Write(2);
+                                memWriter.Write(5);
+
+                                byte[] gmdBytes = File.ReadAllBytes(gmd);
+                                memWriter.Write(Convert.ToUInt32(gmdBytes.Length));
+                                memWriter.Write(gmdBytes);
+
+                                var eplBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\secondhalf.epl"));
+                                memWriter.Write(eplBytes2);
+
+                                controller.EmbeddedEPLData.Add(memStream.ToArray().Skip(16).ToArray());
                             }
-
-                            writer.Write(eplData.EPLDataBytes.Length);
-                            writer.Write(eplData.EPLDataBytes);
                         }
+
+                        writer.Write(controller.EmbeddedEPLData[0]);
+                        
+                        writer.Write(EPL.NameData(particle.Name)); // epl hash string
 
                         EPL.WriteVector3(writer, controller.BoundingBoxMin);
                         EPL.WriteVector3(writer, controller.BoundingBoxMax);
                     }
                 }
+                writer.Write(0); // BlendAnimCount
             }
         }
     }
@@ -114,7 +110,7 @@ namespace EPLGen
             0x50, 0x00, 0x00, 0x01
         };
         public float Duration { get; set; } = 2;
-        public uint ControllerCount { get; set; } = 12;
+        public uint ControllerCount { get; set; } = 1;
         public List<GapAnimController> Controllers { get; set; } = new List<GapAnimController>() { new GapAnimController() };
     }
 
@@ -127,16 +123,10 @@ namespace EPLGen
         public List<GapAnimLayer> Layers { get; set; } = new List<GapAnimLayer>() { new GapAnimLayer() };
         public uint EmbeddedEPLCount { get; set; } = 1;
 
-        public List<EPLData> EmbeddedEPLData { get; set; } = new List<EPLData>() { new EPLData() };
+        public List<byte[]> EmbeddedEPLData { get; set; } = new List<byte[]>() { }; // EPL starting with 00 00 00 05
         public Vector3 BoundingBoxMin { get; set; } = new Vector3(-3747.618896f, 13840.197266f, 3538.263672f);
         public Vector3 BoundingBoxMax { get; set; } = new Vector3(-5435.104492f, 13410.140625f, -4183.845215f);
 
-    }
-
-    public class EPLData
-    {
-        public byte[] EPLDataBytes { get; set; } = new byte[] { }; // starts with 00 00 00 05
-        public byte[] HashString { get; set; } = new byte[] { };
     }
 
     public class GapAnimLayer
