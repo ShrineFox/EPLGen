@@ -342,6 +342,11 @@ namespace EPLGen
             public Vector2 Field180 = new Vector2(-1f, 2f); // 0,0 for floor
             public Vector2 Field190 = new Vector2(0f, 0f);
             public float DistanceFromScreen = 10f;
+
+            public override string ToString()
+            {
+                return Name;
+            }
         }
 
         public enum ModelType
@@ -391,7 +396,7 @@ namespace EPLGen
             listBox_Sprites.Items.Clear();
             foreach (var item in userSettings.Particles)
             {
-                listBox_Sprites.Items.Add(item.Name);
+                listBox_Sprites.Items.Add(item); // Add Particle objects directly
             }
 
             // Re-enable listbox and re-select previous value if within bounds
@@ -866,6 +871,9 @@ namespace EPLGen
             if (outPath.Count <= 0 || string.IsNullOrEmpty(outPath[0]))
                 return;
 
+            if (!outPath[0].ToLower().EndsWith(".gap"))
+                outPath[0] += ".GAP";
+
             GAP.Build(userSettings, outPath[0]);
 
             MessageBox.Show($"Done exporting GAP.", "GAP Export Successful");
@@ -950,6 +958,34 @@ namespace EPLGen
                 PasteParams_Click(sender, e);
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.C)
                 CopyParams_Click(sender, e);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Up)
+                MoveSelectedItem(-1);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Down)
+                MoveSelectedItem(1);
+        }
+
+        private void MoveSelectedItem(int direction)
+        {
+            if (listBox_Sprites.SelectedItem == null || listBox_Sprites.SelectedIndex < 0)
+                return;
+
+            // Calculate new index
+            int index = listBox_Sprites.SelectedIndex;
+            int newIndex = index + direction;
+
+            // Ensure new index is valid
+            if (newIndex < 0 || newIndex >= listBox_Sprites.Items.Count)
+                return;
+
+            object selected = listBox_Sprites.SelectedItem;
+
+            userSettings.Particles.RemoveAt(listBox_Sprites.SelectedIndex);
+            userSettings.Particles.Insert(newIndex, (Particle)selected);
+
+            UpdateSpriteList();
+
+            listBox_Sprites.SetSelected(index, true);
+            listBox_Sprites.Focus();
         }
 
         private void SavePreset_Click(object sender, EventArgs e)
@@ -1027,6 +1063,21 @@ namespace EPLGen
             TextureAnimation texAnim = new TextureAnimation();
             texAnim.Build(outPath, Convert.ToInt32(txt_SpriteCount.Text));
             MessageBox.Show($"Done outputting UV anim data to:\n{outPath}", "UV Anim Data Saved Successfully");
+        }
+
+        private void DragDrop(object sender, DragEventArgs e)
+        {
+            string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+
+            foreach (var file in fileList.OrderBy(Path.GetFileName).Reverse().Where(x => x.ToLower().EndsWith(".dds") || x.ToLower().EndsWith(".gmd")))
+                AddParticle(new Particle() { Name = Path.GetFileNameWithoutExtension(file), TexturePath = file });
+
+            UpdateSpriteList();
+        }
+
+        private void DragDrop_Enter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
         }
     }
 

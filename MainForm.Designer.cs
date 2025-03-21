@@ -60,6 +60,7 @@ namespace EPLGen
             exportEPLToolStripMenuItem = new ToolStripMenuItem();
             wrappedInGMDToolStripMenuItem = new ToolStripMenuItem();
             withGMDsWrappedInEPLToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInGAPToolStripMenuItem = new ToolStripMenuItem();
             addToolStripMenuItem = new ToolStripMenuItem();
             removeToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
@@ -69,7 +70,6 @@ namespace EPLGen
             createUVAnimToolStripMenuItem = new ToolStripMenuItem();
             txt_SpriteCount = new ToolStripTextBox();
             toolStripComboBox_GMD = new ToolStripComboBox();
-            wrappedInGAPToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
             panel_ParticleSettings.SuspendLayout();
@@ -85,6 +85,7 @@ namespace EPLGen
             // 
             // tlp_Main
             // 
+            tlp_Main.AllowDrop = true;
             tlp_Main.ColumnCount = 2;
             tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -161,6 +162,7 @@ namespace EPLGen
             // 
             // listBox_Sprites
             // 
+            listBox_Sprites.AllowDrop = true;
             listBox_Sprites.BackColor = Color.FromArgb(60, 63, 65);
             listBox_Sprites.BorderStyle = BorderStyle.None;
             listBox_Sprites.ContextMenuStrip = darkContextMenu_Sprites;
@@ -174,6 +176,8 @@ namespace EPLGen
             listBox_Sprites.Size = new Size(530, 321);
             listBox_Sprites.TabIndex = 1;
             listBox_Sprites.SelectedIndexChanged += SpriteList_IndexChanged;
+            listBox_Sprites.DragDrop += DragDrop;
+            listBox_Sprites.DragEnter += DragDrop_Enter;
             listBox_Sprites.KeyDown += SpritesList_KeyDown;
             // 
             // darkContextMenu_Sprites
@@ -403,7 +407,7 @@ namespace EPLGen
             loadToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             loadToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(224, 26);
+            loadToolStripMenuItem.Size = new Size(169, 26);
             loadToolStripMenuItem.Text = "Load Preset";
             loadToolStripMenuItem.Click += LoadPreset_Click;
             // 
@@ -412,7 +416,7 @@ namespace EPLGen
             saveToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             saveToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(224, 26);
+            saveToolStripMenuItem.Size = new Size(169, 26);
             saveToolStripMenuItem.Text = "Save Preset";
             saveToolStripMenuItem.Click += SavePreset_Click;
             // 
@@ -422,7 +426,7 @@ namespace EPLGen
             exportEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem, wrappedInGAPToolStripMenuItem });
             exportEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
-            exportEPLToolStripMenuItem.Size = new Size(224, 26);
+            exportEPLToolStripMenuItem.Size = new Size(169, 26);
             exportEPLToolStripMenuItem.Text = "Export EPL";
             exportEPLToolStripMenuItem.Click += ExportEPL_Click;
             // 
@@ -432,7 +436,7 @@ namespace EPLGen
             wrappedInGMDToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { withGMDsWrappedInEPLToolStripMenuItem });
             wrappedInGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             wrappedInGMDToolStripMenuItem.Name = "wrappedInGMDToolStripMenuItem";
-            wrappedInGMDToolStripMenuItem.Size = new Size(224, 26);
+            wrappedInGMDToolStripMenuItem.Size = new Size(217, 26);
             wrappedInGMDToolStripMenuItem.Text = "...Wrapped in GMD";
             wrappedInGMDToolStripMenuItem.Click += ExportWrappedEPL_Click;
             // 
@@ -444,6 +448,15 @@ namespace EPLGen
             withGMDsWrappedInEPLToolStripMenuItem.Size = new Size(285, 26);
             withGMDsWrappedInEPLToolStripMenuItem.Text = "...With GMDs Wrapped in EPL";
             withGMDsWrappedInEPLToolStripMenuItem.Click += ExportMetaWrappedEPL_Click;
+            // 
+            // wrappedInGAPToolStripMenuItem
+            // 
+            wrappedInGAPToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGAPToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGAPToolStripMenuItem.Name = "wrappedInGAPToolStripMenuItem";
+            wrappedInGAPToolStripMenuItem.Size = new Size(217, 26);
+            wrappedInGAPToolStripMenuItem.Text = "...Wrapped in GAP";
+            wrappedInGAPToolStripMenuItem.Click += ExportGAPWrappedEPL_Click;
             // 
             // addToolStripMenuItem
             // 
@@ -527,17 +540,9 @@ namespace EPLGen
             toolStripComboBox_GMD.Size = new Size(150, 28);
             toolStripComboBox_GMD.SelectedIndexChanged += GMD_Changed;
             // 
-            // wrappedInGAPToolStripMenuItem
-            // 
-            wrappedInGAPToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            wrappedInGAPToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            wrappedInGAPToolStripMenuItem.Name = "wrappedInGAPToolStripMenuItem";
-            wrappedInGAPToolStripMenuItem.Size = new Size(224, 26);
-            wrappedInGAPToolStripMenuItem.Text = "...Wrapped in GAP";
-            wrappedInGAPToolStripMenuItem.Click += ExportGAPWrappedEPL_Click;
-            // 
             // MainForm
             // 
+            AllowDrop = true;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1073, 691);
