@@ -30,6 +30,7 @@ namespace EPLGen
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tlp_Main = new TableLayoutPanel();
             groupBox_ParticleSettings = new GroupBox();
             panel_ParticleSettings = new Panel();
@@ -61,6 +62,7 @@ namespace EPLGen
             wrappedInGMDToolStripMenuItem = new ToolStripMenuItem();
             withGMDsWrappedInEPLToolStripMenuItem = new ToolStripMenuItem();
             wrappedInGAPToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInGMDToolStripMenuItem1 = new ToolStripMenuItem();
             addToolStripMenuItem = new ToolStripMenuItem();
             removeToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
@@ -452,11 +454,21 @@ namespace EPLGen
             // wrappedInGAPToolStripMenuItem
             // 
             wrappedInGAPToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGAPToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem1 });
             wrappedInGAPToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             wrappedInGAPToolStripMenuItem.Name = "wrappedInGAPToolStripMenuItem";
             wrappedInGAPToolStripMenuItem.Size = new Size(217, 26);
             wrappedInGAPToolStripMenuItem.Text = "...Wrapped in GAP";
             wrappedInGAPToolStripMenuItem.Click += ExportGAPWrappedEPL_Click;
+            // 
+            // wrappedInGMDToolStripMenuItem1
+            // 
+            wrappedInGMDToolStripMenuItem1.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGMDToolStripMenuItem1.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGMDToolStripMenuItem1.Name = "wrappedInGMDToolStripMenuItem1";
+            wrappedInGMDToolStripMenuItem1.Size = new Size(217, 26);
+            wrappedInGMDToolStripMenuItem1.Text = "...Wrapped in GMD";
+            wrappedInGMDToolStripMenuItem1.Click += ExportEPLWrappedInGAPWrappedInGMD_Click;
             // 
             // addToolStripMenuItem
             // 
@@ -548,11 +560,12 @@ namespace EPLGen
             ClientSize = new Size(1073, 691);
             Controls.Add(tlp_Main);
             Controls.Add(darkMenuStrip_MainMenu);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = darkMenuStrip_MainMenu;
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(650, 582);
             Name = "MainForm";
-            Text = "EPLGen";
+            Text = "EPLGen v0.2.1";
             tlp_Main.ResumeLayout(false);
             groupBox_ParticleSettings.ResumeLayout(false);
             panel_ParticleSettings.ResumeLayout(false);
@@ -614,6 +627,8 @@ namespace EPLGen
         private ToolStripMenuItem wrappedInGMDToolStripMenuItem;
         private ToolStripMenuItem withGMDsWrappedInEPLToolStripMenuItem;
         private ToolStripMenuItem wrappedInGAPToolStripMenuItem;
+        private ToolStripMenuItem wrappedInGAPToolStripMenuItem1;
+        private ToolStripMenuItem wrappedInGMDToolStripMenuItem1;
     }
 }
 

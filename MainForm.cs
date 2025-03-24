@@ -879,6 +879,34 @@ namespace EPLGen
             MessageBox.Show($"Done exporting GAP.", "GAP Export Successful");
         }
 
+        private void ExportEPLWrappedInGAPWrappedInGMD_Click(object sender, EventArgs e)
+        {
+            var outPath = WinFormsDialogs.SelectFile("Choose GMD Destination", false, new string[] { "GFS Model Pack (.GMD)" }, true);
+            if (outPath.Count <= 0 || string.IsNullOrEmpty(outPath[0]))
+                return;
+
+            if (!outPath[0].ToLower().EndsWith(".gmd"))
+                outPath[0] += ".GMD";
+
+            string gapPath = outPath[0] + ".GAP";
+            GAP.Build(userSettings, gapPath);
+            using (FileSys.WaitForFile(gapPath)) { };
+            using (FileStream fs = new FileStream(outPath[0], FileMode.Create))
+            {
+                using (EndianBinaryWriter writer = new EndianBinaryWriter(fs, Endianness.BigEndian))
+                {
+                    var gmdBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\firsthalf.gmd"));
+                    var gmdBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\secondhalf.gmd"));
+
+                    writer.Write(gmdBytes);
+                    writer.Write(File.ReadAllBytes(gapPath));
+                    writer.Write(gmdBytes2);
+                }
+            }
+
+            MessageBox.Show($"Done exporting GMD.", "GMD Export Successful");
+        }
+
         private void Rename_Click(object sender, EventArgs e)
         {
             if (listBox_Sprites.SelectedIndex != -1 && userSettings.Particles.Any(x => x.Name.Equals(listBox_Sprites.SelectedItem.ToString())))
