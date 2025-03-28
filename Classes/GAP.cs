@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using ShrineFox.IO;
 using static EPLGen.MainForm;
 
@@ -67,30 +68,7 @@ namespace EPLGen
 
                         var gmd = particle.TexturePath;
 
-                        using (MemoryStream memStream = new MemoryStream())
-                        {
-                            using (EndianBinaryWriter memWriter = new EndianBinaryWriter(memStream, Endianness.BigEndian))
-                            {
-                                var eplBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\firsthalf.epl"));
-                                memWriter.Write(eplBytes);
-
-                                memWriter.Write(particle.DistanceFromScreen);
-                                memWriter.Write(new byte[] { 0x01 }); // Attachment Count
-                                memWriter.Write(EPL.NameData($"{Path.GetFileName(gmd)}"));
-                                memWriter.Write(2);
-                                memWriter.Write(5);
-
-                                byte[] gmdBytes = File.ReadAllBytes(gmd);
-                                memWriter.Write(Convert.ToUInt32(gmdBytes.Length));
-                                memWriter.Write(gmdBytes);
-
-                                var eplBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\secondhalf.epl"));
-                                memWriter.Write(eplBytes2);
-
-                                controller.EmbeddedEPLData.Add(memStream.ToArray().Skip(16).ToArray());
-                            }
-                        }
-
+                        controller.EmbeddedEPLData.Add(WrapGMD_InScreenspaceEPL(gmd).Skip(16).ToArray());
                         writer.Write(controller.EmbeddedEPLData[0]);
                         
                         writer.Write(EPL.NameData(particle.Name)); // epl hash string
@@ -102,6 +80,32 @@ namespace EPLGen
                 writer.Write(0); // BlendAnimCount
             }
         }
+
+        private static byte[] WrapGMD_InScreenspaceEPL(string gmd, float distanceFromScren = 10f)
+        {
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                using (EndianBinaryWriter memWriter = new EndianBinaryWriter(memStream, Endianness.BigEndian))
+                {
+                    var eplBytes = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\Screenspace\\firsthalf.epl"));
+                    memWriter.Write(eplBytes);
+
+                    memWriter.Write(distanceFromScren);
+                    memWriter.Write(new byte[] { 0x01 }); // Attachment Count
+                    memWriter.Write(EPL.NameData($"{Path.GetFileName(gmd)}"));
+                    memWriter.Write(2);
+                    memWriter.Write(5);
+
+                    byte[] gmdBytes = File.ReadAllBytes(gmd);
+                    memWriter.Write(Convert.ToUInt32(gmdBytes.Length));
+                    memWriter.Write(gmdBytes);
+
+                    var eplBytes2 = File.ReadAllBytes(Path.Combine(Exe.Directory(), "Dependencies\\EPL\\Screenspace\\secondhalf.epl"));
+                    memWriter.Write(eplBytes2);
+                }
+                return memStream.ToArray();
+            }
+        } 
     }
 
     public class GapAnim

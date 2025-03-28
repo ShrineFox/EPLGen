@@ -58,19 +58,25 @@ namespace EPLGen
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
-            exportEPLToolStripMenuItem = new ToolStripMenuItem();
-            wrappedInGMDToolStripMenuItem = new ToolStripMenuItem();
-            withGMDsWrappedInEPLToolStripMenuItem = new ToolStripMenuItem();
-            wrappedInGAPToolStripMenuItem = new ToolStripMenuItem();
-            wrappedInGMDToolStripMenuItem1 = new ToolStripMenuItem();
+            exportDDSToolStripMenuItem = new ToolStripMenuItem();
+            asParticleEffectEPLToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInDummyGMDToolStripMenuItem2 = new ToolStripMenuItem();
+            asEPTsToolStripMenuItem = new ToolStripMenuItem();
+            asGMDsusingSelectedBaseGMDToolStripMenuItem = new ToolStripMenuItem();
+            exportGMDToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInEPLToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInGMDToolStripMenuItem2 = new ToolStripMenuItem();
+            wrappedInGAPToolStripMenuItem2 = new ToolStripMenuItem();
+            wrappedInDummyGMDToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInScreenspaceEPLToolStripMenuItem = new ToolStripMenuItem();
+            wrappedInGMDToolStripMenuItem3 = new ToolStripMenuItem();
+            wrappedInGAPToolStripMenuItem3 = new ToolStripMenuItem();
+            wrappedInDummyGMDToolStripMenuItem1 = new ToolStripMenuItem();
             addToolStripMenuItem = new ToolStripMenuItem();
             removeToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
             setImageToolStripMenuItem = new ToolStripMenuItem();
-            createEPTsToolStripMenuItem = new ToolStripMenuItem();
-            createGMDsToolStripMenuItem = new ToolStripMenuItem();
-            createUVAnimToolStripMenuItem = new ToolStripMenuItem();
-            txt_SpriteCount = new ToolStripTextBox();
+            baseGMDToolStripMenuItem = new ToolStripMenuItem();
             toolStripComboBox_GMD = new ToolStripComboBox();
             tlp_Main.SuspendLayout();
             groupBox_ParticleSettings.SuspendLayout();
@@ -387,7 +393,7 @@ namespace EPLGen
             darkMenuStrip_MainMenu.BackColor = Color.FromArgb(60, 63, 65);
             darkMenuStrip_MainMenu.ForeColor = Color.FromArgb(220, 220, 220);
             darkMenuStrip_MainMenu.ImageScalingSize = new Size(20, 20);
-            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, createEPTsToolStripMenuItem, createGMDsToolStripMenuItem, createUVAnimToolStripMenuItem, toolStripComboBox_GMD });
+            darkMenuStrip_MainMenu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, addToolStripMenuItem, removeToolStripMenuItem, renameToolStripMenuItem, setImageToolStripMenuItem, baseGMDToolStripMenuItem, toolStripComboBox_GMD });
             darkMenuStrip_MainMenu.Location = new Point(0, 0);
             darkMenuStrip_MainMenu.Name = "darkMenuStrip_MainMenu";
             darkMenuStrip_MainMenu.Padding = new Padding(3, 2, 0, 2);
@@ -398,7 +404,7 @@ namespace EPLGen
             // fileToolStripMenuItem
             // 
             fileToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, exportEPLToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, exportDDSToolStripMenuItem, exportGMDToolStripMenuItem });
             fileToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 28);
@@ -409,7 +415,7 @@ namespace EPLGen
             loadToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             loadToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(169, 26);
+            loadToolStripMenuItem.Size = new Size(211, 26);
             loadToolStripMenuItem.Text = "Load Preset";
             loadToolStripMenuItem.Click += LoadPreset_Click;
             // 
@@ -418,57 +424,146 @@ namespace EPLGen
             saveToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
             saveToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(169, 26);
+            saveToolStripMenuItem.Size = new Size(211, 26);
             saveToolStripMenuItem.Text = "Save Preset";
             saveToolStripMenuItem.Click += SavePreset_Click;
             // 
-            // exportEPLToolStripMenuItem
+            // exportDDSToolStripMenuItem
             // 
-            exportEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            exportEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem, wrappedInGAPToolStripMenuItem });
-            exportEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            exportEPLToolStripMenuItem.Name = "exportEPLToolStripMenuItem";
-            exportEPLToolStripMenuItem.Size = new Size(169, 26);
-            exportEPLToolStripMenuItem.Text = "Export EPL";
-            exportEPLToolStripMenuItem.Click += ExportEPL_Click;
+            exportDDSToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            exportDDSToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { asParticleEffectEPLToolStripMenuItem, asEPTsToolStripMenuItem, asGMDsusingSelectedBaseGMDToolStripMenuItem });
+            exportDDSToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            exportDDSToolStripMenuItem.Name = "exportDDSToolStripMenuItem";
+            exportDDSToolStripMenuItem.Size = new Size(211, 26);
+            exportDDSToolStripMenuItem.Text = "Export DDS Files...";
             // 
-            // wrappedInGMDToolStripMenuItem
+            // asParticleEffectEPLToolStripMenuItem
             // 
-            wrappedInGMDToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            wrappedInGMDToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { withGMDsWrappedInEPLToolStripMenuItem });
-            wrappedInGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            wrappedInGMDToolStripMenuItem.Name = "wrappedInGMDToolStripMenuItem";
-            wrappedInGMDToolStripMenuItem.Size = new Size(217, 26);
-            wrappedInGMDToolStripMenuItem.Text = "...Wrapped in GMD";
-            wrappedInGMDToolStripMenuItem.Click += ExportWrappedEPL_Click;
+            asParticleEffectEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            asParticleEffectEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInDummyGMDToolStripMenuItem2 });
+            asParticleEffectEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            asParticleEffectEPLToolStripMenuItem.Name = "asParticleEffectEPLToolStripMenuItem";
+            asParticleEffectEPLToolStripMenuItem.Size = new Size(238, 26);
+            asParticleEffectEPLToolStripMenuItem.Text = "As Particle Effect EPL...";
+            asParticleEffectEPLToolStripMenuItem.ToolTipText = "Exports each DDS in file list as part of a particle effect EPL";
+            asParticleEffectEPLToolStripMenuItem.Click += ExportDDS_WrappedInEPL_Click;
             // 
-            // withGMDsWrappedInEPLToolStripMenuItem
+            // wrappedInDummyGMDToolStripMenuItem2
             // 
-            withGMDsWrappedInEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            withGMDsWrappedInEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            withGMDsWrappedInEPLToolStripMenuItem.Name = "withGMDsWrappedInEPLToolStripMenuItem";
-            withGMDsWrappedInEPLToolStripMenuItem.Size = new Size(285, 26);
-            withGMDsWrappedInEPLToolStripMenuItem.Text = "...With GMDs Wrapped in EPL";
-            withGMDsWrappedInEPLToolStripMenuItem.Click += ExportMetaWrappedEPL_Click;
+            wrappedInDummyGMDToolStripMenuItem2.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInDummyGMDToolStripMenuItem2.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInDummyGMDToolStripMenuItem2.Name = "wrappedInDummyGMDToolStripMenuItem2";
+            wrappedInDummyGMDToolStripMenuItem2.Size = new Size(264, 26);
+            wrappedInDummyGMDToolStripMenuItem2.Text = "Wrapped In Dummy GMD";
+            wrappedInDummyGMDToolStripMenuItem2.ToolTipText = "Output DDS particle EPL wrapped in a dummy GMD (for attaching to objects)";
+            wrappedInDummyGMDToolStripMenuItem2.Click += ExportDDS_WrappedInEPL_WrappedInGMD_Click;
             // 
-            // wrappedInGAPToolStripMenuItem
+            // asEPTsToolStripMenuItem
             // 
-            wrappedInGAPToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            wrappedInGAPToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem1 });
-            wrappedInGAPToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            wrappedInGAPToolStripMenuItem.Name = "wrappedInGAPToolStripMenuItem";
-            wrappedInGAPToolStripMenuItem.Size = new Size(217, 26);
-            wrappedInGAPToolStripMenuItem.Text = "...Wrapped in GAP";
-            wrappedInGAPToolStripMenuItem.Click += ExportGAPWrappedEPL_Click;
+            asEPTsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            asEPTsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            asEPTsToolStripMenuItem.Name = "asEPTsToolStripMenuItem";
+            asEPTsToolStripMenuItem.Size = new Size(238, 26);
+            asEPTsToolStripMenuItem.Text = "As EPTs";
+            asEPTsToolStripMenuItem.ToolTipText = "Exports each DDS in file list as an EPT file";
+            asEPTsToolStripMenuItem.Click += ExportDDS_AsEPTs;
             // 
-            // wrappedInGMDToolStripMenuItem1
+            // asGMDsusingSelectedBaseGMDToolStripMenuItem
             // 
-            wrappedInGMDToolStripMenuItem1.BackColor = Color.FromArgb(60, 63, 65);
-            wrappedInGMDToolStripMenuItem1.ForeColor = Color.FromArgb(220, 220, 220);
-            wrappedInGMDToolStripMenuItem1.Name = "wrappedInGMDToolStripMenuItem1";
-            wrappedInGMDToolStripMenuItem1.Size = new Size(217, 26);
-            wrappedInGMDToolStripMenuItem1.Text = "...Wrapped in GMD";
-            wrappedInGMDToolStripMenuItem1.Click += ExportEPLWrappedInGAPWrappedInGMD_Click;
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.Name = "asGMDsusingSelectedBaseGMDToolStripMenuItem";
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.Size = new Size(238, 26);
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.Text = "As GMDs";
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.ToolTipText = "Output DDS as GMD using selected base GMD.\r\n(first Material and Texture in GMD will be modified)";
+            asGMDsusingSelectedBaseGMDToolStripMenuItem.Click += ExportDDS_WrappedIGMD_Click;
+            // 
+            // exportGMDToolStripMenuItem
+            // 
+            exportGMDToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            exportGMDToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInEPLToolStripMenuItem, wrappedInScreenspaceEPLToolStripMenuItem });
+            exportGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            exportGMDToolStripMenuItem.Name = "exportGMDToolStripMenuItem";
+            exportGMDToolStripMenuItem.Size = new Size(211, 26);
+            exportGMDToolStripMenuItem.Text = "Export GMDs...";
+            // 
+            // wrappedInEPLToolStripMenuItem
+            // 
+            wrappedInEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem2, wrappedInGAPToolStripMenuItem2 });
+            wrappedInEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInEPLToolStripMenuItem.Name = "wrappedInEPLToolStripMenuItem";
+            wrappedInEPLToolStripMenuItem.Size = new Size(292, 26);
+            wrappedInEPLToolStripMenuItem.Text = "Wrapped in EPL...";
+            wrappedInEPLToolStripMenuItem.ToolTipText = "Exports each GMD in particle list as a MODEL3D EPL. \r\nUseful for adding animated GMDs to nodes.";
+            wrappedInEPLToolStripMenuItem.Click += ExportGMDs_WrappedInEPLs_Click;
+            // 
+            // wrappedInGMDToolStripMenuItem2
+            // 
+            wrappedInGMDToolStripMenuItem2.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGMDToolStripMenuItem2.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGMDToolStripMenuItem2.Name = "wrappedInGMDToolStripMenuItem2";
+            wrappedInGMDToolStripMenuItem2.Size = new Size(264, 26);
+            wrappedInGMDToolStripMenuItem2.Text = "Wrapped in Dummy GMD";
+            wrappedInGMDToolStripMenuItem2.Click += ExportGMDs_WrappedInEPLs_WrappedInDummyGMD_Click;
+            // 
+            // wrappedInGAPToolStripMenuItem2
+            // 
+            wrappedInGAPToolStripMenuItem2.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGAPToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[] { wrappedInDummyGMDToolStripMenuItem });
+            wrappedInGAPToolStripMenuItem2.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGAPToolStripMenuItem2.Name = "wrappedInGAPToolStripMenuItem2";
+            wrappedInGAPToolStripMenuItem2.Size = new Size(264, 26);
+            wrappedInGAPToolStripMenuItem2.Text = "Wrapped in GAP...";
+            // 
+            // wrappedInDummyGMDToolStripMenuItem
+            // 
+            wrappedInDummyGMDToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInDummyGMDToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInDummyGMDToolStripMenuItem.Name = "wrappedInDummyGMDToolStripMenuItem";
+            wrappedInDummyGMDToolStripMenuItem.Size = new Size(264, 26);
+            wrappedInDummyGMDToolStripMenuItem.Text = "Wrapped in Dummy GMD";
+            // 
+            // wrappedInScreenspaceEPLToolStripMenuItem
+            // 
+            wrappedInScreenspaceEPLToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInScreenspaceEPLToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrappedInGMDToolStripMenuItem3, wrappedInGAPToolStripMenuItem3 });
+            wrappedInScreenspaceEPLToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInScreenspaceEPLToolStripMenuItem.Name = "wrappedInScreenspaceEPLToolStripMenuItem";
+            wrappedInScreenspaceEPLToolStripMenuItem.Size = new Size(292, 26);
+            wrappedInScreenspaceEPLToolStripMenuItem.Text = "Wrapped in Screenspace EPL...";
+            wrappedInScreenspaceEPLToolStripMenuItem.ToolTipText = "Exports each GMD in particle list as a screenspace EPL. Useful for \r\ndisplaying GMDs fixed to the screen via field effect banks using flowscript.";
+            wrappedInScreenspaceEPLToolStripMenuItem.Click += ExportGMDs_WrappedInScreenspaceEPLs_Click;
+            // 
+            // wrappedInGMDToolStripMenuItem3
+            // 
+            wrappedInGMDToolStripMenuItem3.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGMDToolStripMenuItem3.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGMDToolStripMenuItem3.Name = "wrappedInGMDToolStripMenuItem3";
+            wrappedInGMDToolStripMenuItem3.Size = new Size(264, 26);
+            wrappedInGMDToolStripMenuItem3.Text = "Wrapped in Dummy GMD";
+            wrappedInGMDToolStripMenuItem3.ToolTipText = "Exports each GMD in particle list as a GMD wrapped in a\r\n screenspace EPL wrapped in another GMD.. Useful for \r\nattaching screenspace effects to other nodes.";
+            wrappedInGMDToolStripMenuItem3.Click += ExportGMDs_WrappedInScreenspaceEPLs_WrappedInDummyGMD;
+            // 
+            // wrappedInGAPToolStripMenuItem3
+            // 
+            wrappedInGAPToolStripMenuItem3.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInGAPToolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { wrappedInDummyGMDToolStripMenuItem1 });
+            wrappedInGAPToolStripMenuItem3.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInGAPToolStripMenuItem3.Name = "wrappedInGAPToolStripMenuItem3";
+            wrappedInGAPToolStripMenuItem3.Size = new Size(264, 26);
+            wrappedInGAPToolStripMenuItem3.Text = "Wrapped In GAP...";
+            wrappedInGAPToolStripMenuItem3.ToolTipText = "Exports a GAP where each animation is a GMD in the file list\r\n wrapped in a screenspace EPL. Useful for attaching screenspace\r\n effects to GMD nodes and toggling displayed GMD via flowscript.";
+            wrappedInGAPToolStripMenuItem3.Click += ExportGMDs_WrappedInScreenspaceEPLs_WrappedInGAP_Click;
+            // 
+            // wrappedInDummyGMDToolStripMenuItem1
+            // 
+            wrappedInDummyGMDToolStripMenuItem1.BackColor = Color.FromArgb(60, 63, 65);
+            wrappedInDummyGMDToolStripMenuItem1.ForeColor = Color.FromArgb(220, 220, 220);
+            wrappedInDummyGMDToolStripMenuItem1.Name = "wrappedInDummyGMDToolStripMenuItem1";
+            wrappedInDummyGMDToolStripMenuItem1.Size = new Size(264, 26);
+            wrappedInDummyGMDToolStripMenuItem1.Text = "Wrapped in Dummy GMD";
+            wrappedInDummyGMDToolStripMenuItem1.Click += ExportGMDs_WrappedInScreenspaceEPLs_WrappedInGAP_WrappedInDummyGMD_Click;
             // 
             // addToolStripMenuItem
             // 
@@ -506,41 +601,15 @@ namespace EPLGen
             setImageToolStripMenuItem.Text = "Set Image";
             setImageToolStripMenuItem.Click += ChooseImageFile_Click;
             // 
-            // createEPTsToolStripMenuItem
+            // baseGMDToolStripMenuItem
             // 
-            createEPTsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            createEPTsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            createEPTsToolStripMenuItem.Name = "createEPTsToolStripMenuItem";
-            createEPTsToolStripMenuItem.Size = new Size(99, 28);
-            createEPTsToolStripMenuItem.Text = "Create EPTs";
-            createEPTsToolStripMenuItem.Click += CreateEPTs_Click;
-            // 
-            // createGMDsToolStripMenuItem
-            // 
-            createGMDsToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            createGMDsToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            createGMDsToolStripMenuItem.Name = "createGMDsToolStripMenuItem";
-            createGMDsToolStripMenuItem.Size = new Size(110, 28);
-            createGMDsToolStripMenuItem.Text = "Create GMDs";
-            createGMDsToolStripMenuItem.Click += CreateGMDs_Click;
-            // 
-            // createUVAnimToolStripMenuItem
-            // 
-            createUVAnimToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
-            createUVAnimToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { txt_SpriteCount });
-            createUVAnimToolStripMenuItem.ForeColor = Color.FromArgb(220, 220, 220);
-            createUVAnimToolStripMenuItem.Name = "createUVAnimToolStripMenuItem";
-            createUVAnimToolStripMenuItem.Size = new Size(128, 28);
-            createUVAnimToolStripMenuItem.Text = "Create UV Anim";
-            createUVAnimToolStripMenuItem.Click += CreateUVAnim_Click;
-            // 
-            // txt_SpriteCount
-            // 
-            txt_SpriteCount.BackColor = Color.FromArgb(60, 63, 65);
-            txt_SpriteCount.ForeColor = Color.FromArgb(220, 220, 220);
-            txt_SpriteCount.Name = "txt_SpriteCount";
-            txt_SpriteCount.Size = new Size(100, 27);
-            txt_SpriteCount.Text = "4";
+            baseGMDToolStripMenuItem.BackColor = Color.FromArgb(60, 63, 65);
+            baseGMDToolStripMenuItem.Enabled = false;
+            baseGMDToolStripMenuItem.ForeColor = Color.FromArgb(153, 153, 153);
+            baseGMDToolStripMenuItem.Name = "baseGMDToolStripMenuItem";
+            baseGMDToolStripMenuItem.Size = new Size(95, 28);
+            baseGMDToolStripMenuItem.Text = "Base GMD:";
+            baseGMDToolStripMenuItem.ToolTipText = "GMD model from Dependencies/GMD folder to \r\nuse when exporting DDS files as GMD.";
             // 
             // toolStripComboBox_GMD
             // 
@@ -550,6 +619,7 @@ namespace EPLGen
             toolStripComboBox_GMD.ForeColor = Color.FromArgb(220, 220, 220);
             toolStripComboBox_GMD.Name = "toolStripComboBox_GMD";
             toolStripComboBox_GMD.Size = new Size(150, 28);
+            toolStripComboBox_GMD.ToolTipText = "GMD model from Dependencies/GMD folder to ";
             toolStripComboBox_GMD.SelectedIndexChanged += GMD_Changed;
             // 
             // MainForm
@@ -565,7 +635,7 @@ namespace EPLGen
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(650, 582);
             Name = "MainForm";
-            Text = "EPLGen v0.2.1";
+            Text = "EPLGen v0.3";
             tlp_Main.ResumeLayout(false);
             groupBox_ParticleSettings.ResumeLayout(false);
             panel_ParticleSettings.ResumeLayout(false);
@@ -595,7 +665,6 @@ namespace EPLGen
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportEPLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addSpriteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeSelectedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameSelectedToolStripMenuItem;
@@ -614,21 +683,28 @@ namespace EPLGen
         private System.Windows.Forms.ComboBox comboBox_Mode;
         private System.Windows.Forms.Panel panel_ParticleSettings;
         private System.Windows.Forms.TableLayoutPanel tlp_ParticleSettings;
-        private ToolStripMenuItem createEPTsToolStripMenuItem;
-        private ToolStripMenuItem createUVAnimToolStripMenuItem;
-        private ToolStripTextBox txt_SpriteCount;
         private ToolStripMenuItem copyParamsToolStripMenuItem;
         private ToolStripMenuItem pasteParamsToolStripMenuItem;
         private ToolStripMenuItem copyToolStripMenuItem;
         private ToolStripMenuItem pasteToolStripMenuItem;
         private ToolStripMenuItem pasteNewtoolStripMenuItem;
         private ToolStripComboBox toolStripComboBox_GMD;
-        private ToolStripMenuItem createGMDsToolStripMenuItem;
-        private ToolStripMenuItem wrappedInGMDToolStripMenuItem;
-        private ToolStripMenuItem withGMDsWrappedInEPLToolStripMenuItem;
-        private ToolStripMenuItem wrappedInGAPToolStripMenuItem;
         private ToolStripMenuItem wrappedInGAPToolStripMenuItem1;
-        private ToolStripMenuItem wrappedInGMDToolStripMenuItem1;
+        private ToolStripMenuItem exportDDSToolStripMenuItem;
+        private ToolStripMenuItem exportGMDToolStripMenuItem;
+        private ToolStripMenuItem wrappedInEPLToolStripMenuItem;
+        private ToolStripMenuItem wrappedInGMDToolStripMenuItem2;
+        private ToolStripMenuItem wrappedInGAPToolStripMenuItem2;
+        private ToolStripMenuItem wrappedInDummyGMDToolStripMenuItem;
+        private ToolStripMenuItem wrappedInScreenspaceEPLToolStripMenuItem;
+        private ToolStripMenuItem wrappedInGMDToolStripMenuItem3;
+        private ToolStripMenuItem wrappedInGAPToolStripMenuItem3;
+        private ToolStripMenuItem wrappedInDummyGMDToolStripMenuItem1;
+        private ToolStripMenuItem asParticleEffectEPLToolStripMenuItem;
+        private ToolStripMenuItem asEPTsToolStripMenuItem;
+        private ToolStripMenuItem asGMDsusingSelectedBaseGMDToolStripMenuItem;
+        private ToolStripMenuItem baseGMDToolStripMenuItem;
+        private ToolStripMenuItem wrappedInDummyGMDToolStripMenuItem2;
     }
 }
 

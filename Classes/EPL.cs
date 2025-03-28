@@ -23,7 +23,7 @@ namespace EPLGen
             return data.ToArray();
         }
 
-        public static void Build(UserSettings settings, string outputPath, int angleSeed = 0)
+        public static byte[] Build(UserSettings settings, int angleSeed = 0)
         {
             EPL epl = new EPL();
             epl.Name = NameData(settings.ModelName);
@@ -101,91 +101,90 @@ namespace EPLGen
                 epl.Animation.Controllers.Add(new AnimController() { Field0C = epl.ChildCount - i, ControllerIndex = i });
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-
-            using (EndianBinaryWriter writer = new EndianBinaryWriter(
-                new FileStream(outputPath, FileMode.Create), Endianness.BigEndian))
+            using (MemoryStream memStream = new MemoryStream())
             {
-                // Start EPL
-                writer.Write(epl.Header);
-                writer.Write(epl.Flags);
-                writer.Write(epl.Name);
-                WriteVector3(writer, epl.Translation);
-                WriteQuaternion(writer, epl.Rotation);
-                WriteVector3(writer, epl.Scale);
-                writer.Write(epl.BeforeLeaf);
-                
-                // Child Nodes
-                writer.Write(epl.ChildCount);
-                
-                foreach (EplChildNode node in epl.ChildNodes)
-                { 
-                    writer.Write(node.Name);
-                    WriteVector3(writer, node.Translation);
-                    WriteQuaternion(writer, node.Rotation);
-                    WriteVector3(writer, node.Scale);
-                    // Particle Data
-                    writer.Write(node.LeafHeader);
-                    writer.Write(node.LeafName);
-                    writer.Write(node.ParticleData.ParticleHeader);
-                    writer.Write(node.ParticleData.RandomSpawnDelay);
-                    writer.Write(node.ParticleData.ParticleLife);
-                    writer.Write(node.ParticleData.AngleSeed);
-                    writer.Write(node.ParticleData.DespawnTimer);
-                    WriteVector2(writer, node.ParticleData.SpawnChoker);
-                    writer.Write(node.ParticleData.ColorOverLifeOffset);
-                    writer.Write(node.ParticleData.FieldC4);
-                    WriteVector2(writer, node.ParticleData.OpacityOverLife);
-                    writer.Write(node.ParticleData.ColorOverLife_Bezier);
-                    writer.Write(node.ParticleData.SizeOverLife);
-                    WriteVector2(writer, node.ParticleData.SpawnerAngles);
-                    WriteVector2(writer, node.ParticleData.CycleRateFromBirth);
-                    writer.Write(node.ParticleData.CycleRateGlobal);
-                    writer.Write(node.ParticleData.UnknownFields);
-                    writer.Write(node.ParticleData.ParticleScale);
-                    writer.Write(node.ParticleData.ParticleSpeed);
-                    // Explosion Data
-                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field170);
-                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field188);
-                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field178);
-                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field180);
-                    WriteVector2(writer, node.ParticleData.ExplosionEffect.Field190);
-                    writer.Write(node.ParticleData.ExplosionEffect.Field198);
-                    // Embedded Data
-                    writer.Write(node.ParticleData.EmbeddedFileName);
-                    writer.Write(node.ParticleData.EmbeddedFileFields);
-                    writer.Write(node.ParticleData.DataLength);
-                    writer.Write(node.ParticleData.EmbeddedFile);
-                    writer.Write(node.SubNodeFooter);
-                }
-
-                // Animation Data
-                writer.Write(epl.Animation.Field00);
-                writer.Write(epl.Animation.Field04);
-                writer.Write(epl.Animation.Flags);
-                writer.Write(epl.Animation.Duration);
-                writer.Write(epl.Animation.SubControllerCount);
-                foreach (var subCtrl in epl.Animation.SubControllers)
+                using (EndianBinaryWriter memWriter = new EndianBinaryWriter(memStream, Endianness.BigEndian))
                 {
-                    writer.Write(subCtrl.TargetKind);
-                    writer.Write(subCtrl.TargetID);
-                    writer.Write(subCtrl.TargetName);
-                    writer.Write(subCtrl.Layers);
-                }
+                    // Start EPL
+                    memWriter.Write(epl.Header);
+                    memWriter.Write(epl.Flags);
+                    memWriter.Write(epl.Name);
+                    WriteVector3(memWriter, epl.Translation);
+                    WriteQuaternion(memWriter, epl.Rotation);
+                    WriteVector3(memWriter, epl.Scale);
+                    memWriter.Write(epl.BeforeLeaf);
 
-                writer.Write(epl.Animation.Field10);
-                foreach (var ctrl in epl.Animation.Controllers)
-                {
-                    writer.Write(ctrl.Field00);
-                    writer.Write(ctrl.Field04);
-                    writer.Write(ctrl.ControllerIndex);
-                    writer.Write(ctrl.Field0C);
-                }
+                    // Child Nodes
+                    memWriter.Write(epl.ChildCount);
 
-                writer.Write(epl.Field40);
+                    foreach (EplChildNode node in epl.ChildNodes)
+                    {
+                        memWriter.Write(node.Name);
+                        WriteVector3(memWriter, node.Translation);
+                        WriteQuaternion(memWriter, node.Rotation);
+                        WriteVector3(memWriter, node.Scale);
+                        // Particle Data
+                        memWriter.Write(node.LeafHeader);
+                        memWriter.Write(node.LeafName);
+                        memWriter.Write(node.ParticleData.ParticleHeader);
+                        memWriter.Write(node.ParticleData.RandomSpawnDelay);
+                        memWriter.Write(node.ParticleData.ParticleLife);
+                        memWriter.Write(node.ParticleData.AngleSeed);
+                        memWriter.Write(node.ParticleData.DespawnTimer);
+                        WriteVector2(memWriter, node.ParticleData.SpawnChoker);
+                        memWriter.Write(node.ParticleData.ColorOverLifeOffset);
+                        memWriter.Write(node.ParticleData.FieldC4);
+                        WriteVector2(memWriter, node.ParticleData.OpacityOverLife);
+                        memWriter.Write(node.ParticleData.ColorOverLife_Bezier);
+                        memWriter.Write(node.ParticleData.SizeOverLife);
+                        WriteVector2(memWriter, node.ParticleData.SpawnerAngles);
+                        WriteVector2(memWriter, node.ParticleData.CycleRateFromBirth);
+                        memWriter.Write(node.ParticleData.CycleRateGlobal);
+                        memWriter.Write(node.ParticleData.UnknownFields);
+                        memWriter.Write(node.ParticleData.ParticleScale);
+                        memWriter.Write(node.ParticleData.ParticleSpeed);
+                        // Explosion Data
+                        WriteVector2(memWriter, node.ParticleData.ExplosionEffect.Field170);
+                        WriteVector2(memWriter, node.ParticleData.ExplosionEffect.Field188);
+                        WriteVector2(memWriter, node.ParticleData.ExplosionEffect.Field178);
+                        WriteVector2(memWriter, node.ParticleData.ExplosionEffect.Field180);
+                        WriteVector2(memWriter, node.ParticleData.ExplosionEffect.Field190);
+                        memWriter.Write(node.ParticleData.ExplosionEffect.Field198);
+                        // Embedded Data
+                        memWriter.Write(node.ParticleData.EmbeddedFileName);
+                        memWriter.Write(node.ParticleData.EmbeddedFileFields);
+                        memWriter.Write(node.ParticleData.DataLength);
+                        memWriter.Write(node.ParticleData.EmbeddedFile);
+                        memWriter.Write(node.SubNodeFooter);
+                    }
+
+                    // Animation Data
+                    memWriter.Write(epl.Animation.Field00);
+                    memWriter.Write(epl.Animation.Field04);
+                    memWriter.Write(epl.Animation.Flags);
+                    memWriter.Write(epl.Animation.Duration);
+                    memWriter.Write(epl.Animation.SubControllerCount);
+                    foreach (var subCtrl in epl.Animation.SubControllers)
+                    {
+                        memWriter.Write(subCtrl.TargetKind);
+                        memWriter.Write(subCtrl.TargetID);
+                        memWriter.Write(subCtrl.TargetName);
+                        memWriter.Write(subCtrl.Layers);
+                    }
+
+                    memWriter.Write(epl.Animation.Field10);
+                    foreach (var ctrl in epl.Animation.Controllers)
+                    {
+                        memWriter.Write(ctrl.Field00);
+                        memWriter.Write(ctrl.Field04);
+                        memWriter.Write(ctrl.ControllerIndex);
+                        memWriter.Write(ctrl.Field0C);
+                    }
+
+                    memWriter.Write(epl.Field40);
+                }
+                return memStream.ToArray();
             }
-
-            using (ShrineFox.IO.FileSys.WaitForFile(outputPath)) { };
         }
 
         public static void WriteVector2(EndianBinaryWriter writer, Vector2 vec2)
