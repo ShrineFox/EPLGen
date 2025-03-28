@@ -65,10 +65,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Classes\Form\FileWrap.cs">
+    <Compile Update="Forms\MainForm Events\FileWrap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Classes\Form\Settings.cs">
+    <Compile Update="Forms\MainForm Events\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
