@@ -40,22 +40,22 @@ namespace EPLGen
             switch (name)
             {
                 case "ModelRot":
-                    SetRotationValue(axis, value, userSettings.Rotation);
+                    userSettings.Rotation = UpdateQuaternion(userSettings.Rotation, axis, value);
                     break;
                 case "ParticleRot":
-                    SetRotationValue(axis, value, particle.Rotation);
+                    particle.Rotation = UpdateQuaternion(particle.Rotation, axis, value);
                     break;
                 case "ModelScale":
-                    SetScaleValue(axis, value, userSettings.Scale);
+                    userSettings.Scale = UpdateVector3(userSettings.Scale, axis, value);
                     break;
                 case "ParticleScale":
-                    SetScaleValue(axis, value, particle.Scale);
+                    particle.Scale = UpdateVector3(particle.Scale, axis, value);
                     break;
                 case "ModelTranslation":
-                    SetTranslationValue(axis, value, userSettings.Translation);
+                    userSettings.Translation = UpdateVector3(userSettings.Translation, axis, value);
                     break;
                 case "ParticleTranslation":
-                    SetTranslationValue(axis, value, particle.Translation);
+                    particle.Translation = UpdateVector3(particle.Translation, axis, value);
                     break;
                 case "ParticleSpeed":
                     particle.ParticleSpeed = value;
@@ -70,31 +70,66 @@ namespace EPLGen
                     particle.DespawnTimer = value;
                     break;
                 case "SpawnChoker":
-                    SetVector2Value(axis, value, particle.SpawnChoker);
+                    particle.SpawnChoker = UpdateVector2(particle.SpawnChoker, axis, value);
                     break;
                 case "SpawnerAngles":
-                    SetVector2Value(axis, value, particle.SpawnerAngles);
+                    particle.SpawnerAngles = UpdateVector2(particle.SpawnerAngles, axis, value);
                     break;
                 case "Field170":
-                    SetVector2Value(axis, value, particle.Field170);
+                    particle.Field170 = UpdateVector2(particle.Field170, axis, value);
                     break;
                 case "Field188":
-                    SetVector2Value(axis, value, particle.Field188);
+                    particle.Field188 = UpdateVector2(particle.Field188, axis, value);
                     break;
                 case "Field178":
-                    SetVector2Value(axis, value, particle.Field178);
+                    particle.Field178 = UpdateVector2(particle.Field178, axis, value);
                     break;
                 case "Field180":
-                    SetVector2Value(axis, value, particle.Field180);
+                    particle.Field180 = UpdateVector2(particle.Field180, axis, value);
                     break;
                 case "Field190":
-                    SetVector2Value(axis, value, particle.Field190);
+                    particle.Field190 = UpdateVector2(particle.Field190, axis, value);
                     break;
                 case "DistanceFromScreen":
                     particle.DistanceFromScreen = value;
                     break;
             }
         }
+
+        private Quaternion UpdateQuaternion(Quaternion q, string axis, float value)
+        {
+            return axis switch
+            {
+                "x" => new Quaternion(value, q.Y, q.Z, q.W),
+                "y" => new Quaternion(q.X, value, q.Z, q.W),
+                "z" => new Quaternion(q.X, q.Y, value, q.W),
+                "w" => new Quaternion(q.X, q.Y, q.Z, value),
+                _ => q,
+            };
+        }
+
+
+        private Vector3 UpdateVector3(Vector3 v, string axis, float value)
+        {
+            return axis switch
+            {
+                "x" => new Vector3(value, v.Y, v.Z),
+                "y" => new Vector3(v.X, value, v.Z),
+                "z" => new Vector3(v.X, v.Y, value),
+                _ => v,
+            };
+        }
+
+        private Vector2 UpdateVector2(Vector2 v, string axis, float value)
+        {
+            return axis switch
+            {
+                "x" => new Vector2(value, v.Y),
+                "y" => new Vector2(v.X, value),
+                _ => v,
+            };
+        }
+
 
         private void LoadOptionValues()
         {
@@ -209,7 +244,7 @@ namespace EPLGen
                 Minimum = min,
                 Maximum = max,
                 Name = name,
-                Anchor = AnchorStyles.Left,
+                Anchor = (AnchorStyles.Left | AnchorStyles.Right),
                 AutoSize = true
             };
             numUpDwn.ValueChanged += FieldValue_Changed;
@@ -265,72 +300,6 @@ namespace EPLGen
                 SetOptionValue(name, axis, value, particle);
             }
         }
-
-        private void SetRotationValue(string axis, float value, Quaternion rotation)
-        {
-            switch (axis)
-            {
-                case "x":
-                    rotation.X = value;
-                    break;
-                case "y":
-                    rotation.Y = value;
-                    break;
-                case "z":
-                    rotation.Z = value;
-                    break;
-                case "w":
-                    rotation.W = value;
-                    break;
-            }
-        }
-
-        private void SetScaleValue(string axis, float value, Vector3 scale)
-        {
-            switch (axis)
-            {
-                case "x":
-                    scale.X = value;
-                    break;
-                case "y":
-                    scale.Y = value;
-                    break;
-                case "z":
-                    scale.Z = value;
-                    break;
-            }
-        }
-
-        private void SetTranslationValue(string axis, float value, Vector3 translation)
-        {
-            switch (axis)
-            {
-                case "x":
-                    translation.X = value;
-                    break;
-                case "y":
-                    translation.Y = value;
-                    break;
-                case "z":
-                    translation.Z = value;
-                    break;
-            }
-        }
-
-        private void SetVector2Value(string axis, float value, Vector2 vector)
-        {
-            switch (axis)
-            {
-                case "x":
-                    vector.X = value;
-                    break;
-                case "y":
-                    vector.Y = value;
-                    break;
-            }
-        }
-
-        
 
         private void SetNumericUpDownValue(DarkNumericUpDown numUpDwn, Quaternion rotation, string axis)
         {
