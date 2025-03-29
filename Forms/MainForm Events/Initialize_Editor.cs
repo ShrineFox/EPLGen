@@ -4,6 +4,7 @@ using ShrineFox.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,250 +35,66 @@ namespace EPLGen
             AddNumControls(tlp_ParticleSettings, "Distance From Screen:", "DistanceFromScreen", 14, false);
         }
 
-        private void AddNumControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int row, bool decimalPlaces = true)
+        private void SetOptionValue(string name, string axis, float value, Particle particle)
         {
-            var numUpDwn = new DarkNumericUpDown()
+            switch (name)
             {
-                Minimum = -999999,
-                Maximum = 999999,
-                Name = $"num_{fieldPrefix}_x",
-                Anchor = AnchorStyles.Left,
-                AutoSize = true
-            };
-            numUpDwn.ValueChanged += FieldValue_Changed;
-            if (!decimalPlaces)
-                numUpDwn.DecimalPlaces = 7;
-            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
-            parentTlp.Controls.Add(numUpDwn, 1, row);
-        }
-
-        private void AddAxisControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int numOfOptions, int row)
-        {
-            TableLayoutPanel tlp = new TableLayoutPanel() { Dock = DockStyle.Fill };
-            for (int i = 0; i < numOfOptions; i++)
-            {
-                string axis = "x";
-                switch (i)
-                {
-                    case 1: axis = "y"; break;
-                    case 2: axis = "z"; break;
-                    case 3: axis = "w"; break;
-                }
-
-                decimal maxMin = 360;
-                float columnWidth = 25f;
-                if (numOfOptions < 4)
-                {
-                    maxMin = 99999;
-                    columnWidth = 33f;
-                }
-
-                var numUpDwn = new DarkNumericUpDown() { Minimum = maxMin * -1, Maximum = maxMin, Dock = DockStyle.Top, Name = $"num_{fieldPrefix}_{axis}", DecimalPlaces = 7 };
-                numUpDwn.ValueChanged += FieldValue_Changed;
-                tlp.RowStyles.Add(new RowStyle() { SizeType = SizeType.Percent, Height = 50f });
-                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
-                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
-                tlp.Controls.Add(new DarkLabel() { Text = axis.ToUpper(), Dock = DockStyle.Bottom }, i, 0);
-                tlp.Controls.Add(numUpDwn, i, 1);
-            }
-            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
-            parentTlp.Controls.Add(tlp, 1, row);
-        }
-
-        private void UpdateOptionValue(string name, string axis, float value)
-        {
-            foreach (var item in listBox_Sprites.SelectedItems)
-            {
-                var particle = userSettings.Particles.First(x => x.Name.Equals(item.ToString()));
-                switch (name)
-                {
-                    case "ModelRot":
-                        switch (axis)
-                        {
-                            case "x":
-                                userSettings.Rotation.X = value;
-                                break;
-                            case "y":
-                                userSettings.Rotation.Y = value;
-                                break;
-                            case "z":
-                                userSettings.Rotation.Z = value;
-                                break;
-                            case "w":
-                                userSettings.Rotation.W = value;
-                                break;
-                        }
-                        break;
-                    case "ParticleRot":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Rotation.X = value;
-                                break;
-                            case "y":
-                                particle.Rotation.Y = value;
-                                break;
-                            case "z":
-                                particle.Rotation.Z = value;
-                                break;
-                            case "w":
-                                particle.Rotation.W = value;
-                                break;
-                        }
-                        break;
-                    case "ModelScale":
-                        switch (axis)
-                        {
-                            case "x":
-                                userSettings.Scale.X = value;
-                                break;
-                            case "y":
-                                userSettings.Scale.Y = value;
-                                break;
-                            case "z":
-                                userSettings.Scale.Z = value;
-                                break;
-                        }
-                        break;
-                    case "ParticleScale":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Scale.X = value;
-                                break;
-                            case "y":
-                                particle.Scale.Y = value;
-                                break;
-                            case "z":
-                                particle.Scale.Z = value;
-                                break;
-                        }
-                        break;
-                    case "ModelTranslation":
-                        switch (axis)
-                        {
-                            case "x":
-                                userSettings.Translation.X = value;
-                                break;
-                            case "y":
-                                userSettings.Translation.Y = value;
-                                break;
-                            case "z":
-                                userSettings.Translation.Z = value;
-                                break;
-                        }
-                        break;
-                    case "ParticleTranslation":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Translation.X = value;
-                                break;
-                            case "y":
-                                particle.Translation.Y = value;
-                                break;
-                            case "z":
-                                particle.Translation.Z = value;
-                                break;
-                        }
-                        break;
-                    case "ParticleSpeed":
-                        particle.ParticleSpeed = value;
-                        break;
-                    case "RandomSpawnDelay":
-                        particle.RandomSpawnDelay = Convert.ToUInt32(value);
-                        break;
-                    case "ParticleLife":
-                        particle.ParticleLife = value;
-                        break;
-                    case "DespawnTimer":
-                        particle.DespawnTimer = value;
-                        break;
-                    case "SpawnChoker":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.SpawnChoker.X = value;
-                                break;
-                            case "y":
-                                particle.SpawnChoker.Y = value;
-                                break;
-                        }
-                        break;
-                    case "SpawnerAngles":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.SpawnerAngles.X = value;
-                                break;
-                            case "y":
-                                particle.SpawnerAngles.Y = value;
-                                break;
-                        }
-                        break;
-                    case "Field170":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Field170.X = value;
-                                break;
-                            case "y":
-                                particle.Field170.Y = value;
-                                break;
-                        }
-                        break;
-                    case "Field188":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Field188.X = value;
-                                break;
-                            case "y":
-                                particle.Field188.Y = value;
-                                break;
-                        }
-                        break;
-                    case "Field178":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Field178.X = value;
-                                break;
-                            case "y":
-                                particle.Field178.Y = value;
-                                break;
-                        }
-                        break;
-                    case "Field180":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Field180.X = value;
-                                break;
-                            case "y":
-                                particle.Field180.Y = value;
-                                break;
-                        }
-                        break;
-                    case "Field190":
-                        switch (axis)
-                        {
-                            case "x":
-                                particle.Field190.X = value;
-                                break;
-                            case "y":
-                                particle.Field190.Y = value;
-                                break;
-                        }
-                        break;
-                    case "DistanceFromScreen":
-                        particle.DistanceFromScreen = value;
-                        break;
-                }
-
+                case "ModelRot":
+                    SetRotationValue(axis, value, userSettings.Rotation);
+                    break;
+                case "ParticleRot":
+                    SetRotationValue(axis, value, particle.Rotation);
+                    break;
+                case "ModelScale":
+                    SetScaleValue(axis, value, userSettings.Scale);
+                    break;
+                case "ParticleScale":
+                    SetScaleValue(axis, value, particle.Scale);
+                    break;
+                case "ModelTranslation":
+                    SetTranslationValue(axis, value, userSettings.Translation);
+                    break;
+                case "ParticleTranslation":
+                    SetTranslationValue(axis, value, particle.Translation);
+                    break;
+                case "ParticleSpeed":
+                    particle.ParticleSpeed = value;
+                    break;
+                case "RandomSpawnDelay":
+                    particle.RandomSpawnDelay = Convert.ToUInt32(value);
+                    break;
+                case "ParticleLife":
+                    particle.ParticleLife = value;
+                    break;
+                case "DespawnTimer":
+                    particle.DespawnTimer = value;
+                    break;
+                case "SpawnChoker":
+                    SetVector2Value(axis, value, particle.SpawnChoker);
+                    break;
+                case "SpawnerAngles":
+                    SetVector2Value(axis, value, particle.SpawnerAngles);
+                    break;
+                case "Field170":
+                    SetVector2Value(axis, value, particle.Field170);
+                    break;
+                case "Field188":
+                    SetVector2Value(axis, value, particle.Field188);
+                    break;
+                case "Field178":
+                    SetVector2Value(axis, value, particle.Field178);
+                    break;
+                case "Field180":
+                    SetVector2Value(axis, value, particle.Field180);
+                    break;
+                case "Field190":
+                    SetVector2Value(axis, value, particle.Field190);
+                    break;
+                case "DistanceFromScreen":
+                    particle.DistanceFromScreen = value;
+                    break;
             }
         }
-
 
         private void LoadOptionValues()
         {
@@ -329,94 +146,22 @@ namespace EPLGen
             switch (ctrl)
             {
                 case "ModelRot":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.Z);
-                            break;
-                        case "w":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Rotation.W);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, userSettings.Rotation, axis);
                     break;
                 case "ParticleRot":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.Z);
-                            break;
-                        case "w":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Rotation.W);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Rotation, axis);
                     break;
                 case "ModelScale":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Scale.Z);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, userSettings.Scale, axis);
                     break;
                 case "ParticleScale":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Scale.Z);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Scale, axis);
                     break;
                 case "ModelTranslation":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(userSettings.Translation.Z);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, userSettings.Translation, axis);
                     break;
                 case "ParticleTranslation":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.Y);
-                            break;
-                        case "z":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Translation.Z);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Translation, axis);
                     break;
                 case "ParticleSpeed":
                     numUpDwn.Value = Convert.ToDecimal(particle.ParticleSpeed);
@@ -431,81 +176,25 @@ namespace EPLGen
                     numUpDwn.Value = Convert.ToDecimal(particle.DespawnTimer);
                     break;
                 case "SpawnChoker":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnChoker.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnChoker.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.SpawnChoker, axis);
                     break;
                 case "SpawnerAngles":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnerAngles.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.SpawnerAngles.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.SpawnerAngles, axis);
                     break;
                 case "Field170":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field170.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field170.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Field170, axis);
                     break;
                 case "Field188":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field188.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field188.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Field188, axis);
                     break;
                 case "Field178":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field178.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field178.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Field178, axis);
                     break;
                 case "Field180":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field180.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field180.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Field180, axis);
                     break;
                 case "Field190":
-                    switch (axis)
-                    {
-                        case "x":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field190.X);
-                            break;
-                        case "y":
-                            numUpDwn.Value = Convert.ToDecimal(particle.Field190.Y);
-                            break;
-                    }
+                    SetNumericUpDownValue(numUpDwn, particle.Field190, axis);
                     break;
                 case "DistanceFromScreen":
                     numUpDwn.Value = Convert.ToDecimal(particle.DistanceFromScreen);
@@ -513,5 +202,182 @@ namespace EPLGen
             }
         }
 
+        private DarkNumericUpDown CreateNumericUpDown(string name, decimal min, decimal max, bool decimalPlaces = true)
+        {
+            var numUpDwn = new DarkNumericUpDown()
+            {
+                Minimum = min,
+                Maximum = max,
+                Name = name,
+                Anchor = AnchorStyles.Left,
+                AutoSize = true
+            };
+            numUpDwn.ValueChanged += FieldValue_Changed;
+            if (!decimalPlaces)
+                numUpDwn.DecimalPlaces = 7;
+            return numUpDwn;
+        }
+
+        private void AddNumControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int row, bool decimalPlaces = true)
+        {
+            var numUpDwn = CreateNumericUpDown($"num_{fieldPrefix}_x", -999999, 999999, decimalPlaces);
+            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
+            parentTlp.Controls.Add(numUpDwn, 1, row);
+        }
+
+        private void AddAxisControls(TableLayoutPanel parentTlp, string labelText, string fieldPrefix, int numOfOptions, int row)
+        {
+            TableLayoutPanel tlp = new TableLayoutPanel() { Dock = DockStyle.Fill };
+            for (int i = 0; i < numOfOptions; i++)
+            {
+                string axis = "x";
+                switch (i)
+                {
+                    case 1: axis = "y"; break;
+                    case 2: axis = "z"; break;
+                    case 3: axis = "w"; break;
+                }
+
+                decimal maxMin = 360;
+                float columnWidth = 25f;
+                if (numOfOptions < 4)
+                {
+                    maxMin = 99999;
+                    columnWidth = 33f;
+                }
+
+                var numUpDwn = CreateNumericUpDown($"num_{fieldPrefix}_{axis}", maxMin * -1, maxMin);
+                tlp.RowStyles.Add(new RowStyle() { SizeType = SizeType.Percent, Height = 50f });
+                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
+                tlp.ColumnStyles.Add(new ColumnStyle() { SizeType = SizeType.Percent, Width = columnWidth });
+                tlp.Controls.Add(new DarkLabel() { Text = axis.ToUpper(), Dock = DockStyle.Bottom }, i, 0);
+                tlp.Controls.Add(numUpDwn, i, 1);
+            }
+            parentTlp.Controls.Add(new DarkLabel() { Text = labelText, Anchor = AnchorStyles.Right, AutoSize = true }, 0, row);
+            parentTlp.Controls.Add(tlp, 1, row);
+        }
+
+        private void UpdateOptionValue(string name, string axis, float value)
+        {
+            foreach (var item in listBox_Sprites.SelectedItems)
+            {
+                var particle = userSettings.Particles.First(x => x.Name.Equals(item.ToString()));
+                SetOptionValue(name, axis, value, particle);
+            }
+        }
+
+        private void SetRotationValue(string axis, float value, Quaternion rotation)
+        {
+            switch (axis)
+            {
+                case "x":
+                    rotation.X = value;
+                    break;
+                case "y":
+                    rotation.Y = value;
+                    break;
+                case "z":
+                    rotation.Z = value;
+                    break;
+                case "w":
+                    rotation.W = value;
+                    break;
+            }
+        }
+
+        private void SetScaleValue(string axis, float value, Vector3 scale)
+        {
+            switch (axis)
+            {
+                case "x":
+                    scale.X = value;
+                    break;
+                case "y":
+                    scale.Y = value;
+                    break;
+                case "z":
+                    scale.Z = value;
+                    break;
+            }
+        }
+
+        private void SetTranslationValue(string axis, float value, Vector3 translation)
+        {
+            switch (axis)
+            {
+                case "x":
+                    translation.X = value;
+                    break;
+                case "y":
+                    translation.Y = value;
+                    break;
+                case "z":
+                    translation.Z = value;
+                    break;
+            }
+        }
+
+        private void SetVector2Value(string axis, float value, Vector2 vector)
+        {
+            switch (axis)
+            {
+                case "x":
+                    vector.X = value;
+                    break;
+                case "y":
+                    vector.Y = value;
+                    break;
+            }
+        }
+
+        
+
+        private void SetNumericUpDownValue(DarkNumericUpDown numUpDwn, Quaternion rotation, string axis)
+        {
+            switch (axis)
+            {
+                case "x":
+                    numUpDwn.Value = Convert.ToDecimal(rotation.X);
+                    break;
+                case "y":
+                    numUpDwn.Value = Convert.ToDecimal(rotation.Y);
+                    break;
+                case "z":
+                    numUpDwn.Value = Convert.ToDecimal(rotation.Z);
+                    break;
+                case "w":
+                    numUpDwn.Value = Convert.ToDecimal(rotation.W);
+                    break;
+            }
+        }
+
+        private void SetNumericUpDownValue(DarkNumericUpDown numUpDwn, Vector3 vector, string axis)
+        {
+            switch (axis)
+            {
+                case "x":
+                    numUpDwn.Value = Convert.ToDecimal(vector.X);
+                    break;
+                case "y":
+                    numUpDwn.Value = Convert.ToDecimal(vector.Y);
+                    break;
+                case "z":
+                    numUpDwn.Value = Convert.ToDecimal(vector.Z);
+                    break;
+            }
+        }
+
+        private void SetNumericUpDownValue(DarkNumericUpDown numUpDwn, Vector2 vector, string axis)
+        {
+            switch (axis)
+            {
+                case "x":
+                    numUpDwn.Value = Convert.ToDecimal(vector.X);
+                    break;
+                case "y":
+                    numUpDwn.Value = Convert.ToDecimal(vector.Y);
+                    break;
+            }
+        }
     }
 }
